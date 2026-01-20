@@ -1,0 +1,14 @@
+# robots.txt for 夯肉 HANGROU
+
+User-agent: *
+Allow: /
+
+# Disallow specific files if needed
+# Disallow: /private/
+# Disallow: /admin/
+
+# Sitemap location
+Sitemap: https://hangrou.com.tw/sitemap.xml
+
+# Crawl-delay (optional, if needed)
+# Crawl-delay: 1
