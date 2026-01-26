@@ -2,13 +2,24 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>夯肉 HANGROU - POS 點餐系統原型</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            /* 禁止觸控縮放和手勢操作 */
+            touch-action: manipulation;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* 允許輸入框選取文字 */
+        input, textarea {
+            -webkit-user-select: text;
+            user-select: text;
         }
 
         body {
@@ -16,6 +27,25 @@
             background: #F8F9FA;
             color: #2D3436;
             overflow-x: hidden;
+            /* 防止 iOS Safari 彈性滾動 */
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            /* 禁止雙擊縮放 */
+            touch-action: pan-x pan-y;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 主內容區允許滾動 */
+        .main-content,
+        .menu-section,
+        .cart-items,
+        .modal-body,
+        .reports-page,
+        .settings-page {
+            position: static;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         /* 頂部導航 */
@@ -2454,6 +2484,29 @@
             updateDiscountRulesList();
             updateCart();
         }
+
+        // 防止觸控縮放和手勢操作
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                // 防止多指觸控縮放
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                // 防止雙擊縮放
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // 防止手勢縮放
+        document.addEventListener('gesturestart', function(event) {
+            event.preventDefault();
+        });
 
         // 監聽輸入變化以更新預覽
         document.addEventListener('DOMContentLoaded', () => {
