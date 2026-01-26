@@ -437,11 +437,15 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.1s;
+            /* 移除過渡動畫以提升觸控響應速度 */
+            transition: none;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             -webkit-user-select: none;
+            /* 防止連點時的延遲 */
+            -webkit-touch-callout: none;
+            -webkit-user-drag: none;
         }
 
         .quick-amount-btn:hover {
@@ -452,6 +456,12 @@
         .quick-amount-btn:active {
             transform: scale(0.95);
             background: #F0F0F0;
+        }
+
+        /* 按鈕按下狀態（僅用於觸控裝置） */
+        .quick-amount-btn.pressed {
+            transform: scale(0.95);
+            background: #E0E0E0;
         }
 
         .change-display {
@@ -1795,8 +1805,27 @@
         function addAmount(amount) {
             const input = document.getElementById('receivedAmount');
             const current = parseInt(input.value) || 0;
-            input.value = current + amount;
-            calculateChange();
+            const newValue = current + amount;
+            input.value = newValue;
+
+            // 直接計算找零，避免重複計算小計和折扣
+            const receivedInput = document.getElementById('receivedAmount');
+            const changeDisplay = document.getElementById('changeDisplay');
+            const received = parseInt(receivedInput.value) || 0;
+
+            // 從全域變數或計算總額
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const { totalDiscount } = calculateDiscounts();
+            const total = subtotal - totalDiscount;
+
+            const change = received - total;
+            if (change >= 0) {
+                changeDisplay.textContent = `找零：$${change}`;
+                changeDisplay.style.background = '#00B894';
+            } else {
+                changeDisplay.textContent = `金額不足：差 $${Math.abs(change)}`;
+                changeDisplay.style.background = '#D63031';
+            }
         }
 
         // 收全額
@@ -1808,14 +1837,28 @@
 
             // 四捨五入到整數
             const fullAmount = Math.round(total);
-            document.getElementById('receivedAmount').value = fullAmount;
-            calculateChange();
+            const input = document.getElementById('receivedAmount');
+            input.value = fullAmount;
+
+            // 立即更新找零顯示
+            const changeDisplay = document.getElementById('changeDisplay');
+            changeDisplay.textContent = '找零：$0';
+            changeDisplay.style.background = '#00B894';
         }
 
         // 清除金額（歸零）
         function clearAmount() {
-            document.getElementById('receivedAmount').value = '';
-            calculateChange();
+            const input = document.getElementById('receivedAmount');
+            input.value = '';
+
+            // 立即重置找零顯示
+            const changeDisplay = document.getElementById('changeDisplay');
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const { totalDiscount } = calculateDiscounts();
+            const total = subtotal - totalDiscount;
+
+            changeDisplay.textContent = `金額不足：差 $${total}`;
+            changeDisplay.style.background = '#D63031';
         }
 
         // 驗證數字輸入
@@ -2504,6 +2547,63 @@
         // 防止手勢縮放
         document.addEventListener('gesturestart', function(event) {
             event.preventDefault();
+        });
+
+        // 優化快速金額按鈕的觸控響應
+        document.addEventListener('DOMContentLoaded', () => {
+            const quickAmountBtns = document.querySelectorAll('.quick-amount-btn');
+
+            quickAmountBtns.forEach(btn => {
+                // 使用 touchstart 事件來消除 300ms 延遲
+                btn.addEventListener('touchstart', function(e) {
+                    e.preventDefault(); // 防止觸發後續的 click 事件
+
+                    // 添加按下視覺效果
+                    this.classList.add('pressed');
+
+                    // 使用 vibration API 提供觸覺回饋（如果支援）
+                    if (navigator.vibrate) {
+                        navigator.vibrate(10); // 輕微震動 10ms
+                    }
+
+                    // 取得 onclick 屬性中的函數名稱和參數
+                    const onclickValue = this.getAttribute('onclick');
+                    if (onclickValue) {
+                        // 解析並執行函數
+                        // 例如：addAmount(100) -> 執行 addAmount(100)
+                        const match = onclickValue.match(/(\w+)\(([^)]*)\)/);
+                        if (match) {
+                            const funcName = match[1];
+                            const args = match[2] ? match[2].split(',').map(arg => {
+                                arg = arg.trim();
+                                // 移除引號（字串參數）
+                                if ((arg.startsWith("'") && arg.endsWith("'")) ||
+                                    (arg.startsWith('"') && arg.endsWith('"'))) {
+                                    return arg.slice(1, -1);
+                                }
+                                // 數字參數
+                                return isNaN(arg) ? arg : parseInt(arg);
+                            }) : [];
+
+                            // 執行對應的函數
+                            if (typeof window[funcName] === 'function') {
+                                window[funcName](...args);
+                            }
+                        }
+                    }
+                }, { passive: false });
+
+                // 移除按下狀態
+                btn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('pressed');
+                }, { passive: false });
+
+                // 如果觸控取消，也要移除按下狀態
+                btn.addEventListener('touchcancel', function(e) {
+                    this.classList.remove('pressed');
+                });
+            });
         });
 
         // 監聽輸入變化以更新預覽
