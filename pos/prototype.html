@@ -567,9 +567,16 @@
             font-size: 14px;
         }
 
+        .top-item-discount {
+            color: #D63031;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
         .top-item-revenue {
             font-weight: 600;
             color: #FF6B35;
+            text-align: right;
         }
 
         .back-btn {
@@ -1042,8 +1049,12 @@
                     <div class="stat-value" id="todayOrders">0</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">平均客單價</div>
-                    <div class="stat-value" id="todayAvg">$0</div>
+                    <div class="stat-label">今日總折扣</div>
+                    <div class="stat-value" id="todayDiscount" style="color: #D63031;">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">今日利潤</div>
+                    <div class="stat-value" id="todayProfit" style="color: #00B894;">$0</div>
                 </div>
             </div>
 
@@ -1137,6 +1148,14 @@
                 <ul class="top-items-list" id="topItemsList">
                     <li style="text-align: center; padding: 20px; color: #636E72;">今日尚無銷售記錄</li>
                 </ul>
+            </div>
+
+            <!-- 折扣明細 -->
+            <div class="chart-container">
+                <div class="chart-title">折扣明細</div>
+                <div class="discount-details" id="discountDetails">
+                    <div style="text-align: center; padding: 20px; color: #636E72;">今日尚無折扣記錄</div>
+                </div>
             </div>
         </div>
 
@@ -1382,7 +1401,8 @@
         // 當日銷售統計
         let dailyStats = {
             date: new Date().toISOString().split('T')[0],
-            totalRevenue: 0,
+            totalRevenue: 0,         // 原價營業額（未折扣）
+            totalDiscount: 0,        // 總折扣金額
             orderCount: 0,
             orders: [],
             hourlyData: {
@@ -1787,6 +1807,7 @@
                 dailyStats = {
                     date: dateStr,
                     totalRevenue: 0,
+                    totalDiscount: 0,
                     orderCount: 0,
                     orders: [],
                     hourlyData: {
@@ -1804,29 +1825,41 @@
                 };
             }
 
-            // 更新統計（使用折扣後的金額）
-            dailyStats.totalRevenue += total;
+            // 更新統計（totalRevenue 記錄原價，totalDiscount 記錄折扣）
+            dailyStats.totalRevenue += subtotal;
+            dailyStats.totalDiscount += totalDiscount;
             dailyStats.orderCount++;
 
-            // 更新時段資料
+            // 更新時段資料（使用原價）
             if (dailyStats.hourlyData.hasOwnProperty(hour)) {
-                dailyStats.hourlyData[hour] += total;
+                dailyStats.hourlyData[hour] += subtotal;
             }
 
             // 更新商品銷售統計和分類統計
             cart.forEach(item => {
                 const itemTotal = item.price * item.quantity;
 
+                // 計算該品項的折扣金額
+                let itemDiscount = 0;
+                discountRules.forEach(rule => {
+                    if (rule.type === 'item' && rule.itemId === item.id) {
+                        const times = Math.floor(item.quantity / rule.quantity);
+                        itemDiscount += times * rule.discountAmount;
+                    }
+                });
+
                 // 商品統計
                 if (!dailyStats.itemSales[item.id]) {
                     dailyStats.itemSales[item.id] = {
                         name: item.name,
                         quantity: 0,
-                        revenue: 0
+                        revenue: 0,
+                        discount: 0
                     };
                 }
                 dailyStats.itemSales[item.id].quantity += item.quantity;
                 dailyStats.itemSales[item.id].revenue += itemTotal;
+                dailyStats.itemSales[item.id].discount += itemDiscount;
 
                 // 分類統計
                 if (dailyStats.categorySales.hasOwnProperty(item.category)) {
@@ -1839,6 +1872,8 @@
                 orderNumber: document.getElementById('orderNumber').textContent,
                 time: now.toTimeString().slice(0, 8),
                 items: cart.map(i => ({ name: i.name, quantity: i.quantity, price: i.price })),
+                subtotal: subtotal,
+                discount: totalDiscount,
                 total: total
             });
 
@@ -1857,6 +1892,7 @@
         // 顯示報表頁面
         function showReports() {
             document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('settingsPage').classList.remove('active');
             document.getElementById('reportsPage').classList.add('active');
             // 預設顯示日報表
             updateDailyReport();
@@ -1891,11 +1927,11 @@
             // 統計卡片
             document.getElementById('todayRevenue').textContent = `$${dailyStats.totalRevenue.toLocaleString()}`;
             document.getElementById('todayOrders').textContent = dailyStats.orderCount;
+            document.getElementById('todayDiscount').textContent = `-$${dailyStats.totalDiscount.toLocaleString()}`;
 
-            const avgTicket = dailyStats.orderCount > 0
-                ? Math.round(dailyStats.totalRevenue / dailyStats.orderCount)
-                : 0;
-            document.getElementById('todayAvg').textContent = `$${avgTicket}`;
+            // 今日利潤 = 原價營業額 - 總折扣
+            const profit = dailyStats.totalRevenue - dailyStats.totalDiscount;
+            document.getElementById('todayProfit').textContent = `$${profit.toLocaleString()}`;
 
             // 分類銷售占比
             const totalCategoryRevenue = Object.values(dailyStats.categorySales).reduce((sum, val) => sum + val, 0) || 1;
@@ -1960,16 +1996,130 @@
                 sortedItems.forEach((item, index) => {
                     const li = document.createElement('li');
                     li.className = 'top-item';
+
                     li.innerHTML = `
                         <div class="top-item-rank">${index + 1}</div>
                         <div class="top-item-info">
                             <div class="top-item-name">${item.name}</div>
                             <div class="top-item-qty">${item.quantity} 份</div>
                         </div>
-                        <div class="top-item-revenue">$${item.revenue.toLocaleString()}</div>
+                        <div class="top-item-revenue">
+                            <div style="font-size: 16px; font-weight: 600; color: #2D3436;">$${item.revenue.toLocaleString()}</div>
+                        </div>
                     `;
                     topItemsListEl.appendChild(li);
                 });
+            }
+
+            // 折扣明細
+            updateDiscountDetails();
+        }
+
+        // 更新折扣明細
+        function updateDiscountDetails() {
+            const discountDetailsEl = document.getElementById('discountDetails');
+            discountDetailsEl.innerHTML = '';
+
+            if (dailyStats.totalDiscount === 0) {
+                discountDetailsEl.innerHTML = '<div style="text-align: center; padding: 20px; color: #636E72;">今日尚無折扣記錄</div>';
+                return;
+            }
+
+            // 統計每個折扣規則的使用情況
+            const discountUsage = {};
+
+            dailyStats.orders.forEach(order => {
+                if (order.discount > 0) {
+                    // 分析這筆訂單使用了哪些折扣
+                    // 暫時簡化處理：直接顯示總折扣
+                    const key = '總折扣';
+                    if (!discountUsage[key]) {
+                        discountUsage[key] = {
+                            count: 0,
+                            totalDiscount: 0
+                        };
+                    }
+                    discountUsage[key].count++;
+                    discountUsage[key].totalDiscount += order.discount;
+                }
+            });
+
+            // 根據實際的折扣規則統計
+            const ruleUsage = {};
+            discountRules.forEach(rule => {
+                ruleUsage[rule.id] = {
+                    name: '',
+                    count: 0,
+                    totalDiscount: 0
+                };
+
+                if (rule.type === 'item') {
+                    ruleUsage[rule.id].name = `${rule.itemName} 買${rule.quantity}串折$${rule.discountAmount}`;
+
+                    // 計算該規則使用次數
+                    dailyStats.orders.forEach(order => {
+                        const item = order.items.find(i => i.name === rule.itemName);
+                        if (item) {
+                            const times = Math.floor(item.quantity / rule.quantity);
+                            if (times > 0) {
+                                ruleUsage[rule.id].count += times;
+                                ruleUsage[rule.id].totalDiscount += times * rule.discountAmount;
+                            }
+                        }
+                    });
+                } else if (rule.type === 'category') {
+                    ruleUsage[rule.id].name = `${categoryNames[rule.categoryId]} 買${rule.quantity}串折$${rule.discountAmount}`;
+
+                    // 計算該分類規則使用次數（簡化處理）
+                    let categoryQty = 0;
+                    dailyStats.orders.forEach(order => {
+                        order.items.forEach(item => {
+                            const menuItem = menuItems.find(m => m.name === item.name);
+                            if (menuItem && menuItem.category === rule.categoryId) {
+                                categoryQty += item.quantity;
+                            }
+                        });
+                    });
+                    const times = Math.floor(categoryQty / rule.quantity);
+                    ruleUsage[rule.id].count = times;
+                    ruleUsage[rule.id].totalDiscount = times * rule.discountAmount;
+                } else if (rule.type === 'total') {
+                    ruleUsage[rule.id].name = `全館 買${rule.quantity}串折$${rule.discountAmount}`;
+
+                    // 計算總數量規則使用次數
+                    let totalQty = 0;
+                    dailyStats.orders.forEach(order => {
+                        order.items.forEach(item => {
+                            totalQty += item.quantity;
+                        });
+                    });
+                    const times = Math.floor(totalQty / rule.quantity);
+                    ruleUsage[rule.id].count = times;
+                    ruleUsage[rule.id].totalDiscount = times * rule.discountAmount;
+                }
+            });
+
+            // 顯示折扣明細
+            let hasDiscount = false;
+            Object.values(ruleUsage).forEach(usage => {
+                if (usage.count > 0) {
+                    hasDiscount = true;
+                    const detailDiv = document.createElement('div');
+                    detailDiv.className = 'discount-detail-item';
+                    detailDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #FFF3CD; border-radius: 6px; margin-bottom: 8px;';
+                    detailDiv.innerHTML = `
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: #2D3436; margin-bottom: 4px;">${usage.name}</div>
+                            <div style="font-size: 13px; color: #636E72;">套用 ${usage.count} 次</div>
+                        </div>
+                        <div style="font-size: 18px; font-weight: 700; color: #D63031;">-$${usage.totalDiscount.toLocaleString()}</div>
+                    `;
+                    discountDetailsEl.appendChild(detailDiv);
+                }
+            });
+
+            if (!hasDiscount) {
+                discountDetailsEl.innerHTML = '<div style="text-align: center; padding: 20px; color: #636E72;">今日尚無折扣記錄</div>';
             }
         }
 
@@ -2043,6 +2193,7 @@
         function hideReports() {
             document.getElementById('mainPage').style.display = 'block';
             document.getElementById('reportsPage').classList.remove('active');
+            document.getElementById('settingsPage').classList.remove('active');
         }
 
         // 顯示設定頁面
@@ -2056,6 +2207,7 @@
         // 隱藏設定頁面
         function hideSettings() {
             document.getElementById('settingsPage').classList.remove('active');
+            document.getElementById('reportsPage').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
         }
 

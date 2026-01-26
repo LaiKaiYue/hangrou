@@ -160,10 +160,13 @@
 
 #### 4.2 銷售報表
 **日報表**：
-- 營業額總計
+- 原價營業額（未折扣）
+- 今日總折扣金額
+- 今日利潤（原價 - 折扣）
+- 訂單數統計
 - 各分類銷售占比
-- 熱銷商品 TOP 10
-- 客單價趨勢
+- 熱銷商品 TOP 10（顯示排名、品項、數量、營業額）
+- **折扣明細**：顯示每個折扣規則的使用次數和總折扣金額
 - 每小時營業額分析
 
 **週報表**：
@@ -488,8 +491,9 @@
       }
     }
   ],
-  subtotal: 260,
-  total: 260,
+  subtotal: 260,              // 原價小計
+  discount: 0,                // ✅ 新增：折扣金額
+  total: 260,                 // 實收金額（subtotal - discount）
   paymentMethod: "cash",
   receivedAmount: 1000,
   changeAmount: 740,
@@ -503,9 +507,9 @@
 ```javascript
 {
   date: "2026-01-26",
-  totalRevenue: 8560,
+  totalRevenue: 9000,        // 原價營業額（未折扣）
+  totalDiscount: 440,        // 總折扣金額
   orderCount: 42,
-  avgTicketSize: 204,
   paymentMethods: {
     "cash": 8560
   },
@@ -516,18 +520,38 @@
     "20": 1800,
     "21": 660
   },
-  categorySales: {
-    "category_beef": 3500,
-    "category_pork": 2100,
-    "category_chicken": 1800,
-    "category_vegetable": 1160
+  itemSales: {
+    "item_beef": {
+      name: "牛五花",
+      quantity: 25,
+      revenue: 3000,          // 原價營業額
+      discount: 150           // 該品項的折扣金額
+    }
   },
-  topItems: [
-    { itemId: "item_beef", name: "牛五花", quantity: 25, revenue: 3000 }
-  ],
+  categorySales: {
+    "beef": 3500,
+    "pork": 2100,
+    "chicken": 1800,
+    "vegetable": 1160
+  },
   createdAt: "2026-01-26T23:59:59Z"
 }
 ```
+
+**說明**：
+- `totalRevenue`：原價營業額（未折扣前的總額）
+- `totalDiscount`：當日所有折扣的總金額
+- 利潤計算：`totalRevenue - totalDiscount = 實收金額`
+- `itemSales`：每個品項包含原價營業額和折扣金額（用於後台計算）
+- `hourlyData`：記錄每小時的原價營業額
+
+**折扣明細顯示**：
+- 根據 `discountRules` 和訂單記錄計算每個折扣規則的使用次數
+- 顯示每個折扣規則的總折扣金額
+- 支援三種折扣類型明細：
+  - 單一品項折扣：顯示品項名稱
+  - 分類折扣：顯示分類名稱
+  - 總數量折扣：顯示「全館」
 
 ### IndexedDB 資料庫設計
 
@@ -966,13 +990,15 @@ const printKitchenTicket = async (order, printerIp) => {
 
 ---
 
-**文件版本**：v3.2
+**文件版本**：v3.4
 **建立日期**：2026-01-26
 **最後更新**：2026-01-26
 **維護者**：Claude Code Assistant
 **狀態**：Phase 1 規劃（Vue 3 Web 版本，已確定技術堆疊，原型開發中）
 
 **更新記錄**：
+- v3.4 (2026-01-26)：優化報表顯示，熱銷商品不顯示折扣金額，新增獨立折扣明細區域
+- v3.3 (2026-01-26)：優化報表統計，營業額改用原價計算，新增利潤顯示，熱銷商品顯示折扣金額
 - v3.2 (2026-01-26)：擴充折扣功能，支援跨品項折扣（單一品項、分類折扣、總數量折扣）
 - v3.1 (2026-01-26)：新增折扣優惠功能，買幾串折多少的���惠規則
 - v3.0 (2026-01-26)：移除方案選擇，確定使用 Vue 3，專注於 Web 版開發
