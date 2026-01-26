@@ -1262,11 +1262,13 @@
 
                     <div class="input-group">
                         <label class="input-label">實收金額</label>
-                        <input type="number" class="input-field" id="receivedAmount" placeholder="輸入金額" oninput="calculateChange()">
+                        <input type="number" class="input-field" id="receivedAmount" placeholder="輸入金額" oninput="validateNumberInput(this)" min="0" step="1" pattern="\d*">
                         <div class="quick-amount-buttons">
-                            <button class="quick-amount-btn" onclick="setAmount(100)">$100</button>
-                            <button class="quick-amount-btn" onclick="setAmount(500)">$500</button>
-                            <button class="quick-amount-btn" onclick="setAmount(1000)">$1000</button>
+                            <button class="quick-amount-btn" onclick="addAmount(100)">$100</button>
+                            <button class="quick-amount-btn" onclick="addAmount(500)">$500</button>
+                            <button class="quick-amount-btn" onclick="addAmount(1000)">$1000</button>
+                            <button class="quick-amount-btn" onclick="setFullAmount()" style="background: #FF6B35; color: white; border-color: #FF6B35;">💰 收全額</button>
+                            <button class="quick-amount-btn" onclick="clearAmount()" style="background: #D63031; color: white; border-color: #D63031;">🗑️ 歸零</button>
                         </div>
                     </div>
 
@@ -1755,9 +1757,44 @@
             document.getElementById('checkoutModal').classList.remove('active');
         }
 
-        // 設定快速金額
+        // 設定快速金額（直接設定）
         function setAmount(amount) {
             document.getElementById('receivedAmount').value = amount;
+            calculateChange();
+        }
+
+        // 累加金額（按鈕可累加）
+        function addAmount(amount) {
+            const input = document.getElementById('receivedAmount');
+            const current = parseInt(input.value) || 0;
+            input.value = current + amount;
+            calculateChange();
+        }
+
+        // 收全額
+        function setFullAmount() {
+            // 計算小計和折扣
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const { totalDiscount } = calculateDiscounts();
+            const total = subtotal - totalDiscount;
+
+            // 四捨五入到整數
+            const fullAmount = Math.round(total);
+            document.getElementById('receivedAmount').value = fullAmount;
+            calculateChange();
+        }
+
+        // 清除金額（歸零）
+        function clearAmount() {
+            document.getElementById('receivedAmount').value = '';
+            calculateChange();
+        }
+
+        // 驗證數字輸入
+        function validateNumberInput(input) {
+            // 移除非數字字元（允許空字串以便清除）
+            const value = input.value.replace(/[^\d]/g, '');
+            input.value = value;
             calculateChange();
         }
 
