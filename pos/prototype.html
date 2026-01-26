@@ -22,29 +22,18 @@
             user-select: text;
         }
 
+        html {
+            /* 防止整體頁面縮放 */
+            touch-action: pan-x pan-y;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
             background: #F8F9FA;
             color: #2D3436;
             overflow-x: hidden;
-            /* 防止 iOS Safari 彈性滾動 */
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            /* 禁止雙擊縮放 */
+            /* 防止雙擊縮放 */
             touch-action: pan-x pan-y;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        /* 主內容區允許滾動 */
-        .main-content,
-        .menu-section,
-        .cart-items,
-        .modal-body,
-        .reports-page,
-        .settings-page {
-            position: static;
-            overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
 
