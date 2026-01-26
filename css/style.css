@@ -85,6 +85,13 @@ body::before {
     transition: var(--transition);
 }
 
+/* ==================== Hero 區域 ==================== */
+.hero {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
 .navbar .container {
     display: flex;
     justify-content: space-between;
