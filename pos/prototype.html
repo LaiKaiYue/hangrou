@@ -128,12 +128,27 @@
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             cursor: pointer;
-            transition: all 0.2s;
+            /* 移除過渡動畫以提升觸控響應速度 */
+            transition: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .menu-item:hover {
             transform: translateY(-4px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .menu-item:active {
+            transform: scale(0.98);
+            background: #F8F9FA;
+        }
+
+        .menu-item.pressed {
+            transform: scale(0.98);
+            background: #F8F9FA;
         }
 
         .menu-item-image {
@@ -233,10 +248,26 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            /* 移除過渡動畫以提升觸控響應速度 */
+            transition: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .quantity-btn:hover {
             background: #FF8C42;
+        }
+
+        .quantity-btn:active {
+            transform: scale(0.95);
+            background: #E65A2B;
+        }
+
+        .quantity-btn.pressed {
+            transform: scale(0.95);
+            background: #E65A2B;
         }
 
         .quantity-display {
@@ -253,6 +284,22 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
+            /* 移除過渡動畫以提升觸控響應速度 */
+            transition: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .delete-btn:active {
+            transform: scale(0.95);
+            background: #B02929;
+        }
+
+        .delete-btn.pressed {
+            transform: scale(0.95);
+            background: #B02929;
         }
 
         .cart-footer {
@@ -1526,7 +1573,34 @@
                         <div class="menu-item-price">$${item.price}</div>
                     </div>
                 `;
-                menuItem.onclick = () => addToCart(item);
+
+                // 優化觸控響應 - 使用 touchstart 事件
+                menuItem.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.classList.add('pressed');
+
+                    // 觸覺回饋
+                    if (navigator.vibrate) {
+                        navigator.vibrate(10);
+                    }
+
+                    // 立即執行 addToCart
+                    addToCart(item);
+
+                    // 短暫延遲後移除按下狀態
+                    setTimeout(() => {
+                        this.classList.remove('pressed');
+                    }, 100);
+                }, { passive: false });
+
+                // 保留 click 作為備用（非觸控設備）
+                menuItem.onclick = (e) => {
+                    // 如果已經被 touchstart 處理過，則不重複執行
+                    if (!e.defaultPrevented) {
+                        addToCart(item);
+                    }
+                };
+
                 menuGrid.appendChild(menuItem);
             });
         }
@@ -1552,7 +1626,15 @@
             } else {
                 cart.push({ ...item, quantity: 1 });
             }
-            updateCart();
+
+            // 使用 requestAnimationFrame 優化 DOM 更新
+            if (!window.cartUpdatePending) {
+                window.cartUpdatePending = true;
+                requestAnimationFrame(() => {
+                    updateCart();
+                    window.cartUpdatePending = false;
+                });
+            }
         }
 
         // 計算折扣總額
@@ -2549,8 +2631,9 @@
             event.preventDefault();
         });
 
-        // 優化快速金額按鈕的觸控響應
+        // 優化所有觸控按鈕的響應
         document.addEventListener('DOMContentLoaded', () => {
+            // 優化快速金額按鈕
             const quickAmountBtns = document.querySelectorAll('.quick-amount-btn');
 
             quickAmountBtns.forEach(btn => {
@@ -2603,6 +2686,98 @@
                 btn.addEventListener('touchcancel', function(e) {
                     this.classList.remove('pressed');
                 });
+            });
+
+            // 使用事件委派來優化購物車按鈕
+            const cartItemsContainer = document.getElementById('cartItems');
+
+            cartItemsContainer.addEventListener('touchstart', function(e) {
+                const quantityBtn = e.target.closest('.quantity-btn');
+                const deleteBtn = e.target.closest('.delete-btn');
+
+                if (quantityBtn) {
+                    e.preventDefault();
+                    quantityBtn.classList.add('pressed');
+
+                    // 觸覺回饋
+                    if (navigator.vibrate) {
+                        navigator.vibrate(10);
+                    }
+
+                    // 取得 onclick 中的函數和參數
+                    const onclickValue = quantityBtn.getAttribute('onclick');
+                    if (onclickValue) {
+                        const match = onclickValue.match(/(\w+)\(([^)]*)\)/);
+                        if (match) {
+                            const funcName = match[1];
+                            const args = match[2] ? match[2].split(',').map(arg => {
+                                arg = arg.trim();
+                                if ((arg.startsWith("'") && arg.endsWith("'")) ||
+                                    (arg.startsWith('"') && arg.endsWith('"'))) {
+                                    return arg.slice(1, -1);
+                                }
+                                return isNaN(arg) ? arg : parseInt(arg);
+                            }) : [];
+
+                            if (typeof window[funcName] === 'function') {
+                                window[funcName](...args);
+                            }
+                        }
+                    }
+                } else if (deleteBtn) {
+                    e.preventDefault();
+                    deleteBtn.classList.add('pressed');
+
+                    // 觸覺回饋
+                    if (navigator.vibrate) {
+                        navigator.vibrate(10);
+                    }
+
+                    // 取得 onclick 中的函數和參數
+                    const onclickValue = deleteBtn.getAttribute('onclick');
+                    if (onclickValue) {
+                        const match = onclickValue.match(/(\w+)\(([^)]*)\)/);
+                        if (match) {
+                            const funcName = match[1];
+                            const args = match[2] ? match[2].split(',').map(arg => {
+                                arg = arg.trim();
+                                if ((arg.startsWith("'") && arg.endsWith("'")) ||
+                                    (arg.startsWith('"') && arg.endsWith('"'))) {
+                                    return arg.slice(1, -1);
+                                }
+                                return isNaN(arg) ? arg : parseInt(arg);
+                            }) : [];
+
+                            if (typeof window[funcName] === 'function') {
+                                window[funcName](...args);
+                            }
+                        }
+                    }
+                }
+            }, { passive: false });
+
+            cartItemsContainer.addEventListener('touchend', function(e) {
+                const quantityBtn = e.target.closest('.quantity-btn');
+                const deleteBtn = e.target.closest('.delete-btn');
+
+                if (quantityBtn) {
+                    e.preventDefault();
+                    quantityBtn.classList.remove('pressed');
+                } else if (deleteBtn) {
+                    e.preventDefault();
+                    deleteBtn.classList.remove('pressed');
+                }
+            }, { passive: false });
+
+            cartItemsContainer.addEventListener('touchcancel', function(e) {
+                const quantityBtn = e.target.closest('.quantity-btn');
+                const deleteBtn = e.target.closest('.delete-btn');
+
+                if (quantityBtn) {
+                    quantityBtn.classList.remove('pressed');
+                } else if (deleteBtn) {
+                    deleteBtn.classList.remove('pressed');
+                }
             });
         });
 
