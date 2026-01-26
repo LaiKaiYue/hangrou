@@ -3,9 +3,15 @@
 ## 專案概述
 
 **專案名稱**：夯肉 HANGROU
-**專案類型**：日式炭火燒烤餐車服務網站
-**技術堆疊**：純 HTML/CSS/JavaScript（靜態網站）
-**部署平台**：支援 GitHub Pages、Cloudflare Pages 等靜態託管
+**專案類型**：多專案儲存庫（Monorepo）
+- 🌐 靜態行銷網站（已完成，營運中）
+- 📱 iPad POS 點餐系統（原型開發中）
+
+**重要規範**：
+- ✅ **所有檔案、註解、變數命名必須使用繁體中文**
+- ✅ **使用者介面文字必須使用繁體中文（台灣）**
+- ✅ **文件說明必須使用繁體中文**
+- ✅ **程式碼註解必須使用繁體中文**
 
 ## 業務資訊
 
@@ -26,27 +32,101 @@
 
 ```
 hangrou/
-├── index.html              # 主頁面（包含所有內容）
-├── css/
-│   └── style.css          # 完整樣式表（含暗黑模���）
-├── js/
-│   └── main.js            # 互動邏輯
-├── images/
-│   ├── about/             # 關於我們圖片
-│   └── ...                # 其他圖片資源
-├── .htaccess              # Apache 設定
-├── robots.txt             # 搜尋引擎爬蟲規則
-├── sitemap.xml            # 網站地圖
-├── deploy.sh              # 部署腳本
-├── README.md              # 專案說明文件
-├── BBQKING-STYLE-GUIDE.md # 設計風格指南
-├── DEPLOYMENT-GUIDE.md    # 部署指南
-├── SEO-CHECKLIST.md       # SEO 檢查清單
-├── IMAGES-GUIDE.md        # 圖片使用指南
-└── CLAUDE.md              # 本檔案（AI 助手指南）
+├── 📱 pos/                          # iPad POS 點餐系統
+│   ├── docs/                        # POS 專案文件
+│   │   ├── POS-PLANNER.md           # 開發規劃
+│   │   └── VUE3-QUICKSTART.md        # Vue 3 快速開始
+│   ├── prototype.html               # 可操作原型（已完成）
+│   ├── src/                         # POS 原始碼（待建立）
+│   └── package.json                 # NPM 設定（待建立）
+│
+├── 🌐 website/                     # 靜態行銷網站
+│   ├── index.html                  # 主頁面
+│   ├── css/                        # 樣式檔案
+│   │   └── style.css
+│   ├── js/                         # JavaScript
+│   │   └── main.js
+│   ├── images/                     # 圖片資源
+│   │   ├── about/
+│   │   ├── hero/
+│   │   ├── menu/
+│   │   └── activity/
+│   ├── .htaccess                   # Apache 設定
+│   ├── robots.txt                  # 搜尋引擎爬蟲規則
+│   ├── sitemap.xml                 # 網站地圖
+│   ├── deploy.sh                   # 部署腳本
+│   └── README.md                   # 網站說明
+│
+├── 📚 docs/                        # 共用文件
+│   ├── DEPLOYMENT-GUIDE.md         # 部署指南
+│   ├── SEO-CHECKLIST.md            # SEO 檢查清單
+│   ├── IMAGES-GUIDE.md             # 圖片使用指南
+│   ├── BBQKING-STYLE-GUIDE.md      # 設計風格指南
+│   └── GITHUB-PAGES-DEPLOYMENT.md  # GitHub Pages 部署
+│
+├── .git/                           # Git 版本控制
+├── .gitignore
+├── CLAUDE.md                       # AI 助手專案指南（本檔案）
+└── README.md                       # 專案總覽
 ```
 
-## 設計系統
+## 子系統說明
+
+### 🌐 靜態行銷網站（website/）
+
+**技術堆疊**：純 HTML/CSS/JavaScript
+**部署平台**：GitHub Pages、Cloudflare Pages 等靜態託管
+**狀態**：✅ 已完成，營運中
+**網址**：https://hangrou.com.tw
+
+**功能特色**：
+- 響應式設計（手機/平板/桌機）
+- 暗黑模式切換
+- Hero 輪播圖（5秒自動切換）
+- 精選菜單分類展示
+- SEO 優化（完整 Meta、Open Graph、JSON-LD）
+
+詳細說明請參考：[website/README.md](website/README.md)
+
+### 📱 iPad POS 點餐系統（pos/）
+
+**技術堆疊**：Vue 3 + TypeScript + Vant 4
+**平台**：iPad 9 (Safari 瀏覽器)
+**資料庫**：IndexedDB（本地）
+**列印**：ESC/POS 協定（網路列印機）
+**狀態**：🎨 原型開發中（可操作原型已完成）
+
+**當前進度**：
+- ✅ 可操作原型（`pos/prototype.html`）
+- ✅ 點餐系統（網格化選單、即時購物車）
+- ✅ 結帳系統（現金付款、找零計算）
+- ✅ 銷售統計（日/週/月報表、即時統計）
+- ⏳ Vue 3 專案建置（待開發）
+- ⏳ IndexedDB 資料庫整合（待開發）
+- ⏳ 列印機整合（待開發）
+
+**原型功能**：
+- 📍 主畫面：分類切換、選單展示、購物車管理
+- 💳 結帳流程：訂單確認、現金付款、找零計算
+- 📊 銷售報表：日/週/月報表、分類統計、時段分析、熱銷 TOP 10
+- 📈 即時統計：營業額、訂單數、平均客單價、分類占比
+
+**快速測試原型**：
+```bash
+# 方法 1：直接用瀏覽器打開
+open /Users/laikaiyue/Documents/Project/hangrou/pos/prototype.html
+
+# 方法 2：使用本地伺服器
+cd /Users/laikaiyue/Documents/Project/hangrou/pos
+python -m http.server 8000
+# 訪問 http://localhost:8000/prototype.html
+```
+
+詳細說明請參考：
+- [pos/docs/POS-PLANNER.md](pos/docs/POS-PLANNER.md) - 完整開發規劃
+- [pos/docs/VUE3-QUICKSTART.md](pos/docs/VUE3-QUICKSTART.md) - Vue 3 快速開始
+
+## 網站設計系統
 
 ### 配色方案
 ```css
@@ -76,7 +156,7 @@ hangrou/
 - **平板版**：768px - 968px
 - **手機版**：< 768px
 
-## 核心功能
+## 網站核心功能
 
 ### 1. 導航列
 - 固定頂部導航（position: fixed）
@@ -121,31 +201,118 @@ hangrou/
   - 當地人氣
   - 營業時間
 
-### 7. 聯���我們
+### 7. 聯絡我們
 - 營業資訊（地點、時間、電話）
 - 快速聯絡卡片
 - 不包含表單提交功能（靜態展示）
 
-## JavaScript 功能
+## 本地開發
 
-### 主題切換
-- localStorage 儲存使用者偏好
-- 支援系統主題自動檢測（prefers-color-scheme）
-- 切換時更新導航列背景色
+### 靜態網站開發
 
-### 動畫效果
-- IntersectionObserver 實現滾動動畫
-- 卡片元素依次浮現（opacity + translateY）
-- 頁面載入淡入效果
+```bash
+# 進入網站目錄
+cd website
 
-### 輪播圖
-- 自動播放（5秒間隔）
-- 點擊圓點手動切換
-- 滑鼠懸停暫停
+# 啟動本地伺服器
+python -m http.server 8000
+# 或
+npx http-server
 
-### 手機版選單
-- 漢堡圖示動畫（X 形變）
-- 點擊選單項後自動關閉
+# 訪問 http://localhost:8000
+```
+
+### POS 系統開發
+
+```bash
+# 進入 POS 目錄（需要先初始化專案）
+cd pos
+
+# 安裝依賴
+npm install
+
+# 啟動開發伺服器
+npm run dev
+```
+
+詳細說明請參考：[pos/docs/VUE3-QUICKSTART.md](pos/docs/VUE3-QUICKSTART.md)
+
+### 測試暗黑模式
+1. 點擊右上角主題切換按鈕
+2. 或檢查開發者工具 → 渲染 → 模擬媒體特徵 → prefers-color-scheme: dark
+
+### 測試響應式
+1. 開啟瀏覽器開發者工具（F12）
+2. 點擊裝置工具列圖示（Ctrl+Shift+M / Cmd+Shift+M）
+3. 選擇不同裝置預設
+
+## 網站常用維護操作
+
+### 更新菜單價格
+在 `website/index.html` 中搜尋對應的菜品名稱，修改 `.menu-price` 內容：
+```html
+<p class="menu-price">NT$ 50</p>
+```
+
+### 新增菜品
+複製現有的 `.menu-item` 結構，修改圖片、名稱、描述和價格：
+```html
+<div class="menu-item">
+    <div class="menu-image">
+        <img src="images/menu/your-image.jpg" alt="菜品名稱" loading="lazy">
+    </div>
+    <div class="menu-info">
+        <h3>菜品名稱</h3>
+        <p class="menu-desc">菜品描述</p>
+        <p class="menu-price">NT$ 價格</p>
+    </div>
+</div>
+```
+
+### 更換主題顏色
+在 `website/css/style.css` 的 `:root` 中修改 CSS 變數：
+```css
+:root {
+    --primary-color: #FF6B35;
+    --secondary-color: #FF8C42;
+}
+```
+
+### 新增實際圖片
+1. 將圖片放入 `website/images/` 對應子目錄
+2. 在 HTML 中引用：`<img src="images/your-image.jpg" alt="描述" loading="lazy">`
+3. 建議圖片尺寸：
+   - 菜品圖片：600x400px
+   - 活動照片：600x600px（方形）
+   - Hero 背景：1920x1080px
+
+### 修改聯絡資訊
+需在多處更新：
+1. `website/index.html` 頁尾區域
+2. `website/index.html` 聯絡我們區域
+3. `website/index.html` JSON-LD 結構化資料
+4. `README.md` 文件
+
+## 部署
+
+### 靜態網站部署
+
+#### GitHub Pages
+```bash
+cd website
+./deploy.sh
+```
+
+#### Cloudflare Pages
+1. 連接 GitHub 儲存庫
+2. 設定輸出目錄：`website`
+3. 自動部署
+
+#### 靜態託管服務
+上傳 `website/` 目錄到任何靜態託管服務
+
+### POS 系統部署（未來）
+參考：[docs/DEPLOYMENT-GUIDE.md](docs/DEPLOYMENT-GUIDE.md)
 
 ## SEO 優化
 
@@ -167,53 +334,6 @@ hangrou/
 - **OG 圖片路徑**：/images/og-image.jpg（需新增）
 - **Twitter Card 圖片**：/images/twitter-card.jpg（需新增）
 
-## 常用任務
-
-### 更新菜單價格
-在 `index.html` 中搜尋對應的菜品名稱，修改 `.menu-price` 內容：
-```html
-<p class="menu-price">NT$ 50</p>
-```
-
-### 新增菜品
-複製現有的 `.menu-item` 結構，修改圖片、名稱、描述和價格：
-```html
-<div class="menu-item">
-    <div class="menu-image">
-        <img src="圖片路徑" alt="菜品名稱" loading="lazy">
-    </div>
-    <div class="menu-info">
-        <h3>菜品名稱</h3>
-        <p class="menu-desc">菜品描述</p>
-        <p class="menu-price">NT$ 價格</p>
-    </div>
-</div>
-```
-
-### 更換主題顏色
-在 `css/style.css` 的 `:root` 中修改 CSS 變數：
-```css
-:root {
-    --primary-color: #FF6B35;
-    --secondary-color: #FF8C42;
-}
-```
-
-### 新增實際圖片
-1. 將圖片放入 `images/` 目錄
-2. 在 HTML 中引用：`<img src="images/your-image.jpg" alt="描述">`
-3. 建議圖片尺寸：
-   - 菜品圖片：600x400px
-   - 活動照片：600x600px（方形）
-   - Hero 背景：1920x1080px
-
-### 修改聯絡資訊
-需在多處更新：
-1. `index.html` 頁尾區域
-2. `index.html` 聯絡我們區域
-3. JSON-LD 結構化資料（第 41-42 行）
-4. README.md 文件
-
 ## 開發注意事項
 
 ### 圖片優化
@@ -224,7 +344,7 @@ hangrou/
 ### 效能優化
 - Google Fonts 使用 `preconnect` 預先連線
 - CSS 動畫使用 `transform` 和 `opacity`（GPU 加速）
-- 避免_layout shift_（CLS）
+- 避免layout shift（CLS）
 
 ### 瀏覽器相容性
 - 使用 CSS 變數（IE 不支援）
@@ -235,53 +355,6 @@ hangrou/
 - 手機版選單寬度 100%
 - 卡片網格使用 `repeat(auto-fit, minmax(...))` 自動適應
 - 字體大小使用相對單位（rem）
-
-## 本地開發
-
-### 啟動本地伺服器
-```bash
-# Python 3
-python -m http.server 8000
-
-# Python 2
-python -m SimpleHTTPServer 8000
-
-# Node.js
-npx http-server
-```
-
-訪問：http://localhost:8000
-
-### 測試暗黑模式
-1. 點擊右上角主題切換按鈕
-2. 或檢查開發者工具 → 渲染 → 模擬媒體特徵 → prefers-color-scheme: dark
-
-### 測試響應式
-1. 開啟瀏覽器開發者工具（F12）
-2. 點擊裝置工具列圖示（Ctrl+Shift+M / Cmd+Shift+M）
-3. 選擇不同裝置預設
-
-## 部署
-
-### GitHub Pages
-```bash
-./deploy.sh
-```
-
-### Cloudflare Pages
-透過 Cloudflare Dashboard 連接 GitHub 儲存庫自動部署
-
-### 靜態伺服器
-上傳整個專案資料夾到任何靜態託管服務
-
-## 相關文件
-
-- `README.md` - 專案基本說明
-- `BBQKING-STYLE-GUIDE.md` - 設計風格詳細指南
-- `DEPLOYMENT-GUIDE.md` - 完整部署指南
-- `SEO-CHECKLIST.md` - SEO 優化檢查清單
-- `IMAGES-GUIDE.md` - 圖片使用和優化指南
-- `GITHUB-PAGES-DEPLOYMENT.md` - GitHub Pages 部署教學
 
 ## 程式碼風格約定
 
@@ -301,6 +374,12 @@ npx http-server
 - 箭頭函式
 - 事件委託優化效能
 - 清晰的註解分塊
+
+### Vue 3 + TypeScript（POS 系統）
+- 使用 Composition API
+- 型別嚴格模式
+- Pinia 狀態管理
+- 單一檔案組件（SFC）
 
 ## 維護建議
 
@@ -336,18 +415,53 @@ npx http-server
 - 檢查 CSS 變數是否正確定義
 
 **問題**：圖片顯示不正常
-- 檢查圖片路徑是否正確
-- 確認圖片檔案已上傳
+- 檢查圖片路徑是否正確（注意相對路徑）
+- 確認圖片檔案已上傳至 `website/images/`
 
 **問題**：手機版選單無法開啟
 - 檢查漢堡按鈕和選單的 ID 是否符合
 - 檢查 CSS 媒體查詢是否生效
 
-## 聯絡方式
+## 相關文件
 
-如有問題或需要協助，請查看專案根目錄的相關文件或提交 Issue。
+### 專案總覽
+- [README.md](README.md) - 專案整體說明
+
+### 網站相關
+- [website/README.md](website/README.md) - 網站詳細說明
+- [docs/DEPLOYMENT-GUIDE.md](docs/DEPLOYMENT-GUIDE.md) - 部署指南
+- [docs/SEO-CHECKLIST.md](docs/SEO-CHECKLIST.md) - SEO 檢查清單
+- [docs/IMAGES-GUIDE.md](docs/IMAGES-GUIDE.md) - 圖片使用指南
+- [docs/BBQKING-STYLE-GUIDE.md](docs/BBQKING-STYLE-GUIDE.md) - 設計風格指南
+- [docs/GITHUB-PAGES-DEPLOYMENT.md](docs/GITHUB-PAGES-DEPLOYMENT.md) - GitHub Pages 部署
+
+### POS 系統相關
+- [pos/docs/POS-PLANNER.md](pos/docs/POS-PLANNER.md) - POS 開發規劃
+- [pos/docs/VUE3-QUICKSTART.md](pos/docs/VUE3-QUICKSTART.md) - Vue 3 快速開始
+
+## 發展階段
+
+### Phase 1：靜態網站 ✅
+- 品牌展示網站
+- SEO 優化
+- 響應式設計
+- 部署上線
+
+### Phase 2：iPad POS 系統 🚧
+- 點餐功能
+- 結帳功能
+- 出單系統
+- 銷售統計
+- 預計 10-12 週開發
+
+### Phase 3：功能擴展 📋
+- 會員系統
+- 掃碼點餐
+- 外送整合
+- 行銷推播
 
 ---
 
 **最後更新**：2026-01-26
 **維護者**：Claude Code Assistant
+**專案狀態**：多專案管理（網站已營運，POS 規劃中）

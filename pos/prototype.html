@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>夯肉 HANGROU - POS 點餐系統原型</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+            background: #F8F9FA;
+            color: #2D3436;
+            overflow-x: hidden;
+        }
+
+        /* 頂部導航 */
+        .header {
+            background: #FF6B35;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* 分類標籤 */
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 12px 20px;
+            background: white;
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 1px solid #DFE6E9;
+        }
+
+        .category-tab {
+            padding: 8px 20px;
+            background: #F8F9FA;
+            border: 2px solid #F8F9FA;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        .category-tab.active {
+            background: #FF6B35;
+            color: white;
+            border-color: #FF6B35;
+        }
+
+        /* 主內容區 */
+        .main-content {
+            display: flex;
+            height: calc(100vh - 140px);
+        }
+
+        /* 選單區域 */
+        .menu-section {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .menu-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .menu-item-image {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(135deg, #FF6B35, #FF8C42);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .menu-item-info {
+            padding: 12px;
+        }
+
+        .menu-item-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .menu-item-desc {
+            font-size: 12px;
+            color: #636E72;
+            margin-bottom: 8px;
+        }
+
+        .menu-item-price {
+            font-size: 18px;
+            color: #FF6B35;
+            font-weight: 600;
+        }
+
+        /* 購物車側邊欄 */
+        .cart-sidebar {
+            width: 380px;
+            background: white;
+            border-left: 1px solid #DFE6E9;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-header {
+            padding: 16px 20px;
+            background: #FF8C42;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .cart-item {
+            background: #F8F9FA;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .cart-item-price {
+            color: #636E72;
+            font-size: 14px;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #FF6B35;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn:hover {
+            background: #FF8C42;
+        }
+
+        .quantity-display {
+            font-weight: 600;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .delete-btn {
+            background: #D63031;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .cart-footer {
+            padding: 16px 20px;
+            background: #F8F9FA;
+            border-top: 1px solid #DFE6E9;
+        }
+
+        .cart-summary {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .cart-total {
+            font-size: 24px;
+            font-weight: 600;
+            color: #FF6B35;
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #FF6B35;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #FF8C42;
+        }
+
+        .btn-secondary {
+            background: #636E72;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #2D3436;
+        }
+
+        /* 結帳彈窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: #FF6B35;
+            color: white;
+            padding: 16px 20px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .order-info {
+            background: #F8F9FA;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .order-info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .checkout-items {
+            margin-bottom: 16px;
+        }
+
+        .checkout-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #F8F9FA;
+        }
+
+        .payment-section {
+            margin-top: 20px;
+        }
+
+        .payment-method {
+            background: #F8F9FA;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #DFE6E9;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #FF6B35;
+        }
+
+        .quick-amount-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .quick-amount-btn {
+            flex: 1;
+            padding: 8px;
+            background: #F8F9FA;
+            border: 2px solid #F8F9FA;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .quick-amount-btn:hover {
+            border-color: #FF6B35;
+            background: white;
+        }
+
+        .change-display {
+            background: #00B894;
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* 報表頁面 */
+        .reports-page {
+            display: none;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .reports-page.active {
+            display: block;
+        }
+
+        .reports-header {
+            margin-bottom: 20px;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #636E72;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: #FF6B35;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .hourly-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .hourly-label {
+            width: 100px;
+            font-size: 14px;
+        }
+
+        .hourly-bar-bg {
+            flex: 1;
+            height: 24px;
+            background: #F8F9FA;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 12px;
+        }
+
+        .hourly-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF6B35, #FF8C42);
+            transition: width 0.5s;
+        }
+
+        .hourly-value {
+            width: 80px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .top-items-list {
+            list-style: none;
+        }
+
+        .top-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #F8F9FA;
+        }
+
+        .top-item-rank {
+            width: 30px;
+            height: 30px;
+            background: #FF6B35;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .top-item-info {
+            flex: 1;
+        }
+
+        .top-item-name {
+            font-weight: 600;
+        }
+
+        .top-item-qty {
+            color: #636E72;
+            font-size: 14px;
+        }
+
+        .top-item-revenue {
+            font-weight: 600;
+            color: #FF6B35;
+        }
+
+        .back-btn {
+            background: #636E72;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        /* 空購物車狀態 */
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: #636E72;
+        }
+
+        .empty-cart-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        /* 報表類型切換 */
+        .report-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .report-tab {
+            flex: 1;
+            padding: 12px;
+            background: white;
+            border: 2px solid #DFE6E9;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .report-tab.active {
+            background: #FF6B35;
+            color: white;
+            border-color: #FF6B35;
+        }
+
+        .report-tab:hover:not(.active) {
+            border-color: #FF6B35;
+        }
+
+        /* 報表內容區 */
+        .report-content {
+            display: none;
+        }
+
+        .report-content.active {
+            display: block;
+        }
+
+        /* 分類統計 */
+        .category-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .category-stat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-label {
+            width: 100px;
+            font-weight: 600;
+        }
+
+        .category-bar-bg {
+            flex: 1;
+            height: 24px;
+            background: #F8F9FA;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .category-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF6B35, #FF8C42);
+            transition: width 0.5s;
+        }
+
+        .category-value {
+            width: 80px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        /* 時段圖表 */
+        .hourly-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* 趨勢圖表 */
+        .trend-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 200px;
+            padding: 20px 0;
+            gap: 8px;
+        }
+
+        .trend-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .trend-bar-fill {
+            width: 100%;
+            background: linear-gradient(180deg, #FF6B35, #FF8C42);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s;
+            min-height: 4px;
+        }
+
+        .trend-bar-label {
+            font-size: 12px;
+            color: #636E72;
+        }
+
+        .trend-bar-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: #FF6B35;
+        }
+
+        /* 成長統計 */
+        .growth-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .growth-item {
+            background: #F8F9FA;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .growth-label {
+            font-size: 14px;
+            color: #636E72;
+            margin-bottom: 8px;
+        }
+
+        .growth-value {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .growth-value.positive {
+            color: #00B894;
+        }
+
+        .growth-value.negative {
+            color: #D63031;
+        }
+
+        /* 響應式 */
+        @media (max-width: 968px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                border-left: none;
+                border-top: 1px solid #DFE6E9;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 頂部導航 -->
+    <header class="header">
+        <h1>夯肉 HANGROU</h1>
+        <div class="header-buttons">
+            <button class="header-btn" onclick="showReports()">📊 報表</button>
+            <button class="header-btn">⚙️ 設定</button>
+        </div>
+    </header>
+
+    <!-- 主畫面 -->
+    <div id="mainPage">
+        <!-- 分類標籤 -->
+        <div class="category-tabs" id="categoryTabs">
+            <div class="category-tab active" data-category="all">🐔 全部</div>
+            <div class="category-tab" data-category="beef">🐂 牛肉</div>
+            <div class="category-tab" data-category="pork">🐖 豬肉</div>
+            <div class="category-tab" data-category="chicken">🐔 雞肉</div>
+            <div class="category-tab" data-category="vegetable">🥬 蔬菜</div>
+            <div class="category-tab" data-category="skewer">🍢 串燒</div>
+            <div class="category-tab" data-category="drink">🍺 飲料</div>
+        </div>
+
+        <!-- 主內容區 -->
+        <div class="main-content">
+            <!-- 選單區域 -->
+            <div class="menu-section">
+                <div class="menu-grid" id="menuGrid">
+                    <!-- 菜品會由 JavaScript 動態生成 -->
+                </div>
+            </div>
+
+            <!-- 購物車側邊欄 -->
+            <div class="cart-sidebar">
+                <div class="cart-header">
+                    🛒 目前訂單
+                </div>
+                <div class="cart-items" id="cartItems">
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <p>尚未點選任何商品</p>
+                    </div>
+                </div>
+                <div class="cart-footer">
+                    <div class="cart-summary">
+                        <span>總計：<span id="totalItems">0</span> 件</span>
+                        <span class="cart-total" id="cartTotal">$0</span>
+                    </div>
+                    <div class="cart-actions">
+                        <button class="btn btn-secondary" onclick="clearCart()">清空</button>
+                        <button class="btn btn-primary" onclick="showCheckout()">結帳</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 報表頁面 -->
+    <div class="reports-page" id="reportsPage">
+        <button class="back-btn" onclick="hideReports()">← 返回點餐</button>
+
+        <div class="reports-header">
+            <h2>銷售報表</h2>
+        </div>
+
+        <!-- 報表類型切換 -->
+        <div class="report-tabs">
+            <div class="report-tab active" data-report="daily" onclick="switchReport('daily')">日報表</div>
+            <div class="report-tab" data-report="weekly" onclick="switchReport('weekly')">週報表</div>
+            <div class="report-tab" data-report="monthly" onclick="switchReport('monthly')">月報表</div>
+        </div>
+
+        <!-- 日報表 -->
+        <div class="report-content active" id="dailyReport">
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-label">今日營業額</div>
+                    <div class="stat-value" id="todayRevenue">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">訂單數</div>
+                    <div class="stat-value" id="todayOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">平均客單價</div>
+                    <div class="stat-value" id="todayAvg">$0</div>
+                </div>
+            </div>
+
+            <!-- 分類銷售占比 -->
+            <div class="chart-container">
+                <div class="chart-title">各分類銷售占比</div>
+                <div class="category-stats" id="categoryStats">
+                    <div class="category-stat-item">
+                        <div class="category-label">🐂 牛肉</div>
+                        <div class="category-bar-bg">
+                            <div class="category-bar-fill" style="width: 45%; background: linear-gradient(90deg, #FF6B35, #FF8C42);"></div>
+                        </div>
+                        <div class="category-value">$0</div>
+                    </div>
+                    <div class="category-stat-item">
+                        <div class="category-label">🐖 豬肉</div>
+                        <div class="category-bar-bg">
+                            <div class="category-bar-fill" style="width: 30%; background: linear-gradient(90deg, #FF6B35, #FF8C42);"></div>
+                        </div>
+                        <div class="category-value">$0</div>
+                    </div>
+                    <div class="category-stat-item">
+                        <div class="category-label">🐔 雞肉</div>
+                        <div class="category-bar-bg">
+                            <div class="category-bar-fill" style="width: 15%; background: linear-gradient(90deg, #FF6B35, #FF8C42);"></div>
+                        </div>
+                        <div class="category-value">$0</div>
+                    </div>
+                    <div class="category-stat-item">
+                        <div class="category-label">🥬 蔬菜</div>
+                        <div class="category-bar-bg">
+                            <div class="category-bar-fill" style="width: 10%; background: linear-gradient(90deg, #FF6B35, #FF8C42);"></div>
+                        </div>
+                        <div class="category-value">$0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 時段分布 -->
+            <div class="chart-container">
+                <div class="chart-title">每小時營業額分析</div>
+                <div class="hourly-bars" id="hourlyBars">
+                    <div class="hourly-bar">
+                        <div class="hourly-label">17:00</div>
+                        <div class="hourly-bar-bg">
+                            <div class="hourly-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="hourly-value">$0</div>
+                    </div>
+                    <div class="hourly-bar">
+                        <div class="hourly-label">18:00</div>
+                        <div class="hourly-bar-bg">
+                            <div class="hourly-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="hourly-value">$0</div>
+                    </div>
+                    <div class="hourly-bar">
+                        <div class="hourly-label">19:00</div>
+                        <div class="hourly-bar-bg">
+                            <div class="hourly-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="hourly-value">$0</div>
+                    </div>
+                    <div class="hourly-bar">
+                        <div class="hourly-label">20:00</div>
+                        <div class="hourly-bar-bg">
+                            <div class="hourly-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="hourly-value">$0</div>
+                    </div>
+                    <div class="hourly-bar">
+                        <div class="hourly-label">21:00</div>
+                        <div class="hourly-bar-bg">
+                            <div class="hourly-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="hourly-value">$0</div>
+                    </div>
+                    <div class="hourly-bar">
+                        <div class="hourly-label">22:00</div>
+                        <div class="hourly-bar-bg">
+                            <div class="hourly-bar-fill" style="width: 0%"></div>
+                        </div>
+                        <div class="hourly-value">$0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 熱銷商品 TOP 10 -->
+            <div class="chart-container">
+                <div class="chart-title">熱銷商品 TOP 10</div>
+                <ul class="top-items-list" id="topItemsList">
+                    <li style="text-align: center; padding: 20px; color: #636E72;">今日尚無銷售記錄</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 週報表 -->
+        <div class="report-content" id="weeklyReport">
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-label">本週營業額</div>
+                    <div class="stat-value" id="weekRevenue">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">本週訂單數</div>
+                    <div class="stat-value" id="weekOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">日均營業額</div>
+                    <div class="stat-value" id="weekAvg">$0</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">7天營業額趨勢圖</div>
+                <div class="trend-chart" id="weekTrendChart">
+                    <!-- 會由 JavaScript 動態生成 -->
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">週成長對比</div>
+                <div class="growth-stats">
+                    <div class="growth-item">
+                        <div class="growth-label">營業額成長</div>
+                        <div class="growth-value positive">+0%</div>
+                    </div>
+                    <div class="growth-item">
+                        <div class="growth-label">訂單數成長</div>
+                        <div class="growth-value positive">+0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 月報表 -->
+        <div class="report-content" id="monthlyReport">
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-label">本月營業額</div>
+                    <div class="stat-value" id="monthRevenue">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">本月訂單數</div>
+                    <div class="stat-value" id="monthOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">日均營業額</div>
+                    <div class="stat-value" id="monthAvg">$0</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">月度銷售趨勢</div>
+                <div class="trend-chart" id="monthTrendChart">
+                    <!-- 會由 JavaScript 動態生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 結帳彈窗 -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">結帳付款</div>
+                <button class="modal-close" onclick="hideCheckout()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="order-info">
+                    <div class="order-info-row">
+                        <span>訂單號：</span>
+                        <span id="orderNumber">#20260126-001</span>
+                    </div>
+                    <div class="order-info-row">
+                        <span>時間：</span>
+                        <span id="orderTime">2026-01-26 19:35</span>
+                    </div>
+                </div>
+
+                <div class="checkout-items" id="checkoutItems">
+                    <!-- 訂單項目會由 JavaScript 動態生成 -->
+                </div>
+
+                <div class="order-info">
+                    <div class="order-info-row">
+                        <span>總計：</span>
+                        <span class="cart-total" id="checkoutTotal">$0</span>
+                    </div>
+                </div>
+
+                <div class="payment-section">
+                    <div class="payment-method">
+                        <span>💵</span>
+                        <span>現金付款</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">實收金額</label>
+                        <input type="number" class="input-field" id="receivedAmount" placeholder="輸入金額" oninput="calculateChange()">
+                        <div class="quick-amount-buttons">
+                            <button class="quick-amount-btn" onclick="setAmount(100)">$100</button>
+                            <button class="quick-amount-btn" onclick="setAmount(500)">$500</button>
+                            <button class="quick-amount-btn" onclick="setAmount(1000)">$1000</button>
+                        </div>
+                    </div>
+
+                    <div class="change-display" id="changeDisplay">
+                        找零：$0
+                    </div>
+
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary" onclick="hideCheckout()">取消</button>
+                        <button class="btn btn-primary" onclick="completePayment()">確認付款</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 菜品資料
+        const menuItems = [
+            { id: 1, name: '牛五花', category: 'beef', price: 120, icon: '🥩', desc: '澳洲進口牛五花' },
+            { id: 2, name: '牛小排', category: 'beef', price: 150, icon: '🥩', desc: '厚切牛小排' },
+            { id: 3, name: '牛舌', category: 'beef', price: 130, icon: '👅', desc: '鹽烤牛舌' },
+            { id: 4, name: '豬肋排', category: 'pork', price: 80, icon: '🍖', desc: '醃製豬肋排' },
+            { id: 5, name: '培根捲', category: 'pork', price: 50, icon: '🥓', desc: '培根捲芦筍' },
+            { id: 6, name: '香腸', category: 'pork', price: 40, icon: '🌭', desc: '台式香腸' },
+            { id: 7, name: '雞肉串', category: 'chicken', price: 50, icon: '🍢', desc: '新鮮雞腿肉' },
+            { id: 8, name: '雞翅', category: 'chicken', price: 60, icon: '🍗', desc: '鹽烤雞翅' },
+            { id: 9, name: '烤玉米', category: 'vegetable', price: 40, icon: '🌽', desc: '碳烤玉米' },
+            { id: 10, name: '烤青椒', category: 'vegetable', price: 30, icon: '🫑', desc: '青椒塞肉' },
+            { id: 11, name: '串燒組合', category: 'skewer', price: 100, icon: '🍢', desc: '綜合串燒' },
+            { id: 12, name: '烤香菇', category: 'vegetable', price: 35, icon: '🍄', desc: '碳烤香菇' },
+            { id: 13, name: '可樂', category: 'drink', price: 30, icon: '🥤', desc: '可口可樂' },
+            { id: 14, name: '啤酒', category: 'drink', price: 60, icon: '🍺', desc: '台灣啤酒' },
+        ];
+
+        // 購物車資料
+        let cart = [];
+        let currentCategory = 'all';
+        let orderCount = 1;
+
+        // 當日銷售統計
+        let dailyStats = {
+            date: new Date().toISOString().split('T')[0],
+            totalRevenue: 0,
+            orderCount: 0,
+            orders: [],
+            hourlyData: {
+                '17': 0, '18': 0, '19': 0, '20': 0, '21': 0, '22': 0, '23': 0
+            },
+            itemSales: {},  // 商品銷售統計 {itemId: {name, quantity, revenue}}
+            categorySales: {
+                beef: 0,
+                pork: 0,
+                chicken: 0,
+                vegetable: 0,
+                skewer: 0,
+                drink: 0
+            }
+        };
+
+        // 週統計（模擬資料）
+        let weeklyStats = {
+            dailyData: [],  // 過去7天的資料
+            totalRevenue: 0,
+            totalOrders: 0,
+            prevWeekRevenue: 0,
+            prevWeekOrders: 0
+        };
+
+        // 月統計（模擬資料）
+        let monthlyStats = {
+            dailyData: [],  // 當月每天的資料
+            totalRevenue: 0,
+            totalOrders: 0
+        };
+
+        // 初始化選單
+        function initMenu() {
+            const menuGrid = document.getElementById('menuGrid');
+            menuGrid.innerHTML = '';
+
+            const filteredItems = currentCategory === 'all'
+                ? menuItems
+                : menuItems.filter(item => item.category === currentCategory);
+
+            filteredItems.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+                menuItem.innerHTML = `
+                    <div class="menu-item-image">${item.icon}</div>
+                    <div class="menu-item-info">
+                        <div class="menu-item-name">${item.name}</div>
+                        <div class="menu-item-desc">${item.desc}</div>
+                        <div class="menu-item-price">$${item.price}</div>
+                    </div>
+                `;
+                menuItem.onclick = () => addToCart(item);
+                menuGrid.appendChild(menuItem);
+            });
+        }
+
+        // 初始化分類標籤
+        function initCategoryTabs() {
+            const tabs = document.querySelectorAll('.category-tab');
+            tabs.forEach(tab => {
+                tab.onclick = () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentCategory = tab.dataset.category;
+                    initMenu();
+                };
+            });
+        }
+
+        // 新增到購物車
+        function addToCart(item) {
+            const existingItem = cart.find(i => i.id === item.id);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            updateCart();
+        }
+
+        // 更新購物車顯示
+        function updateCart() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            const totalItemsEl = document.getElementById('totalItems');
+            const cartTotalEl = document.getElementById('cartTotal');
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <p>尚未點選任何商品</p>
+                    </div>
+                `;
+                totalItemsEl.textContent = '0';
+                cartTotalEl.textContent = '$0';
+                return;
+            }
+
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            let totalQuantity = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                totalQuantity += item.quantity;
+
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price} × ${item.quantity} = $${itemTotal}</div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <div class="quantity-display">${item.quantity}</div>
+                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        <button class="delete-btn" onclick="removeFromCart(${item.id})">刪除</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartItem);
+            });
+
+            totalItemsEl.textContent = totalQuantity;
+            cartTotalEl.textContent = `$${total}`;
+        }
+
+        // 更新數量
+        function updateQuantity(id, change) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(id);
+                } else {
+                    updateCart();
+                }
+            }
+        }
+
+        // 從購物車移除
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+        }
+
+        // 清空購物車
+        function clearCart() {
+            if (confirm('確定要清空訂單嗎？')) {
+                cart = [];
+                updateCart();
+            }
+        }
+
+        // 顯示結帳彈窗
+        function showCheckout() {
+            if (cart.length === 0) {
+                alert('請先點選商品');
+                return;
+            }
+
+            const modal = document.getElementById('checkoutModal');
+            const checkoutItems = document.getElementById('checkoutItems');
+            const checkoutTotal = document.getElementById('checkoutTotal');
+            const orderNumber = document.getElementById('orderNumber');
+            const orderTime = document.getElementById('orderTime');
+
+            // 更新訂單號和時間
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0].replace(/-/g, '');
+            const timeStr = now.toTimeString().slice(0, 5);
+            orderNumber.textContent = `#${dateStr}-${String(orderCount).padStart(3, '0')}`;
+            orderTime.textContent = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)} ${timeStr}`;
+
+            // 顯示訂單項目
+            checkoutItems.innerHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+
+                const checkoutItem = document.createElement('div');
+                checkoutItem.className = 'checkout-item';
+                checkoutItem.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong>
+                        <span style="margin-left: 8px; color: #636E72;">× ${item.quantity}</span>
+                    </div>
+                    <div>$${itemTotal}</div>
+                `;
+                checkoutItems.appendChild(checkoutItem);
+            });
+
+            checkoutTotal.textContent = `$${total}`;
+
+            // 重置輸入
+            document.getElementById('receivedAmount').value = '';
+            document.getElementById('changeDisplay').textContent = '找零：$0';
+
+            modal.classList.add('active');
+        }
+
+        // 隱藏結帳彈窗
+        function hideCheckout() {
+            document.getElementById('checkoutModal').classList.remove('active');
+        }
+
+        // 設定快速金額
+        function setAmount(amount) {
+            document.getElementById('receivedAmount').value = amount;
+            calculateChange();
+        }
+
+        // 計算找零
+        function calculateChange() {
+            const receivedInput = document.getElementById('receivedAmount');
+            const changeDisplay = document.getElementById('changeDisplay');
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const received = parseInt(receivedInput.value) || 0;
+
+            const change = received - total;
+            if (change >= 0) {
+                changeDisplay.textContent = `找零：$${change}`;
+                changeDisplay.style.background = '#00B894';
+            } else {
+                changeDisplay.textContent = `金額不足：差 $${Math.abs(change)}`;
+                changeDisplay.style.background = '#D63031';
+            }
+        }
+
+        // 完成付款
+        function completePayment() {
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const received = parseInt(document.getElementById('receivedAmount').value) || 0;
+
+            if (received < total) {
+                alert('實收金額不足！');
+                return;
+            }
+
+            // 記錄訂單到統計資料
+            const now = new Date();
+            const hour = now.getHours().toString();
+            const dateStr = now.toISOString().split('T')[0];
+
+            // 檢查是否新的一天
+            if (dailyStats.date !== dateStr) {
+                dailyStats = {
+                    date: dateStr,
+                    totalRevenue: 0,
+                    orderCount: 0,
+                    orders: [],
+                    hourlyData: {
+                        '17': 0, '18': 0, '19': 0, '20': 0, '21': 0, '22': 0, '23': 0
+                    },
+                    itemSales: {},
+                    categorySales: {
+                        beef: 0,
+                        pork: 0,
+                        chicken: 0,
+                        vegetable: 0,
+                        skewer: 0,
+                        drink: 0
+                    }
+                };
+            }
+
+            // 更新統計
+            dailyStats.totalRevenue += total;
+            dailyStats.orderCount++;
+
+            // 更新時段資料
+            if (dailyStats.hourlyData.hasOwnProperty(hour)) {
+                dailyStats.hourlyData[hour] += total;
+            }
+
+            // 更新商品銷售統計和分類統計
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+
+                // 商品統計
+                if (!dailyStats.itemSales[item.id]) {
+                    dailyStats.itemSales[item.id] = {
+                        name: item.name,
+                        quantity: 0,
+                        revenue: 0
+                    };
+                }
+                dailyStats.itemSales[item.id].quantity += item.quantity;
+                dailyStats.itemSales[item.id].revenue += itemTotal;
+
+                // 分類統計
+                if (dailyStats.categorySales.hasOwnProperty(item.category)) {
+                    dailyStats.categorySales[item.category] += itemTotal;
+                }
+            });
+
+            // 記錄訂單
+            dailyStats.orders.push({
+                orderNumber: document.getElementById('orderNumber').textContent,
+                time: now.toTimeString().slice(0, 8),
+                items: cart.map(i => ({ name: i.name, quantity: i.quantity, price: i.price })),
+                total: total
+            });
+
+            // 顯示完成訊息
+            alert(`✅ 付款完成！\n\n訂單已自動列印廚房單和客戶小票`);
+
+            // 清空購物車
+            cart = [];
+            orderCount++;
+            updateCart();
+
+            // 關閉彈窗
+            hideCheckout();
+        }
+
+        // 顯示報表頁面
+        function showReports() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('reportsPage').classList.add('active');
+            // 預設顯示日報表
+            updateDailyReport();
+        }
+
+        // 切換報表類型
+        function switchReport(type) {
+            // 移除所有 active
+            document.querySelectorAll('.report-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.report-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // 設定 active
+            document.querySelector(`.report-tab[data-report="${type}"]`).classList.add('active');
+            document.getElementById(`${type}Report`).classList.add('active');
+
+            // 更新對應報表資料
+            if (type === 'daily') {
+                updateDailyReport();
+            } else if (type === 'weekly') {
+                updateWeeklyReport();
+            } else if (type === 'monthly') {
+                updateMonthlyReport();
+            }
+        }
+
+        // 更新日報表
+        function updateDailyReport() {
+            // 統計卡片
+            document.getElementById('todayRevenue').textContent = `$${dailyStats.totalRevenue.toLocaleString()}`;
+            document.getElementById('todayOrders').textContent = dailyStats.orderCount;
+
+            const avgTicket = dailyStats.orderCount > 0
+                ? Math.round(dailyStats.totalRevenue / dailyStats.orderCount)
+                : 0;
+            document.getElementById('todayAvg').textContent = `$${avgTicket}`;
+
+            // 分類銷售占比
+            const totalCategoryRevenue = Object.values(dailyStats.categorySales).reduce((sum, val) => sum + val, 0) || 1;
+            const categoryLabels = {
+                beef: '🐂 牛肉',
+                pork: '🐖 豬肉',
+                chicken: '🐔 雞肉',
+                vegetable: '🥬 蔬菜'
+            };
+
+            const categoryStatsEl = document.getElementById('categoryStats');
+            categoryStatsEl.innerHTML = '';
+
+            Object.entries(categoryLabels).forEach(([key, label]) => {
+                const revenue = dailyStats.categorySales[key] || 0;
+                const percentage = (revenue / totalCategoryRevenue) * 100;
+
+                const item = document.createElement('div');
+                item.className = 'category-stat-item';
+                item.innerHTML = `
+                    <div class="category-label">${label}</div>
+                    <div class="category-bar-bg">
+                        <div class="category-bar-fill" style="width: ${percentage}%"></div>
+                    </div>
+                    <div class="category-value">$${revenue}</div>
+                `;
+                categoryStatsEl.appendChild(item);
+            });
+
+            // 時段分布
+            const maxHourlyRevenue = Math.max(...Object.values(dailyStats.hourlyData), 1);
+            const hourlyBarsEl = document.getElementById('hourlyBars');
+            hourlyBarsEl.innerHTML = '';
+
+            for (let hour = 17; hour <= 22; hour++) {
+                const revenue = dailyStats.hourlyData[hour.toString()] || 0;
+                const percentage = (revenue / maxHourlyRevenue) * 100;
+
+                const bar = document.createElement('div');
+                bar.className = 'hourly-bar';
+                bar.innerHTML = `
+                    <div class="hourly-label">${hour}:00</div>
+                    <div class="hourly-bar-bg">
+                        <div class="hourly-bar-fill" style="width: ${percentage}%"></div>
+                    </div>
+                    <div class="hourly-value">$${revenue}</div>
+                `;
+                hourlyBarsEl.appendChild(bar);
+            }
+
+            // 熱銷商品 TOP 10
+            const topItemsListEl = document.getElementById('topItemsList');
+            topItemsListEl.innerHTML = '';
+
+            const sortedItems = Object.values(dailyStats.itemSales)
+                .sort((a, b) => b.revenue - a.revenue)
+                .slice(0, 10);
+
+            if (sortedItems.length === 0) {
+                topItemsListEl.innerHTML = '<li style="text-align: center; padding: 20px; color: #636E72;">今日尚無銷售記錄</li>';
+            } else {
+                sortedItems.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'top-item';
+                    li.innerHTML = `
+                        <div class="top-item-rank">${index + 1}</div>
+                        <div class="top-item-info">
+                            <div class="top-item-name">${item.name}</div>
+                            <div class="top-item-qty">${item.quantity} 份</div>
+                        </div>
+                        <div class="top-item-revenue">$${item.revenue.toLocaleString()}</div>
+                    `;
+                    topItemsListEl.appendChild(li);
+                });
+            }
+        }
+
+        // 更新週報表
+        function updateWeeklyReport() {
+            // 結合今日資料計算週統計
+            const weekRevenue = dailyStats.totalRevenue + 54320; // 模擬前6天
+            const weekOrders = dailyStats.orderCount + 248; // 模擬前6天
+
+            document.getElementById('weekRevenue').textContent = `$${weekRevenue.toLocaleString()}`;
+            document.getElementById('weekOrders').textContent = weekOrders;
+
+            const weekAvg = Math.round(weekRevenue / 7);
+            document.getElementById('weekAvg').textContent = `$${weekAvg.toLocaleString()}`;
+
+            // 7天趨勢圖
+            const weekTrendChartEl = document.getElementById('weekTrendChart');
+            weekTrendChartEl.innerHTML = '';
+
+            const days = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
+            const trendData = [7500, 8200, 7800, 8500, 9100, 8800, dailyStats.totalRevenue || 8500];
+            const maxTrend = Math.max(...trendData);
+
+            days.forEach((day, index) => {
+                const height = (trendData[index] / maxTrend) * 150;
+
+                const bar = document.createElement('div');
+                bar.className = 'trend-bar';
+                bar.innerHTML = `
+                    <div class="trend-bar-value">$${(trendData[index] / 1000).toFixed(1)}k</div>
+                    <div class="trend-bar-fill" style="height: ${height}px"></div>
+                    <div class="trend-bar-label">${day}</div>
+                `;
+                weekTrendChartEl.appendChild(bar);
+            });
+        }
+
+        // 更新月報表
+        function updateMonthlyReport() {
+            // 模擬月統計
+            const monthRevenue = dailyStats.totalRevenue + 245600;
+            const monthOrders = dailyStats.orderCount + 1156;
+
+            document.getElementById('monthRevenue').textContent = `$${monthRevenue.toLocaleString()}`;
+            document.getElementById('monthOrders').textContent = monthOrders;
+
+            const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+            const monthAvg = Math.round(monthRevenue / daysInMonth);
+            document.getElementById('monthAvg').textContent = `$${monthAvg.toLocaleString()}`;
+
+            // 月度趨勢圖（顯示前15天）
+            const monthTrendChartEl = document.getElementById('monthTrendChart');
+            monthTrendChartEl.innerHTML = '';
+
+            for (let day = 1; day <= 15; day++) {
+                const revenue = 7000 + Math.random() * 4000; // 模擬資料
+                const height = (revenue / 12000) * 150;
+
+                const bar = document.createElement('div');
+                bar.className = 'trend-bar';
+                bar.innerHTML = `
+                    <div class="trend-bar-value">$${Math.round(revenue / 1000)}k</div>
+                    <div class="trend-bar-fill" style="height: ${height}px"></div>
+                    <div class="trend-bar-label">${day}</div>
+                `;
+                monthTrendChartEl.appendChild(bar);
+            }
+        }
+
+        // 隱藏報表頁面
+        function hideReports() {
+            document.getElementById('mainPage').style.display = 'block';
+            document.getElementById('reportsPage').classList.remove('active');
+        }
+
+        // 初始化
+        window.onload = () => {
+            initMenu();
+            initCategoryTabs();
+        };
+    </script>
+</body>
+</html>

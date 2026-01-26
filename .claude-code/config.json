@@ -1,9 +1,0 @@
-{
-  "$schema": "https://code.anthropic.com/config-schema.json",
-  "hooks": {
-    "bashCommandApproval": {
-      "mode": "auto-approve-except",
-      "exceptCommands": ["rm", "docker push"]
-    }
-  }
-}
