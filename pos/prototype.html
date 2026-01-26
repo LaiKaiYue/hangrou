@@ -829,6 +829,30 @@
             font-size: 14px;
         }
 
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .badge-item {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+
+        .badge-category {
+            background: #F3E5F5;
+            color: #7B1FA2;
+        }
+
+        .badge-total {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
         .discount-rule-actions {
             display: flex;
             gap: 8px;
@@ -1273,20 +1297,46 @@
             </div>
             <div class="modal-body">
                 <div class="input-group">
+                    <label class="input-label">折扣類型</label>
+                    <select class="input-field" id="discountType" onchange="onDiscountTypeChange()">
+                        <option value="item">單一品項折扣</option>
+                        <option value="category">分類折扣</option>
+                        <option value="total">總數量折扣</option>
+                    </select>
+                    <small style="color: #636E72; display: block; margin-top: 4px;" id="discountTypeDesc">
+                        指定單一商品達到數量後折扣
+                    </small>
+                </div>
+
+                <!-- 單一品項選擇 -->
+                <div class="input-group" id="itemSelectGroup">
                     <label class="input-label">選擇品項</label>
                     <select class="input-field" id="discountItem">
                         <!-- 會由 JavaScript 動態生成 -->
                     </select>
                 </div>
 
+                <!-- 分類選擇 -->
+                <div class="input-group" id="categorySelectGroup" style="display: none;">
+                    <label class="input-label">選擇分類</label>
+                    <select class="input-field" id="discountCategory">
+                        <option value="beef">牛肉</option>
+                        <option value="pork">豬肉</option>
+                        <option value="chicken">雞肉</option>
+                        <option value="vegetable">蔬菜</option>
+                        <option value="skewer">串燒</option>
+                        <option value="drink">飲品</option>
+                    </select>
+                </div>
+
                 <div class="input-group">
                     <label class="input-label">購買數量</label>
-                    <input type="number" class="input-field" id="discountQuantity" min="1" value="3" placeholder="例如：3">
+                    <input type="number" class="input-field" id="discountQuantity" min="1" value="3" placeholder="例如：3" oninput="updateDiscountPreview()">
                 </div>
 
                 <div class="input-group">
                     <label class="input-label">折扣金額</label>
-                    <input type="number" class="input-field" id="discountAmount" min="1" value="5" placeholder="例如：5">
+                    <input type="number" class="input-field" id="discountAmount" min="1" value="5" placeholder="例如：5" oninput="updateDiscountPreview()">
                     <small style="color: #636E72; display: block; margin-top: 4px;">
                         買滿指定數量，可折扣的金額
                     </small>
@@ -1369,6 +1419,7 @@
         let discountRules = [
             {
                 id: 1,
+                type: 'item', // 'item' | 'category' | 'total'
                 itemId: 12,
                 itemName: '烤香菇',
                 quantity: 3,
@@ -1377,6 +1428,23 @@
         ];
 
         let editingDiscountId = null;
+
+        // 折扣類型設定
+        const discountTypes = {
+            item: { name: '單一品項', desc: '指定單一商品達到數量後折扣' },
+            category: { name: '分類折扣', desc: '同分類商品總數達到數量後折扣' },
+            total: { name: '總數量', desc: '購物車總數達到數量後折扣' }
+        };
+
+        // 分類對應表
+        const categoryNames = {
+            beef: '牛肉',
+            pork: '豬肉',
+            chicken: '雞肉',
+            vegetable: '蔬菜',
+            skewer: '串燒',
+            drink: '飲品'
+        };
 
         // 初始化選單
         function initMenu() {
@@ -1433,18 +1501,57 @@
             const appliedDiscounts = [];
 
             discountRules.forEach(rule => {
-                const cartItem = cart.find(item => item.id === rule.itemId);
-                if (cartItem && cartItem.quantity >= rule.quantity) {
-                    // 計算可套用幾次折扣
-                    const times = Math.floor(cartItem.quantity / rule.quantity);
-                    const discount = times * rule.discountAmount;
-                    totalDiscount += discount;
-                    appliedDiscounts.push({
-                        itemName: rule.itemName,
-                        quantity: rule.quantity,
-                        times: times,
-                        discount: discount
-                    });
+                if (rule.type === 'item') {
+                    // 單一品項折扣
+                    const cartItem = cart.find(item => item.id === rule.itemId);
+                    if (cartItem && cartItem.quantity >= rule.quantity) {
+                        const times = Math.floor(cartItem.quantity / rule.quantity);
+                        const discount = times * rule.discountAmount;
+                        totalDiscount += discount;
+                        appliedDiscounts.push({
+                            type: 'item',
+                            itemName: rule.itemName,
+                            quantity: rule.quantity,
+                            times: times,
+                            discount: discount,
+                            description: `${rule.itemName} 買${rule.quantity}串折$${rule.discountAmount}`
+                        });
+                    }
+                } else if (rule.type === 'category') {
+                    // 分類折扣
+                    const categoryItems = cart.filter(item => item.category === rule.categoryId);
+                    const totalQuantity = categoryItems.reduce((sum, item) => sum + item.quantity, 0);
+
+                    if (totalQuantity >= rule.quantity) {
+                        const times = Math.floor(totalQuantity / rule.quantity);
+                        const discount = times * rule.discountAmount;
+                        totalDiscount += discount;
+                        appliedDiscounts.push({
+                            type: 'category',
+                            itemName: `${categoryNames[rule.categoryId]}類`,
+                            quantity: rule.quantity,
+                            times: times,
+                            discount: discount,
+                            description: `${categoryNames[rule.categoryId]} 買${rule.quantity}串折$${rule.discountAmount} (共${totalQuantity}串)`
+                        });
+                    }
+                } else if (rule.type === 'total') {
+                    // 總數量折扣
+                    const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+                    if (totalQuantity >= rule.quantity) {
+                        const times = Math.floor(totalQuantity / rule.quantity);
+                        const discount = times * rule.discountAmount;
+                        totalDiscount += discount;
+                        appliedDiscounts.push({
+                            type: 'total',
+                            itemName: '全館商品',
+                            quantity: rule.quantity,
+                            times: times,
+                            discount: discount,
+                            description: `全館 買${rule.quantity}串折$${rule.discountAmount} (共${totalQuantity}串)`
+                        });
+                    }
                 }
             });
 
@@ -1512,7 +1619,7 @@
                 appliedDiscounts.forEach(discount => {
                     const discountInfo = document.createElement('div');
                     discountInfo.style.cssText = 'padding: 8px 12px; font-size: 12px; color: #636E72; background: #FFF3CD; border-radius: 4px; margin-top: 4px;';
-                    discountInfo.textContent = `${discount.itemName} 買${discount.quantity}串折$${discount.discount / discount.times} × ${discount.times}次`;
+                    discountInfo.textContent = discount.description;
                     cartItemsContainer.appendChild(discountInfo);
                 });
             }
@@ -1608,7 +1715,7 @@
                 appliedDiscounts.forEach(discount => {
                     const discountInfo = document.createElement('div');
                     discountInfo.style.cssText = 'padding: 8px 12px; font-size: 12px; color: #636E72; background: #F8F9FA;';
-                    discountInfo.textContent = `${discount.itemName} 買${discount.quantity}串折$${discount.discount / discount.times} × ${discount.times}次`;
+                    discountInfo.textContent = discount.description;
                     checkoutItems.appendChild(discountInfo);
                 });
             }
@@ -1971,10 +2078,27 @@
             discountRules.forEach(rule => {
                 const ruleCard = document.createElement('div');
                 ruleCard.className = 'discount-rule-card';
+
+                let title, desc, typeBadge;
+
+                if (rule.type === 'item') {
+                    typeBadge = '<span class="badge badge-item">單一品項</span>';
+                    title = rule.itemName;
+                    desc = `買 ${rule.quantity} 串 折 $${rule.discountAmount}`;
+                } else if (rule.type === 'category') {
+                    typeBadge = '<span class="badge badge-category">分類折扣</span>';
+                    title = `${categoryNames[rule.categoryId]}類`;
+                    desc = `買 ${rule.quantity} 串 折 $${rule.discountAmount}`;
+                } else if (rule.type === 'total') {
+                    typeBadge = '<span class="badge badge-total">總數量</span>';
+                    title = '全館商品';
+                    desc = `買 ${rule.quantity} 串 折 $${rule.discountAmount}`;
+                }
+
                 ruleCard.innerHTML = `
                     <div class="discount-rule-info">
-                        <div class="discount-rule-title">${rule.itemName}</div>
-                        <div class="discount-rule-desc">買 ${rule.quantity} 串 折 $${rule.discountAmount}</div>
+                        <div class="discount-rule-title">${typeBadge} ${title}</div>
+                        <div class="discount-rule-desc">${desc}</div>
                     </div>
                     <div class="discount-rule-actions">
                         <button class="discount-rule-btn btn-edit" onclick="editDiscountRule(${rule.id})">編輯</button>
@@ -1997,11 +2121,27 @@
             ).join('');
 
             // 重設表單
+            document.getElementById('discountType').value = 'item';
             document.getElementById('discountQuantity').value = 3;
             document.getElementById('discountAmount').value = 5;
+            onDiscountTypeChange();
             updateDiscountPreview();
 
             document.getElementById('discountModal').classList.add('active');
+        }
+
+        // 折扣類型變更處理
+        function onDiscountTypeChange() {
+            const type = document.getElementById('discountType').value;
+            const desc = discountTypes[type].desc;
+
+            document.getElementById('discountTypeDesc').textContent = desc;
+
+            // 顯示/隱藏對應的選擇器
+            document.getElementById('itemSelectGroup').style.display = type === 'item' ? 'block' : 'none';
+            document.getElementById('categorySelectGroup').style.display = type === 'category' ? 'block' : 'none';
+
+            updateDiscountPreview();
         }
 
         // 編輯折扣規則
@@ -2012,12 +2152,22 @@
             editingDiscountId = id;
             document.getElementById('discountModalTitle').textContent = '編輯折扣規則';
 
+            // 設定折扣類型
+            document.getElementById('discountType').value = rule.type;
+            onDiscountTypeChange();
+
             // 填充品項選項
             const itemSelect = document.getElementById('discountItem');
             itemSelect.innerHTML = menuItems.map(item =>
                 `<option value="${item.id}">${item.name} - $${item.price}</option>`
             ).join('');
-            itemSelect.value = rule.itemId;
+
+            // 根據類型設定值
+            if (rule.type === 'item') {
+                itemSelect.value = rule.itemId;
+            } else if (rule.type === 'category') {
+                document.getElementById('discountCategory').value = rule.categoryId;
+            }
 
             document.getElementById('discountQuantity').value = rule.quantity;
             document.getElementById('discountAmount').value = rule.discountAmount;
@@ -2042,20 +2192,31 @@
 
         // 更新折扣預覽
         function updateDiscountPreview() {
-            const itemId = parseInt(document.getElementById('discountItem').value);
+            const type = document.getElementById('discountType').value;
             const quantity = parseInt(document.getElementById('discountQuantity').value) || 3;
             const discountAmount = parseInt(document.getElementById('discountAmount').value) || 5;
 
-            const item = menuItems.find(i => i.id === itemId);
-            const itemName = item ? item.name : '商品';
+            let previewText = '';
 
-            document.getElementById('discountPreviewText').textContent =
-                `${itemName} 買${quantity}串 折$${discountAmount}`;
+            if (type === 'item') {
+                const itemId = parseInt(document.getElementById('discountItem').value);
+                const item = menuItems.find(i => i.id === itemId);
+                const itemName = item ? item.name : '商品';
+                previewText = `${itemName} 買${quantity}串 折$${discountAmount}`;
+            } else if (type === 'category') {
+                const categoryId = document.getElementById('discountCategory').value;
+                const categoryName = categoryNames[categoryId];
+                previewText = `${categoryName}類 買${quantity}串 折$${discountAmount}`;
+            } else if (type === 'total') {
+                previewText = `全館商品 買${quantity}串 折$${discountAmount}`;
+            }
+
+            document.getElementById('discountPreviewText').textContent = previewText;
         }
 
         // 儲存折扣規則
         function saveDiscountRule() {
-            const itemId = parseInt(document.getElementById('discountItem').value);
+            const type = document.getElementById('discountType').value;
             const quantity = parseInt(document.getElementById('discountQuantity').value);
             const discountAmount = parseInt(document.getElementById('discountAmount').value);
 
@@ -2069,26 +2230,34 @@
                 return;
             }
 
-            const item = menuItems.find(i => i.id === itemId);
+            let ruleData = {
+                type: type,
+                quantity: quantity,
+                discountAmount: discountAmount
+            };
+
+            // 根據類型設定特定資料
+            if (type === 'item') {
+                const itemId = parseInt(document.getElementById('discountItem').value);
+                const item = menuItems.find(i => i.id === itemId);
+                ruleData.itemId = itemId;
+                ruleData.itemName = item.name;
+            } else if (type === 'category') {
+                ruleData.categoryId = document.getElementById('discountCategory').value;
+            }
 
             if (editingDiscountId) {
                 // 編輯現有規則
                 const rule = discountRules.find(r => r.id === editingDiscountId);
                 if (rule) {
-                    rule.itemId = itemId;
-                    rule.itemName = item.name;
-                    rule.quantity = quantity;
-                    rule.discountAmount = discountAmount;
+                    Object.assign(rule, ruleData);
                 }
             } else {
                 // 新增規則
                 const newId = Math.max(...discountRules.map(r => r.id), 0) + 1;
                 discountRules.push({
                     id: newId,
-                    itemId: itemId,
-                    itemName: item.name,
-                    quantity: quantity,
-                    discountAmount: discountAmount
+                    ...ruleData
                 });
             }
 

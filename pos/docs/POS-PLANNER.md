@@ -61,8 +61,10 @@
 
 #### 1.3 特殊功能
 - **折扣優惠**：
-  - 買幾串折多少的優惠規則（例如：烤香菇買3串折$5）
-  - 可在設定畫面靈活配置
+  - **單一品項折扣**：買幾串折多少（例如：烤香菇買3串折$5）
+  - **分類折扣**：同分類商品達到數量後折扣（例如：買3串任何雞肉品項折$5）
+  - **總數量折扣**：購物車總數達到數量後折扣（例如：滿5串任何品項折$20）
+  - 可在設定畫面靈活配置所有折扣類型
   - 自動計算折扣金額
   - 支援多個折扣規則同時套用
   - 購物車即時顯示折扣金額
@@ -440,8 +442,15 @@
 ```javascript
 {
   id: 1,
+  type: "item",            // 折扣類型: "item" | "category" | "total"
+
+  // 單一品項折扣 (type: "item")
   itemId: "item_mushroom",
   itemName: "烤香菇",
+
+  // 分類折扣 (type: "category")
+  categoryId: "category_chicken",
+
   quantity: 3,              // 購買數量
   discountAmount: 5,        // 折扣金額
   active: true,
@@ -451,11 +460,16 @@
 ```
 
 **說明**：
-- `itemId`：適用折扣的品項 ID
-- `quantity`：需達到的購買數量
-- `discountAmount`：折扣金額（新台幣）
+- **type**：折扣類型
+  - `"item"`：單一品項折扣（例如：烤香菇買3串折$5）
+  - `"category"`：分類折扣（例如：買3串任何雞肉品項折$5）
+  - `"total"`：總數量折扣（例如：購物車滿5串任何品項折$20）
+- **itemId**：單一品項折扣時使用的品項 ID
+- **categoryId**：分類折扣時使用的分類 ID
+- **quantity**：需達到的購買數量
+- **discountAmount**：折扣金額（新台幣）
 - 系統會自動計算可套用幾次折扣
-- 例如：買6串可套用2次折扣
+- 支援多個折扣規則同時套用
 
 **訂單**
 ```javascript
@@ -548,7 +562,7 @@ const DB_STRUCTURE = {
     {
       name: 'discountRules',   // 折扣規則
       keyPath: 'id',
-      indexes: ['itemId', 'active']
+      indexes: ['type', 'itemId', 'categoryId', 'active']
     },
     {
       name: 'settings',        // 系統設定
@@ -952,14 +966,15 @@ const printKitchenTicket = async (order, printerIp) => {
 
 ---
 
-**文件版本**：v3.1
+**文件版本**：v3.2
 **建立日期**：2026-01-26
 **最後更新**：2026-01-26
 **維護者**：Claude Code Assistant
 **狀態**：Phase 1 規劃（Vue 3 Web 版本，已確定技術堆疊，原型開發中）
 
 **更新記錄**：
-- v3.1 (2026-01-26)：新增折扣優惠功能，買幾串折多少的優惠規則
+- v3.2 (2026-01-26)：擴充折扣功能，支援跨品項折扣（單一品項、分類折扣、總數量折扣）
+- v3.1 (2026-01-26)：新增折扣優惠功能，買幾串折多少的���惠規則
 - v3.0 (2026-01-26)：移除方案選擇，確定使用 Vue 3，專注於 Web 版開發
 - v2.1 (2026-01-26)：調整為 Web 優先方案，Phase 1 專注於 Web 版開發
 - v2.0 (2026-01-26)：確定採用 Vue 3 + Capacitor 方案，加入 App 打包功能
