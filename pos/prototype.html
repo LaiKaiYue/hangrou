@@ -437,12 +437,21 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.2s;
+            transition: all 0.1s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .quick-amount-btn:hover {
             border-color: #FF6B35;
             background: white;
+        }
+
+        .quick-amount-btn:active {
+            transform: scale(0.95);
+            background: #F0F0F0;
         }
 
         .change-display {
