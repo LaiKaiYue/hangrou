@@ -108,6 +108,8 @@ hangrou/
 **原型功能**：
 - 📍 主畫面：分類切換、選單展示、購物車管理
 - 💳 結帳流程：訂單確認、現金付款、找零計算
+- 🏷️ 折扣優惠：買幾串折多少的優惠規則（可在設定畫面配置）
+- ⚙️ 設定管理：新增/編輯/刪除折扣規則
 - 📊 銷售報表：日/週/月報表、分類統計、時段分析、熱銷 TOP 10
 - 📈 即時統計：營業額、訂單數、平均客單價、分類占比
 
@@ -224,9 +226,35 @@ npx http-server
 
 ### POS 系統開發
 
+**測試原型（當前階段）**：
+
 ```bash
-# 進入 POS 目錄（需要先初始化專案）
+# 方法 1：直接用瀏覽器打開
+open /Users/laikaiyue/Documents/Project/hangrou/pos/prototype.html
+
+# 方法 2：使用本地伺服器
+cd /Users/laikaiyue/Documents/Project/hangrou/pos
+python -m http.server 8000
+# 訪問 http://localhost:8000/prototype.html
+```
+
+**原型功能測試清單**：
+- [ ] 點選商品加入購物車
+- [ ] 調整商品數量
+- [ ] 切換不同分類
+- [ ] 測試折扣功能（設定折扣規則）
+- [ ] 結帳流程（輸入金額、計算找零）
+- [ ] 查看銷售報表
+- [ ] 完成付款後查看統計更新
+
+**Vue 3 專案開發（未來）**：
+
+```bash
+# 進入 POS 目錄
 cd pos
+
+# 初始化 Vue 3 專案
+npm create vite@latest . -- --template vue-ts
 
 # 安裝依賴
 npm install
@@ -235,7 +263,9 @@ npm install
 npm run dev
 ```
 
-詳細說明請參考：[pos/docs/VUE3-QUICKSTART.md](pos/docs/VUE3-QUICKSTART.md)
+詳細說明請參考���
+- [pos/docs/VUE3-QUICKSTART.md](pos/docs/VUE3-QUICKSTART.md) - Vue 3 快速開始
+- [pos/docs/POS-PLANNER.md](pos/docs/POS-PLANNER.md) - 完整開發規劃
 
 ### 測試暗黑模式
 1. 點擊右上角主題切換按鈕

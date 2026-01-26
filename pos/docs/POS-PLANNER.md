@@ -60,8 +60,15 @@
   - 支援清空訂單
 
 #### 1.3 特殊功能
-- **套餐組合**：支援建立套餐（例如：燒肉拼盤）
-- **加購推薦**：點餐時顯示推薦搭配菜品
+- **折扣優惠**：
+  - 買幾串折多少的優惠規則（例如：烤香菇買3串折$5）
+  - 可在設定畫面靈活配置
+  - 自動計算折扣金額
+  - 支援多個折扣規則同時套用
+  - 購物車即時顯示折扣金額
+  - 結帳時明確列出折扣明細
+- **套餐組合**：支援建立套餐（例如：燒肉拼盤）（未來擴展）
+- **加購推薦**：點餐時顯示推薦搭配菜品（未來擴展）
 
 ---
 
@@ -429,6 +436,27 @@
 }
 ```
 
+**折扣規則**
+```javascript
+{
+  id: 1,
+  itemId: "item_mushroom",
+  itemName: "烤香菇",
+  quantity: 3,              // 購買數量
+  discountAmount: 5,        // 折扣金額
+  active: true,
+  createdAt: "2026-01-26T10:00:00Z",
+  updatedAt: "2026-01-26T10:00:00Z"
+}
+```
+
+**說明**：
+- `itemId`：適用折扣的品項 ID
+- `quantity`：需達到的購買數量
+- `discountAmount`：折扣金額（新台幣）
+- 系統會自動計算可套用幾次折扣
+- 例如：買6串可套用2次折扣
+
 **訂單**
 ```javascript
 {
@@ -516,6 +544,11 @@ const DB_STRUCTURE = {
       name: 'dailyStats',      // 每日統計
       keyPath: 'date',
       indexes: ['createdAt']
+    },
+    {
+      name: 'discountRules',   // 折扣規則
+      keyPath: 'id',
+      indexes: ['itemId', 'active']
     },
     {
       name: 'settings',        // 系統設定
@@ -919,13 +952,14 @@ const printKitchenTicket = async (order, printerIp) => {
 
 ---
 
-**文件版本**：v3.0
+**文件版本**：v3.1
 **建立日期**：2026-01-26
 **最後更新**：2026-01-26
 **維護者**：Claude Code Assistant
-**狀態**：Phase 1 規劃（Vue 3 Web 版本，已確定技術堆疊）
+**狀態**：Phase 1 規劃（Vue 3 Web 版本，已確定技術堆疊，原型開發中）
 
 **更新記錄**：
+- v3.1 (2026-01-26)：新增折扣優惠功能，買幾串折多少的優惠規則
 - v3.0 (2026-01-26)：移除方案選擇，確定使用 Vue 3，專注於 Web 版開發
 - v2.1 (2026-01-26)：調整為 Web 優先方案，Phase 1 專注於 Web 版開發
 - v2.0 (2026-01-26)：確定採用 Vue 3 + Capacitor 方案，加入 App 打包功能

@@ -748,6 +748,178 @@
             color: #D63031;
         }
 
+        /* 設定頁面 */
+        .settings-page {
+            display: none;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .settings-page.active {
+            display: block;
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .settings-header h2 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .settings-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+
+        .settings-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .section-desc {
+            color: #636E72;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .discount-rules-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .discount-rule-card {
+            background: #F8F9FA;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .discount-rule-card:hover {
+            border-color: #FF6B35;
+            background: white;
+        }
+
+        .discount-rule-info {
+            flex: 1;
+        }
+
+        .discount-rule-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .discount-rule-desc {
+            color: #636E72;
+            font-size: 14px;
+        }
+
+        .discount-rule-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .discount-rule-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-edit {
+            background: #0984E3;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #0770C0;
+        }
+
+        .btn-delete {
+            background: #D63031;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #B02929;
+        }
+
+        .empty-rules {
+            text-align: center;
+            padding: 40px 20px;
+            color: #636E72;
+        }
+
+        .empty-rules-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        /* 折扣預覽 */
+        .discount-preview {
+            background: linear-gradient(135deg, #FF6B35, #FF8C42);
+            color: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .preview-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .preview-text {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        /* 購物車折扣顯示 */
+        .cart-discount {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #FFF3CD;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #FFC107;
+        }
+
+        .discount-label {
+            font-weight: 600;
+            color: #856404;
+        }
+
+        .discount-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #856404;
+        }
+
+        select.input-field {
+            cursor: pointer;
+        }
+
         /* 響應式 */
         @media (max-width: 968px) {
             .main-content {
@@ -768,7 +940,7 @@
         <h1>夯肉 HANGROU</h1>
         <div class="header-buttons">
             <button class="header-btn" onclick="showReports()">📊 報表</button>
-            <button class="header-btn">⚙️ 設定</button>
+            <button class="header-btn" onclick="showSettings()">⚙️ 設定</button>
         </div>
     </header>
 
@@ -1068,6 +1240,71 @@
         </div>
     </div>
 
+    <!-- 設定頁面 -->
+    <div class="settings-page" id="settingsPage">
+        <div class="settings-header">
+            <button class="back-btn" onclick="hideSettings()">← 返回點餐</button>
+            <h2>⚙️ 系統設定</h2>
+        </div>
+
+        <div class="settings-content">
+            <!-- 折扣規則設定 -->
+            <div class="settings-section">
+                <h3>🏷️ 折扣規則</h3>
+                <p class="section-desc">設定買幾串折多少的優惠規則</p>
+
+                <div class="discount-rules-list" id="discountRulesList">
+                    <!-- 折扣規則會由 JavaScript 動態生成 -->
+                </div>
+
+                <button class="btn btn-primary" onclick="showAddDiscountModal()" style="width: 100%; margin-top: 16px;">
+                    + 新增折扣規則
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增/編輯折扣規則彈窗 -->
+    <div class="modal-overlay" id="discountModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="discountModalTitle">新增折扣規則</div>
+                <button class="modal-close" onclick="hideDiscountModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label class="input-label">選擇品項</label>
+                    <select class="input-field" id="discountItem">
+                        <!-- 會由 JavaScript 動態生成 -->
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">購買數量</label>
+                    <input type="number" class="input-field" id="discountQuantity" min="1" value="3" placeholder="例如：3">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">折扣金額</label>
+                    <input type="number" class="input-field" id="discountAmount" min="1" value="5" placeholder="例如：5">
+                    <small style="color: #636E72; display: block; margin-top: 4px;">
+                        買滿指定數量，可折扣的金額
+                    </small>
+                </div>
+
+                <div class="discount-preview" id="discountPreview">
+                    <div class="preview-label">優惠說明預覽</div>
+                    <div class="preview-text" id="discountPreviewText">烤香菇 買3串 折$5</div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="hideDiscountModal()">取消</button>
+                    <button class="btn btn-primary" onclick="saveDiscountRule()">儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 菜品資料
         const menuItems = [
@@ -1128,6 +1365,19 @@
             totalOrders: 0
         };
 
+        // 折扣規則
+        let discountRules = [
+            {
+                id: 1,
+                itemId: 12,
+                itemName: '烤香菇',
+                quantity: 3,
+                discountAmount: 5
+            }
+        ];
+
+        let editingDiscountId = null;
+
         // 初始化選單
         function initMenu() {
             const menuGrid = document.getElementById('menuGrid');
@@ -1177,6 +1427,30 @@
             updateCart();
         }
 
+        // 計算折扣總額
+        function calculateDiscounts() {
+            let totalDiscount = 0;
+            const appliedDiscounts = [];
+
+            discountRules.forEach(rule => {
+                const cartItem = cart.find(item => item.id === rule.itemId);
+                if (cartItem && cartItem.quantity >= rule.quantity) {
+                    // 計算可套用幾次折扣
+                    const times = Math.floor(cartItem.quantity / rule.quantity);
+                    const discount = times * rule.discountAmount;
+                    totalDiscount += discount;
+                    appliedDiscounts.push({
+                        itemName: rule.itemName,
+                        quantity: rule.quantity,
+                        times: times,
+                        discount: discount
+                    });
+                }
+            });
+
+            return { totalDiscount, appliedDiscounts };
+        }
+
         // 更新購物車顯示
         function updateCart() {
             const cartItemsContainer = document.getElementById('cartItems');
@@ -1196,12 +1470,12 @@
             }
 
             cartItemsContainer.innerHTML = '';
-            let total = 0;
+            let subtotal = 0;
             let totalQuantity = 0;
 
             cart.forEach(item => {
                 const itemTotal = item.price * item.quantity;
-                total += itemTotal;
+                subtotal += itemTotal;
                 totalQuantity += item.quantity;
 
                 const cartItem = document.createElement('div');
@@ -1221,6 +1495,29 @@
                 cartItemsContainer.appendChild(cartItem);
             });
 
+            // 計算折扣
+            const { totalDiscount, appliedDiscounts } = calculateDiscounts();
+
+            // 顯示折扣資訊
+            if (totalDiscount > 0) {
+                const discountDiv = document.createElement('div');
+                discountDiv.className = 'cart-discount';
+                discountDiv.innerHTML = `
+                    <div class="discount-label">🏷️ 折扣優惠</div>
+                    <div class="discount-value">-$${totalDiscount}</div>
+                `;
+                cartItemsContainer.appendChild(discountDiv);
+
+                // 顯示折扣說明
+                appliedDiscounts.forEach(discount => {
+                    const discountInfo = document.createElement('div');
+                    discountInfo.style.cssText = 'padding: 8px 12px; font-size: 12px; color: #636E72; background: #FFF3CD; border-radius: 4px; margin-top: 4px;';
+                    discountInfo.textContent = `${discount.itemName} 買${discount.quantity}串折$${discount.discount / discount.times} × ${discount.times}次`;
+                    cartItemsContainer.appendChild(discountInfo);
+                });
+            }
+
+            const total = subtotal - totalDiscount;
             totalItemsEl.textContent = totalQuantity;
             cartTotalEl.textContent = `$${total}`;
         }
@@ -1274,11 +1571,11 @@
 
             // 顯示訂單項目
             checkoutItems.innerHTML = '';
-            let total = 0;
+            let subtotal = 0;
 
             cart.forEach(item => {
                 const itemTotal = item.price * item.quantity;
-                total += itemTotal;
+                subtotal += itemTotal;
 
                 const checkoutItem = document.createElement('div');
                 checkoutItem.className = 'checkout-item';
@@ -1292,6 +1589,31 @@
                 checkoutItems.appendChild(checkoutItem);
             });
 
+            // 計算並顯示折扣
+            const { totalDiscount, appliedDiscounts } = calculateDiscounts();
+
+            if (totalDiscount > 0) {
+                const discountDiv = document.createElement('div');
+                discountDiv.className = 'checkout-item';
+                discountDiv.style.cssText = 'background: #FFF3CD; color: #856404;';
+                discountDiv.innerHTML = `
+                    <div>
+                        <strong>🏷️ 折扣優惠</strong>
+                    </div>
+                    <div style="color: #856404;">-$${totalDiscount}</div>
+                `;
+                checkoutItems.appendChild(discountDiv);
+
+                // 顯示折扣明細
+                appliedDiscounts.forEach(discount => {
+                    const discountInfo = document.createElement('div');
+                    discountInfo.style.cssText = 'padding: 8px 12px; font-size: 12px; color: #636E72; background: #F8F9FA;';
+                    discountInfo.textContent = `${discount.itemName} 買${discount.quantity}串折$${discount.discount / discount.times} × ${discount.times}次`;
+                    checkoutItems.appendChild(discountInfo);
+                });
+            }
+
+            const total = subtotal - totalDiscount;
             checkoutTotal.textContent = `$${total}`;
 
             // 重置輸入
@@ -1316,7 +1638,12 @@
         function calculateChange() {
             const receivedInput = document.getElementById('receivedAmount');
             const changeDisplay = document.getElementById('changeDisplay');
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            // 計算小計和折扣
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const { totalDiscount } = calculateDiscounts();
+            const total = subtotal - totalDiscount;
+
             const received = parseInt(receivedInput.value) || 0;
 
             const change = received - total;
@@ -1331,7 +1658,11 @@
 
         // 完成付款
         function completePayment() {
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            // 計算小計和折扣
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const { totalDiscount } = calculateDiscounts();
+            const total = subtotal - totalDiscount;
+
             const received = parseInt(document.getElementById('receivedAmount').value) || 0;
 
             if (received < total) {
@@ -1366,7 +1697,7 @@
                 };
             }
 
-            // 更新統計
+            // 更新統計（使用折扣後的金額）
             dailyStats.totalRevenue += total;
             dailyStats.orderCount++;
 
@@ -1606,6 +1937,177 @@
             document.getElementById('mainPage').style.display = 'block';
             document.getElementById('reportsPage').classList.remove('active');
         }
+
+        // 顯示設定頁面
+        function showSettings() {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('reportsPage').classList.remove('active');
+            document.getElementById('settingsPage').classList.add('active');
+            updateDiscountRulesList();
+        }
+
+        // 隱藏設定頁面
+        function hideSettings() {
+            document.getElementById('settingsPage').classList.remove('active');
+            document.getElementById('mainPage').style.display = 'block';
+        }
+
+        // 更新折扣規則列表
+        function updateDiscountRulesList() {
+            const listContainer = document.getElementById('discountRulesList');
+            listContainer.innerHTML = '';
+
+            if (discountRules.length === 0) {
+                listContainer.innerHTML = `
+                    <div class="empty-rules">
+                        <div class="empty-rules-icon">🏷️</div>
+                        <p>尚未設定折扣規則</p>
+                        <p style="font-size: 14px; margin-top: 8px;">點擊下方按鈕新增優惠規則</p>
+                    </div>
+                `;
+                return;
+            }
+
+            discountRules.forEach(rule => {
+                const ruleCard = document.createElement('div');
+                ruleCard.className = 'discount-rule-card';
+                ruleCard.innerHTML = `
+                    <div class="discount-rule-info">
+                        <div class="discount-rule-title">${rule.itemName}</div>
+                        <div class="discount-rule-desc">買 ${rule.quantity} 串 折 $${rule.discountAmount}</div>
+                    </div>
+                    <div class="discount-rule-actions">
+                        <button class="discount-rule-btn btn-edit" onclick="editDiscountRule(${rule.id})">編輯</button>
+                        <button class="discount-rule-btn btn-delete" onclick="deleteDiscountRule(${rule.id})">刪除</button>
+                    </div>
+                `;
+                listContainer.appendChild(ruleCard);
+            });
+        }
+
+        // 顯示新增折扣規則彈窗
+        function showAddDiscountModal() {
+            editingDiscountId = null;
+            document.getElementById('discountModalTitle').textContent = '新增折扣規則';
+
+            // 填充品項選項
+            const itemSelect = document.getElementById('discountItem');
+            itemSelect.innerHTML = menuItems.map(item =>
+                `<option value="${item.id}">${item.name} - $${item.price}</option>`
+            ).join('');
+
+            // 重設表單
+            document.getElementById('discountQuantity').value = 3;
+            document.getElementById('discountAmount').value = 5;
+            updateDiscountPreview();
+
+            document.getElementById('discountModal').classList.add('active');
+        }
+
+        // 編輯折扣規則
+        function editDiscountRule(id) {
+            const rule = discountRules.find(r => r.id === id);
+            if (!rule) return;
+
+            editingDiscountId = id;
+            document.getElementById('discountModalTitle').textContent = '編輯折扣規則';
+
+            // 填充品項選項
+            const itemSelect = document.getElementById('discountItem');
+            itemSelect.innerHTML = menuItems.map(item =>
+                `<option value="${item.id}">${item.name} - $${item.price}</option>`
+            ).join('');
+            itemSelect.value = rule.itemId;
+
+            document.getElementById('discountQuantity').value = rule.quantity;
+            document.getElementById('discountAmount').value = rule.discountAmount;
+            updateDiscountPreview();
+
+            document.getElementById('discountModal').classList.add('active');
+        }
+
+        // 刪除折扣規則
+        function deleteDiscountRule(id) {
+            if (confirm('確定要刪除這個折扣規則嗎？')) {
+                discountRules = discountRules.filter(r => r.id !== id);
+                updateDiscountRulesList();
+                updateCart(); // 更新購物車以反映折扣變化
+            }
+        }
+
+        // 隱藏折扣規則彈窗
+        function hideDiscountModal() {
+            document.getElementById('discountModal').classList.remove('active');
+        }
+
+        // 更新折扣預覽
+        function updateDiscountPreview() {
+            const itemId = parseInt(document.getElementById('discountItem').value);
+            const quantity = parseInt(document.getElementById('discountQuantity').value) || 3;
+            const discountAmount = parseInt(document.getElementById('discountAmount').value) || 5;
+
+            const item = menuItems.find(i => i.id === itemId);
+            const itemName = item ? item.name : '商品';
+
+            document.getElementById('discountPreviewText').textContent =
+                `${itemName} 買${quantity}串 折$${discountAmount}`;
+        }
+
+        // 儲存折扣規則
+        function saveDiscountRule() {
+            const itemId = parseInt(document.getElementById('discountItem').value);
+            const quantity = parseInt(document.getElementById('discountQuantity').value);
+            const discountAmount = parseInt(document.getElementById('discountAmount').value);
+
+            if (!quantity || quantity < 1) {
+                alert('請輸入有效的購買數量');
+                return;
+            }
+
+            if (!discountAmount || discountAmount < 1) {
+                alert('請輸入有效的折扣金額');
+                return;
+            }
+
+            const item = menuItems.find(i => i.id === itemId);
+
+            if (editingDiscountId) {
+                // 編輯現有規則
+                const rule = discountRules.find(r => r.id === editingDiscountId);
+                if (rule) {
+                    rule.itemId = itemId;
+                    rule.itemName = item.name;
+                    rule.quantity = quantity;
+                    rule.discountAmount = discountAmount;
+                }
+            } else {
+                // 新增規則
+                const newId = Math.max(...discountRules.map(r => r.id), 0) + 1;
+                discountRules.push({
+                    id: newId,
+                    itemId: itemId,
+                    itemName: item.name,
+                    quantity: quantity,
+                    discountAmount: discountAmount
+                });
+            }
+
+            hideDiscountModal();
+            updateDiscountRulesList();
+            updateCart();
+        }
+
+        // 監聽輸入變化以更新預覽
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = ['discountItem', 'discountQuantity', 'discountAmount'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', updateDiscountPreview);
+                    element.addEventListener('input', updateDiscountPreview);
+                }
+            });
+        });
 
         // 初始化
         window.onload = () => {
