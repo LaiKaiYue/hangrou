@@ -76,6 +76,20 @@
             background: rgba(255,255,255,0.3);
         }
 
+        .header-business-date {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: default;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
         /* 分類標籤 */
         .category-tabs {
             display: flex;
@@ -295,6 +309,51 @@
         .delete-btn:active {
             transform: scale(0.95);
             background: #B02929;
+        }
+
+        /* 通用操作按鈕樣式 */
+        .action-button {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            /* 移除過渡動畫以提升觸控響應速度 */
+            transition: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .action-button:hover {
+            background: #FF8C42;
+        }
+
+        .action-button:active {
+            transform: scale(0.95);
+            background: #E65A2B;
+        }
+
+        /* 日期選擇器輸框樣式 */
+        .menu-input {
+            padding: 10px 14px;
+            border: 2px solid #DFE6E9;
+            border-radius: 4px;
+            font-size: 15px;
+            background: white;
+            color: #2D3436;
+            outline: none;
+        }
+
+        .menu-input:focus {
+            border-color: #FF6B35;
         }
 
         .delete-btn.pressed {
@@ -555,6 +614,12 @@
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+            transition: all 0.2s ease;
         }
 
         .stat-label {
@@ -1048,6 +1113,212 @@
                 border-top: 1px solid #DFE6E9;
             }
         }
+
+        /* 規格選擇對話框樣式 */
+        .spec-item-info {
+            text-align: center;
+            padding: 20px;
+            background: #F8F9FA;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .spec-item-info h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #2D3436;
+        }
+
+        .spec-item-info p {
+            font-size: 24px;
+            color: #FF6B35;
+            font-weight: 600;
+        }
+
+        .spec-section {
+            margin-bottom: 20px;
+        }
+
+        .spec-section h4 {
+            margin-bottom: 12px;
+            font-size: 16px;
+            color: #2D3436;
+        }
+
+        .spec-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .spec-btn {
+            padding: 10px;
+            border: 2px solid #DFE6E9;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .spec-btn.active {
+            background: #FF6B35;
+            color: white;
+            border-color: #FF6B35;
+        }
+
+        .spec-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .spec-checkboxes label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #F8F9FA;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        .spec-checkboxes input[type="checkbox"] {
+            margin-right: 6px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .spec-custom-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #DFE6E9;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .spec-custom-input:focus {
+            outline: none;
+            border-color: #FF6B35;
+        }
+
+        .spec-quantity {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .spec-quantity .qty-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: #FF6B35;
+            color: white;
+            border-radius: 6px;
+            font-size: 20px;
+            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .spec-quantity .qty-display {
+            font-size: 18px;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* 購物車項目規格顯示 */
+        .cart-item-specs {
+            font-size: 12px;
+            color: #636E72;
+            margin-top: 4px;
+        }
+
+        .cart-item-specs .spec-tag {
+            display: inline-block;
+            background: #FFEAA7;
+            color: #2D3436;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 4px;
+            margin-bottom: 2px;
+            font-size: 11px;
+        }
+
+        /* 手動折扣區塊樣式 */
+        .manual-discount-section {
+            background: #FFF3CD;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #FFC107;
+        }
+
+        .manual-discount-section h4 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            color: #2D3436;
+        }
+
+        .quick-discount-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .quick-discount-btn {
+            padding: 10px;
+            background: #FF6B35;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .quick-discount-btn:active {
+            background: #E65A2B;
+        }
+
+        .percentage-discount {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .percentage-btn {
+            padding: 10px;
+            background: #00B894;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .percentage-btn:active {
+            background: #00A383;
+        }
     </style>
 </head>
 <body>
@@ -1055,6 +1326,9 @@
     <header class="header">
         <h1>夯肉 HANGROU</h1>
         <div class="header-buttons">
+            <div class="header-business-date">
+                📅 <span id="headerBusinessDate">-</span>
+            </div>
             <button class="header-btn" onclick="showReports()">📊 報表</button>
             <button class="header-btn" onclick="showSettings()">⚙️ 設定</button>
         </div>
@@ -1124,21 +1398,36 @@
 
         <!-- 日報表 -->
         <div class="report-content active" id="dailyReport">
+            <div class="chart-container">
+                <div class="chart-title">📊 日報表查詢</div>
+                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 20px;">
+                    <input type="date" id="dailyStartDateSelector" class="menu-input" style="flex: 1; min-width: 180px;" placeholder="開始日期">
+                    <span style="color: #636E72;">至</span>
+                    <input type="date" id="dailyEndDateSelector" class="menu-input" style="flex: 1; min-width: 180px;" placeholder="結束日期">
+                    <button class="action-button" onclick="loadDailyReportByDateRange()">
+                        🔍 查詢
+                    </button>
+                    <button class="action-button" onclick="loadTodayReport()" style="background: #636E72;">
+                        今日
+                    </button>
+                </div>
+            </div>
+
             <div class="stats-cards">
                 <div class="stat-card">
-                    <div class="stat-label">今日營業額</div>
+                    <div class="stat-label" id="revenueLabel">今日營業額</div>
                     <div class="stat-value" id="todayRevenue">$0</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" style="cursor: pointer;" onclick="showOrderListModal()">
                     <div class="stat-label">訂單數</div>
                     <div class="stat-value" id="todayOrders">0</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">今日總折扣</div>
+                    <div class="stat-label" id="discountLabel">今日總折扣</div>
                     <div class="stat-value" id="todayDiscount" style="color: #D63031;">$0</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">今日利潤</div>
+                    <div class="stat-label" id="profitLabel">今日利潤</div>
                     <div class="stat-value" id="todayProfit" style="color: #00B894;">$0</div>
                 </div>
             </div>
@@ -1242,10 +1531,44 @@
                     <div style="text-align: center; padding: 20px; color: #636E72;">今日尚無折扣記錄</div>
                 </div>
             </div>
+
+            <!-- 結帳操作 -->
+            <div class="chart-container" id="dailyCheckoutSection">
+                <div class="chart-title" id="checkoutTitle">🔒 營業日結帳操作</div>
+                <div style="display: flex; gap: 12px; justify-content: center; padding: 20px; flex-wrap: wrap;">
+                    <button class="action-button" onclick="exportDailyReport()" style="background: #0984E3;">
+                        📥 匯出結帳明細
+                    </button>
+                    <button class="action-button" id="closeoutButton" onclick="performDailyCloseout()" style="background: #D63031;">
+                        🔒 關帳（換日）
+                    </button>
+                </div>
+                <div style="text-align: center; padding: 0 20px 20px 20px; font-size: 14px; color: #636E72; line-height: 1.6;">
+                    <strong style="color: #2D3436;">說明：</strong><br>
+                    • 匯出結帳明細：依據上方日期區間匯出 CSV 檔案<br>
+                    • 關帳（換日）：更新營業日到下一天，清空統計資料，重置訂單編號
+                </div>
+            </div>
         </div>
 
         <!-- 週報表 -->
         <div class="report-content" id="weeklyReport">
+            <div class="chart-container">
+                <div class="chart-title">選擇週</div>
+                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 20px;">
+                    <input type="week" id="weeklyDateSelector" class="menu-input" style="flex: 1; min-width: 200px;">
+                    <button class="action-button" onclick="loadWeeklyReportByWeek()">
+                        🔍 查詢
+                    </button>
+                    <button class="action-button" onclick="loadThisWeekReport()" style="background: #636E72;">
+                        本週
+                    </button>
+                    <button class="action-button" onclick="loadLastWeekReport()" style="background: #636E72;">
+                        上週
+                    </button>
+                </div>
+            </div>
+
             <div class="stats-cards">
                 <div class="stat-card">
                     <div class="stat-label">本週營業額</div>
@@ -1285,6 +1608,22 @@
 
         <!-- 月報表 -->
         <div class="report-content" id="monthlyReport">
+            <div class="chart-container">
+                <div class="chart-title">選擇月份</div>
+                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 20px;">
+                    <input type="month" id="monthlyDateSelector" class="menu-input" style="flex: 1; min-width: 200px;">
+                    <button class="action-button" onclick="loadMonthlyReportByMonth()">
+                        🔍 查詢
+                    </button>
+                    <button class="action-button" onclick="loadThisMonthReport()" style="background: #636E72;">
+                        本月
+                    </button>
+                    <button class="action-button" onclick="loadLastMonthReport()" style="background: #636E72;">
+                        上月
+                    </button>
+                </div>
+            </div>
+
             <div class="stats-cards">
                 <div class="stat-card">
                     <div class="stat-label">本月營業額</div>
@@ -1309,6 +1648,41 @@
         </div>
     </div>
 
+    <!-- 訂單列表彈窗 -->
+    <div class="modal-overlay" id="orderListModal">
+        <div class="modal" style="max-width: 800px;">
+            <div class="modal-header">
+                <div class="modal-title" id="orderListModalTitle">訂單明細</div>
+                <button class="modal-close" onclick="hideOrderListModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="orderListDate" style="margin-bottom: 12px; color: #636E72;"></div>
+
+                <!-- 訂單搜尋框 -->
+                <div style="margin-bottom: 16px;">
+                    <input
+                        type="text"
+                        id="orderSearchInput"
+                        class="input-field"
+                        placeholder="🔍 輸入訂單編號搜尋（例如：#20250207-001）"
+                        style="width: 100%;"
+                        oninput="filterOrderList()"
+                    >
+                </div>
+
+                <div style="max-height: 500px; overflow-y: auto;">
+                    <div id="orderListContainer">
+                        <!-- 訂單會由 JavaScript 動態生成 -->
+                    </div>
+                </div>
+
+                <div class="modal-actions" style="margin-top: 20px;">
+                    <button class="btn btn-secondary" onclick="hideOrderListModal()">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- 結帳彈窗 -->
     <div class="modal-overlay" id="checkoutModal">
         <div class="modal">
@@ -1320,7 +1694,7 @@
                 <div class="order-info">
                     <div class="order-info-row">
                         <span>訂單號：</span>
-                        <span id="orderNumber">#20260126-001</span>
+                        <span id="orderNumber">#20260126001</span>
                     </div>
                     <div class="order-info-row">
                         <span>時間：</span>
@@ -1332,17 +1706,65 @@
                     <!-- 訂單項目會由 JavaScript 動態生成 -->
                 </div>
 
-                <div class="order-info">
-                    <div class="order-info-row">
-                        <span>總計：</span>
-                        <span class="cart-total" id="checkoutTotal">$0</span>
-                    </div>
-                </div>
+                <!-- 手動折扣區塊 -->
+                    <div class="manual-discount-section">
+                        <h4>💰 手動折扣</h4>
 
-                <div class="payment-section">
-                    <div class="payment-method">
+                        <!-- 快速折扣按鈕 -->
+                        <div class="quick-discount-buttons">
+                            <button class="quick-discount-btn" onclick="applyManualDiscount(10)">折$10</button>
+                            <button class="quick-discount-btn" onclick="applyManualDiscount(20)">折$20</button>
+                            <button class="quick-discount-btn" onclick="applyManualDiscount(50)">折$50</button>
+                        </div>
+
+                        <!-- 自訂金額與百分比 -->
+                        <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                            <div style="flex: 1;">
+                                <input type="number" id="manualDiscountInput" class="input-field" placeholder="自訂金額" style="margin-bottom: 0;">
+                            </div>
+                            <button class="btn btn-secondary" onclick="applyCustomDiscount()" style="padding: 12px 16px;">套用</button>
+                        </div>
+
+                        <!-- 百分比折扣 -->
+                        <div class="percentage-discount">
+                            <button class="percentage-btn" onclick="applyPercentageDiscount(10)">打9折</button>
+                            <button class="percentage-btn" onclick="applyPercentageDiscount(20)">打8折</button>
+                        </div>
+
+                        <!-- 折扣原因 -->
+                        <div style="margin-top: 12px;">
+                            <label style="display: block; margin-bottom: 4px; font-size: 14px;">折扣原因</label>
+                            <select id="discountReason" class="input-field" onchange="updateDiscountReason()">
+                                <option value="">選擇原因</option>
+                                <option value="會員折扣">會員折扣</option>
+                                <option value="活動優惠">活動優惠</option>
+                                <option value="服務補償">服務補償</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+
+                        <!-- 目前手動折扣顯示 -->
+                        <div id="manualDiscountDisplay" style="display: none; margin-top: 12px; padding: 8px; background: white; border-radius: 6px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>已套用手動折扣：</span>
+                                <span id="manualDiscountAmount" style="font-weight: 600; color: #D63031;">$0</span>
+                            </div>
+                            <button onclick="clearManualDiscount()" style="width: 100%; margin-top: 8px; padding: 6px; background: #D63031; color: white; border: none; border-radius: 4px; cursor: pointer;">清除手動折扣</button>
+                        </div>
+                    </div>
+
+                    <!-- 總計顯示 -->
+                    <div class="order-info" style="margin-bottom: 16px;">
+                        <div class="order-info-row">
+                            <span style="font-size: 18px; font-weight: 600;">總計：</span>
+                            <span class="cart-total" id="checkoutTotal" style="font-size: 20px;">$0</span>
+                        </div>
+                    </div>
+
+                    <!-- 現金付款區塊 -->
+                    <div class="payment-method" style="margin-bottom: 16px;">
                         <span>💵</span>
-                        <span>現金付款</span>
+                        <span style="font-size: 16px; font-weight: 600;">現金付款</span>
                     </div>
 
                     <div class="input-group">
@@ -1390,6 +1812,87 @@
                 <button class="btn btn-primary" onclick="showAddDiscountModal()" style="width: 100%; margin-top: 16px;">
                     + 新增折扣規則
                 </button>
+            </div>
+
+            <!-- 測試資料（開發用） -->
+            <div class="settings-section" id="testDataSection" style="display: none;">
+                <h3>🧪 測試資料</h3>
+                <p class="section-desc">生成測試資料以驗證報表查詢功能</p>
+
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="generateTestData()" style="flex: 1; min-width: 200px;">
+                        📊 生成測試資料
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearTestData()" style="flex: 1; min-width: 200px; background: #D63031;">
+                        🗑️ 清除測試資料
+                    </button>
+                </div>
+
+                <div style="margin-top: 12px; padding: 12px; background: #FFF3CD; border-radius: 8px; font-size: 14px; color: #856404;">
+                    <strong>說明：</strong><br>
+                    • 點擊「生成測試資料」會自動建立過去7天的模擬銷售資料<br>
+                    • 生成的資料可用於測試日報表、週報表、月報表的歷史查詢功能<br>
+                    • 測試完成後可點擊「清除測試資料」刪除<br>
+                    <strong style="color: #856404;">💡 提示：此區塊僅在測試模式下顯示（URL 加 ?test=true）</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 規格選擇彈窗 -->
+    <div class="modal-overlay" id="specModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">選擇規格</div>
+                <button class="modal-close" onclick="hideSpecModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- 品項資訊 -->
+                <div class="spec-item-info">
+                    <h3 id="specItemName">雞肉串</h3>
+                    <p id="specItemPrice">$50</p>
+                </div>
+
+                <!-- 辣度選擇 -->
+                <div class="spec-section spicy-section">
+                    <h4>🌶️ 辣度</h4>
+                    <div class="spec-buttons">
+                        <button class="spec-btn active" data-spicy="不辣" onclick="selectSpicy('不辣')">不辣</button>
+                        <button class="spec-btn" data-spicy="微辣" onclick="selectSpicy('微辣')">微辣</button>
+                        <button class="spec-btn" data-spicy="中辣" onclick="selectSpicy('中辣')">中辣</button>
+                        <button class="spec-btn" data-spicy="特辣" onclick="selectSpicy('特辣')">特辣</button>
+                    </div>
+                </div>
+
+                <!-- 客製化備註 -->
+                <div class="spec-section">
+                    <h4>📝 客製化</h4>
+                    <div class="spec-checkboxes">
+                        <label class="ice-option"><input type="checkbox" value="少冰" onchange="updateCustomNotes()"> 少冰</label>
+                        <label class="ice-option"><input type="checkbox" value="去冰" onchange="updateCustomNotes()"> 去冰</label>
+                        <label class="seasoning-option"><input type="checkbox" value="加蔥" onchange="updateCustomNotes()"> 加蔥</label>
+                        <label class="seasoning-option"><input type="checkbox" value="去蔥" onchange="updateCustomNotes()"> 去蔥</label>
+                        <label class="seasoning-option"><input type="checkbox" value="多醬" onchange="updateCustomNotes()"> 多醬</label>
+                        <label class="seasoning-option"><input type="checkbox" value="少醬" onchange="updateCustomNotes()"> 少醬</label>
+                    </div>
+                    <input type="text" id="specCustomInput" class="spec-custom-input" placeholder="其他需求（選填）">
+                </div>
+
+                <!-- 數量選擇 -->
+                <div class="spec-section">
+                    <h4>🔢 數量</h4>
+                    <div class="spec-quantity">
+                        <button class="qty-btn" onclick="adjustSpecQty(-1)">-</button>
+                        <span class="qty-display" id="specQtyDisplay">1</span>
+                        <button class="qty-btn" onclick="adjustSpecQty(1)">+</button>
+                    </div>
+                </div>
+
+                <!-- 確認按鈕 -->
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="hideSpecModal()">取消</button>
+                    <button class="btn btn-primary" onclick="confirmSpec()">確認加入</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1485,9 +1988,22 @@
         let currentCategory = 'all';
         let orderCount = 1;
 
+        // 規格選擇相關變數
+        let currentItem = null;
+        let currentSpecQty = 1;
+        let currentSpecSpicy = '不辣';
+        let currentSpecCustom = [];
+
+        // 手動折扣相關變數
+        let currentManualDiscount = 0;
+        let currentDiscountReason = '';
+
+        // 營業日系統日期
+        let businessDate = new Date().toISOString().split('T')[0];
+
         // 當日銷售統計
         let dailyStats = {
-            date: new Date().toISOString().split('T')[0],
+            date: businessDate,  // 使用營業日
             totalRevenue: 0,         // 原價營業額（未折扣）
             totalDiscount: 0,        // 總折扣金額
             orderCount: 0,
@@ -1620,21 +2136,8 @@
 
         // 新增到購物車
         function addToCart(item) {
-            const existingItem = cart.find(i => i.id === item.id);
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                cart.push({ ...item, quantity: 1 });
-            }
-
-            // 使用 requestAnimationFrame 優化 DOM 更新
-            if (!window.cartUpdatePending) {
-                window.cartUpdatePending = true;
-                requestAnimationFrame(() => {
-                    updateCart();
-                    window.cartUpdatePending = false;
-                });
-            }
+            // 顯示規格選擇對話框
+            showSpecModal(item);
         }
 
         // 計算折扣總額
@@ -1729,9 +2232,20 @@
 
                 const cartItem = document.createElement('div');
                 cartItem.className = 'cart-item';
+
+                // 建立規格資訊 HTML
+                let specsHtml = '';
+                if (item.spicy && item.spicy !== '不辣') {
+                    specsHtml += `<span class="spec-tag">🌶️ ${item.spicy}</span>`;
+                }
+                if (item.custom && item.custom.trim()) {
+                    specsHtml += `<span class="spec-tag">📝 ${item.custom}</span>`;
+                }
+
                 cartItem.innerHTML = `
                     <div class="cart-item-info">
                         <div class="cart-item-name">${item.name}</div>
+                        ${specsHtml ? `<div class="cart-item-specs">${specsHtml}</div>` : ''}
                         <div class="cart-item-price">$${item.price} × ${item.quantity} = $${itemTotal}</div>
                     </div>
                     <div class="cart-item-actions">
@@ -1773,21 +2287,25 @@
 
         // 更新數量
         function updateQuantity(id, change) {
-            const item = cart.find(i => i.id === id);
-            if (item) {
-                item.quantity += change;
-                if (item.quantity <= 0) {
-                    removeFromCart(id);
-                } else {
-                    updateCart();
+            // 找到第一個匹配的項目（考慮到可能有相同ID但不同規格的項目）
+            const itemIndex = cart.findIndex(i => i.id === id);
+            if (itemIndex >= 0) {
+                cart[itemIndex].quantity += change;
+                if (cart[itemIndex].quantity <= 0) {
+                    cart.splice(itemIndex, 1);
                 }
+                updateCart();
             }
         }
 
         // 從購物車移除
         function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            updateCart();
+            // 移除第一個匹配的項目
+            const itemIndex = cart.findIndex(i => i.id === id);
+            if (itemIndex >= 0) {
+                cart.splice(itemIndex, 1);
+                updateCart();
+            }
         }
 
         // 清空購物車
@@ -1811,12 +2329,19 @@
             const orderNumber = document.getElementById('orderNumber');
             const orderTime = document.getElementById('orderTime');
 
-            // 更新訂單號和時間
+            // 更新訂單號和時間（使用營業日作為訂單號日期部分）
             const now = new Date();
-            const dateStr = now.toISOString().split('T')[0].replace(/-/g, '');
+            const dateStr = businessDate.replace(/-/g, ''); // 使用營業日
             const timeStr = now.toTimeString().slice(0, 5);
-            orderNumber.textContent = `#${dateStr}-${String(orderCount).padStart(3, '0')}`;
+            orderNumber.textContent = `#${dateStr}${String(orderCount).padStart(3, '0')}`;
             orderTime.textContent = `${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)} ${timeStr}`;
+
+            // 初始化手動折扣
+            currentManualDiscount = 0;
+            currentDiscountReason = '';
+            document.getElementById('discountReason').value = '';
+            document.getElementById('manualDiscountAmount').value = '';
+            updateManualDiscountDisplay();
 
             // 顯示訂單項目
             checkoutItems.innerHTML = '';
@@ -1826,12 +2351,22 @@
                 const itemTotal = item.price * item.quantity;
                 subtotal += itemTotal;
 
+                // 建立規格資訊
+                let specsText = [];
+                if (item.spicy && item.spicy !== '不辣') {
+                    specsText.push(`🌶️ ${item.spicy}`);
+                }
+                if (item.custom && item.custom.trim()) {
+                    specsText.push(`📝 ${item.custom}`);
+                }
+
                 const checkoutItem = document.createElement('div');
                 checkoutItem.className = 'checkout-item';
                 checkoutItem.innerHTML = `
                     <div>
                         <strong>${item.name}</strong>
                         <span style="margin-left: 8px; color: #636E72;">× ${item.quantity}</span>
+                        ${specsText.length > 0 ? `<div style="font-size: 12px; color: #636E72; margin-top: 4px;">${specsText.join(' | ')}</div>` : ''}
                     </div>
                     <div>$${itemTotal}</div>
                 `;
@@ -1877,6 +2412,237 @@
             document.getElementById('checkoutModal').classList.remove('active');
         }
 
+        // ==================== 訂單列表彈窗功能 ====================
+
+        // 儲存當前顯示的所有訂單（用於搜尋過濾）
+        let currentDisplayOrders = [];
+
+        // 顯示訂單列表彈窗
+        function showOrderListModal() {
+            const startDate = document.getElementById('dailyStartDateSelector').value;
+            const endDate = document.getElementById('dailyEndDateSelector').value;
+
+            if (!startDate || !endDate) {
+                alert('請先選擇日期區間！');
+                return;
+            }
+
+            let orders = [];
+            let displayDate = '';
+
+            // 計算日期區間內的所有日期
+            const dates = [];
+            let currentDate = new Date(startDate);
+            const endDateObj = new Date(endDate);
+
+            while (currentDate <= endDateObj) {
+                dates.push(currentDate.toISOString().split('T')[0]);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // 從各營業日資料收集訂單
+            dates.forEach(date => {
+                let dayData;
+
+                if (date === businessDate) {
+                    // 當前營業日使用記憶體中的即時資料
+                    dayData = dailyStats;
+                } else {
+                    // 從 localStorage 讀取該營業日的資料
+                    const saved = localStorage.getItem(`businessData_${date}`);
+                    if (saved) {
+                        dayData = JSON.parse(saved);
+                    }
+                }
+
+                if (dayData && dayData.orders) {
+                    orders.push(...dayData.orders);
+                }
+            });
+
+            if (orders.length === 0) {
+                alert('該日期區間尚無訂單記錄！');
+                return;
+            }
+
+            // 儲存到全域變數供搜尋使用
+            currentDisplayOrders = orders;
+
+            // 清空搜尋框
+            document.getElementById('orderSearchInput').value = '';
+
+            // 更新彈窗內容
+            document.getElementById('orderListModalTitle').textContent = '訂單明細';
+            displayDate = startDate === endDate
+                ? startDate
+                : `${startDate} ~ ${endDate}`;
+            document.getElementById('orderListDate').textContent = displayDate;
+
+            // 顯示所有訂單
+            renderOrderList(orders);
+
+            // 顯示彈窗
+            document.getElementById('orderListModal').classList.add('active');
+        }
+
+        // 渲染訂單列表
+        function renderOrderList(orders) {
+            const container = document.getElementById('orderListContainer');
+
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #636E72;">
+                        <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
+                        <div style="font-size: 16px;">沒有找到符合的訂單</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = orders.map(order => {
+                // 處理折扣明細
+                let discountDetails = '';
+                if (order.discount > 0) {
+                    const details = [];
+
+                    // 處理手動折扣
+                    if (order.manualDiscount > 0) {
+                        details.push(`手動折扣: ${order.manualDiscountReason || '手動折扣'} (-$${order.manualDiscount})`);
+                    }
+
+                    // 處理自動折扣
+                    if (order.appliedDiscounts && order.appliedDiscounts.length > 0) {
+                        // 兼容兩種格式：測試資料格式（{type, name, amount}）和 calculateDiscounts 格式（{type, description, discount, times}）
+                        const autoDiscounts = order.appliedDiscounts.map(d => {
+                            // 測試資料格式（舊格式）
+                            if (d.name && d.amount) {
+                                // 排除手動折扣（已在上面處理）
+                                if (d.type === '手動折扣') return null;
+                                // 檢查是否有使用次數
+                                const timesText = d.times > 1 ? ` x${d.times}` : '';
+                                return `${d.type}: ${d.name}${timesText} (-$${d.amount})`;
+                            }
+                            // calculateDiscounts 格式（新格式）
+                            const typeMap = { 'item': '單一品項', 'category': '分類折扣', 'total': '總數量折扣' };
+                            const timesText = d.times > 1 ? ` x${d.times}` : '';
+                            return `${typeMap[d.type] || d.type}: ${d.description}${timesText} (-$${d.discount})`;
+                        }).filter(d => d !== null);
+
+                        if (autoDiscounts.length > 0) {
+                            details.push(...autoDiscounts);
+                        }
+                    }
+
+                    // 如果沒有任何明細但有折扣，顯示通用訊息
+                    if (details.length === 0) {
+                        details.push(`折扣: -$${order.discount}`);
+                    }
+
+                    discountDetails = '<div style="margin-bottom: 8px; font-size: 12px; color: #636E72;">' +
+                        details.join(' | ') +
+                        '</div>';
+                }
+
+                return `
+                    <div style="background: #F8F9FA; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+                        <!-- 訂單標題 -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div>
+                                <div style="font-weight: 600; font-size: 16px; color: #2D3436;">${order.orderNumber}</div>
+                                <div style="color: #636E72; font-size: 14px;">
+                                    📅 ${order.businessDate || businessDate} ${order.time}
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600; font-size: 18px; color: #2D3436;">$${order.total.toLocaleString()}</div>
+                                ${order.discount > 0 ? `<div style="color: #D63031; font-size: 12px;">折扣 -$${order.discount}</div>` : ''}
+                            </div>
+                        </div>
+
+                        <!-- 折扣明細 -->
+                        ${discountDetails}
+
+                        <!-- 品項明細 -->
+                        <div style="border-top: 1px solid #DFE6E9; padding-top: 12px;">
+                            <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #2D3436;">品項明細</div>
+                            ${order.items.map(item => {
+                                // 處理客製化口味標籤
+                                const specTags = [];
+                                if (item.spicy && item.spicy !== '不辣') {
+                                    specTags.push(`<span style="display: inline-block; background: #FFEAA7; color: #D63031; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-right: 4px;">🌶️ ${item.spicy}</span>`);
+                                }
+                                if (item.custom) {
+                                    specTags.push(`<span style="display: inline-block; background: #E3F2FD; color: #1976D2; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-right: 4px;">📝 ${item.custom}</span>`);
+                                }
+
+                                return `
+                                    <div style="padding: 8px 0; border-bottom: 1px solid #ECF0F1;">
+                                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                                            <div style="flex: 1;">
+                                                <div style="font-weight: 500; color: #2D3436; margin-bottom: 4px;">
+                                                    ${item.name}
+                                                </div>
+                                                ${specTags.length > 0 ? `<div style="margin-top: 4px;">${specTags.join('')}</div>` : ''}
+                                            </div>
+                                            <div style="text-align: right;">
+                                                <div style="font-size: 16px; font-weight: 600; color: #2D3436;">
+                                                    $${(item.price * item.quantity).toLocaleString()}
+                                                </div>
+                                                <div style="font-size: 13px; color: #636E72;">
+                                                    $${item.price} x ${item.quantity}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        <!-- 價格明細 -->
+                        <div style="border-top: 1px solid #DFE6E9; padding-top: 12px; margin-top: 8px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                                <span style="color: #636E72;">小計：</span>
+                                <span style="color: #2D3436;">$${order.subtotal.toLocaleString()}</span>
+                            </div>
+                            ${order.discount > 0 ? `
+                                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 4px;">
+                                    <span style="color: #636E72;">折扣：</span>
+                                    <span style="color: #D63031;">-$${order.discount.toLocaleString()}</span>
+                                </div>
+                            ` : ''}
+                            <div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: 600; margin-top: 8px;">
+                                <span style="color: #2D3436;">總計：</span>
+                                <span style="color: #00B894;">$${order.total.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 過濾訂單列表（根據訂單編號搜尋）
+        function filterOrderList() {
+            const searchValue = document.getElementById('orderSearchInput').value.trim().toUpperCase();
+
+            if (!searchValue) {
+                // 如果搜尋框為空，顯示所有訂單
+                renderOrderList(currentDisplayOrders);
+                return;
+            }
+
+            // 過濾符合搜尋條件的訂單
+            const filteredOrders = currentDisplayOrders.filter(order => {
+                return order.orderNumber.toUpperCase().includes(searchValue);
+            });
+
+            renderOrderList(filteredOrders);
+        }
+
+        // 隱藏訂單列表彈窗
+        function hideOrderListModal() {
+            document.getElementById('orderListModal').classList.remove('active');
+        }
+
         // 設定快速金額（直接設定）
         function setAmount(amount) {
             document.getElementById('receivedAmount').value = amount;
@@ -1895,10 +2661,10 @@
             const changeDisplay = document.getElementById('changeDisplay');
             const received = parseInt(receivedInput.value) || 0;
 
-            // 從全域變數或計算總額
+            // 從全域變數或計算總額（包含手動折扣）
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const { totalDiscount } = calculateDiscounts();
-            const total = subtotal - totalDiscount;
+            const { totalDiscount: autoDiscount } = calculateDiscounts();
+            const total = Math.max(0, subtotal - autoDiscount - currentManualDiscount);
 
             const change = received - total;
             if (change >= 0) {
@@ -1912,10 +2678,10 @@
 
         // 收全額
         function setFullAmount() {
-            // 計算小計和折扣
+            // 計算小計和所有折扣（包含手動折扣）
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const { totalDiscount } = calculateDiscounts();
-            const total = subtotal - totalDiscount;
+            const { totalDiscount: autoDiscount } = calculateDiscounts();
+            const total = Math.max(0, subtotal - autoDiscount - currentManualDiscount);
 
             // 四捨五入到整數
             const fullAmount = Math.round(total);
@@ -1936,8 +2702,8 @@
             // 立即重置找零顯示
             const changeDisplay = document.getElementById('changeDisplay');
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const { totalDiscount } = calculateDiscounts();
-            const total = subtotal - totalDiscount;
+            const { totalDiscount: autoDiscount } = calculateDiscounts();
+            const total = Math.max(0, subtotal - autoDiscount - currentManualDiscount);
 
             changeDisplay.textContent = `金額不足：差 $${total}`;
             changeDisplay.style.background = '#D63031';
@@ -1956,10 +2722,10 @@
             const receivedInput = document.getElementById('receivedAmount');
             const changeDisplay = document.getElementById('changeDisplay');
 
-            // 計算小計和折扣
+            // 計算小計和所有折扣（包含手動折扣）
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const { totalDiscount } = calculateDiscounts();
-            const total = subtotal - totalDiscount;
+            const { totalDiscount: autoDiscount } = calculateDiscounts();
+            const total = Math.max(0, subtotal - autoDiscount - currentManualDiscount);
 
             const received = parseInt(receivedInput.value) || 0;
 
@@ -1977,7 +2743,8 @@
         function completePayment() {
             // 計算小計和折扣
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const { totalDiscount } = calculateDiscounts();
+            const { totalDiscount: autoDiscount, appliedDiscounts } = calculateDiscounts();
+            const totalDiscount = autoDiscount + currentManualDiscount;
             const total = subtotal - totalDiscount;
 
             const received = parseInt(document.getElementById('receivedAmount').value) || 0;
@@ -1990,34 +2757,12 @@
             // 記錄訂單到統計資料
             const now = new Date();
             const hour = now.getHours().toString();
-            const dateStr = now.toISOString().split('T')[0];
 
-            // 檢查是否新的一天
-            if (dailyStats.date !== dateStr) {
-                dailyStats = {
-                    date: dateStr,
-                    totalRevenue: 0,
-                    totalDiscount: 0,
-                    orderCount: 0,
-                    orders: [],
-                    hourlyData: {
-                        '17': 0, '18': 0, '19': 0, '20': 0, '21': 0, '22': 0, '23': 0
-                    },
-                    itemSales: {},
-                    categorySales: {
-                        beef: 0,
-                        pork: 0,
-                        chicken: 0,
-                        vegetable: 0,
-                        skewer: 0,
-                        drink: 0
-                    }
-                };
-            }
+            // 使用營業日，不判斷新的一天（營業日只在關帳時更新）
 
             // 更新統計（totalRevenue 記錄原價，totalDiscount 記錄折扣）
             dailyStats.totalRevenue += subtotal;
-            dailyStats.totalDiscount += totalDiscount;
+            dailyStats.totalDiscount += totalDiscount; // 包含自動折扣和手動折扣
             dailyStats.orderCount++;
 
             // 更新時段資料（使用原價）
@@ -2057,15 +2802,29 @@
                 }
             });
 
-            // 記錄訂單
+            // 記錄訂單（包含完整資料）
             dailyStats.orders.push({
                 orderNumber: document.getElementById('orderNumber').textContent,
+                businessDate: businessDate,  // 記錄營業日
                 time: now.toTimeString().slice(0, 8),
-                items: cart.map(i => ({ name: i.name, quantity: i.quantity, price: i.price })),
+                items: cart.map(i => ({
+                    name: i.name,
+                    quantity: i.quantity,
+                    price: i.price,
+                    spicy: i.spicy || null,
+                    custom: i.custom || null
+                })),
                 subtotal: subtotal,
                 discount: totalDiscount,
-                total: total
+                total: total,
+                manualDiscount: currentManualDiscount,
+                manualDiscountReason: currentManualDiscount > 0 ? (currentDiscountReason.trim() || '手動折扣') : null,
+                appliedDiscounts: appliedDiscounts
             });
+
+            // 立即儲存當前營業日資料到 localStorage
+            localStorage.setItem(`businessData_${businessDate}`, JSON.stringify(dailyStats));
+            localStorage.setItem('currentBusinessDate', businessDate);
 
             // 顯示完成訊息
             alert(`✅ 付款完成！\n\n訂單已自動列印廚房單和客戶小票`);
@@ -2077,6 +2836,650 @@
 
             // 關閉彈窗
             hideCheckout();
+        }
+
+        // ==================== 每天結帳條功能 ====================
+
+        // 載入結帳報表
+        function loadCheckoutReport() {
+            // 統計卡片
+            const totalRevenue = dailyStats.totalRevenue || 0;
+            const totalDiscount = dailyStats.totalDiscount || 0;
+            const actualRevenue = totalRevenue - totalDiscount;
+            const profit = actualRevenue; // 利潤 = 實收金額
+
+            document.getElementById('checkoutRevenue').textContent = `$${totalRevenue.toLocaleString()}`;
+            document.getElementById('checkoutDiscount').textContent = `-$${totalDiscount.toLocaleString()}`;
+            document.getElementById('checkoutActual').textContent = `$${actualRevenue.toLocaleString()}`;
+            document.getElementById('checkoutProfit').textContent = `$${profit.toLocaleString()}`;
+
+            // 訂單明細列表
+            const orderList = document.getElementById('checkoutOrderList');
+            if (dailyStats.orders && dailyStats.orders.length > 0) {
+                orderList.innerHTML = dailyStats.orders.map(order => `
+                    <tr style="border-bottom: 1px solid #DFE6E9;">
+                        <td style="padding: 12px;">${order.orderNumber}</td>
+                        <td style="padding: 12px;">📅 ${order.businessDate || businessDate} ${order.time}</td>
+                        <td style="padding: 12px; text-align: right;">$${order.subtotal.toLocaleString()}</td>
+                        <td style="padding: 12px; text-align: right; color: #D63031;">-$${order.discount.toLocaleString()}</td>
+                        <td style="padding: 12px; text-align: right; font-weight: bold;">$${order.total.toLocaleString()}</td>
+                    </tr>
+                `).join('');
+            } else {
+                orderList.innerHTML = '<tr><td colspan="5" style="padding: 20px; text-align: center; color: #636E72;">今日尚無訂單記錄</td></tr>';
+            }
+        }
+
+        // 匯出結帳明細（支援日期區間匯出）
+        function exportDailyReport() {
+            const startDate = document.getElementById('dailyStartDateSelector').value;
+            const endDate = document.getElementById('dailyEndDateSelector').value;
+
+            if (!startDate || !endDate) {
+                alert('請先選擇日期區間！');
+                return;
+            }
+
+            // 計算日期區間內的所有日期
+            const dates = [];
+            let currentDate = new Date(startDate);
+            const endDateObj = new Date(endDate);
+
+            while (currentDate <= endDateObj) {
+                dates.push(currentDate.toISOString().split('T')[0]);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // 收集區間內所有訂單
+            let allOrders = [];
+            let totalRevenue = 0;
+            let totalDiscount = 0;
+            let totalOrderCount = 0;
+
+            dates.forEach(date => {
+                let dayData;
+
+                if (date === businessDate) {
+                    // 當前營業日使用記憶體中的即時資料
+                    dayData = dailyStats;
+                } else {
+                    // 從 localStorage 讀取該營業日的資料
+                    const saved = localStorage.getItem(`businessData_${date}`);
+                    if (saved) {
+                        dayData = JSON.parse(saved);
+                    }
+                }
+
+                if (dayData && dayData.orders && dayData.orders.length > 0) {
+                    allOrders.push(...dayData.orders);
+                    totalRevenue += dayData.totalRevenue || 0;
+                    totalDiscount += dayData.totalDiscount || 0;
+                    totalOrderCount += dayData.orderCount || 0;
+                }
+            });
+
+            if (allOrders.length === 0) {
+                alert('選擇的日期區間內沒有訂單記錄！');
+                return;
+            }
+
+            const actualRevenue = totalRevenue - totalDiscount;
+
+            // 產生 CSV 內容
+            let csv = '\uFEFF'; // UTF-8 BOM
+            csv += '夯肉 HANGROU - 結帳明細\n';
+            csv += `匯出時間,${new Date().toLocaleString('zh-TW')}\n`;
+            csv += `日期區間,${startDate} 至 ${endDate} (${dates.length} 天)\n`;
+            csv += `\n`;
+            csv += '營業統計\n';
+            csv += `原價營業額,${totalRevenue}\n`;
+            csv += `總折扣,-${totalDiscount}\n`;
+            csv += `實收金額,${actualRevenue}\n`;
+            csv += `訂單數,${totalOrderCount}\n`;
+            csv += `\n`;
+            csv += '訂單明細\n';
+            csv += '訂單號,營業日,時間,品項,數量,單價,小計,折扣,實收\n';
+
+            // 依日期和訂單號排序
+            allOrders.sort((a, b) => {
+                const dateA = a.businessDate || businessDate;
+                const dateB = b.businessDate || businessDate;
+                if (dateA !== dateB) return dateA.localeCompare(dateB);
+                return a.orderNumber.localeCompare(b.orderNumber);
+            });
+
+            allOrders.forEach(order => {
+                const orderDate = order.businessDate || businessDate;
+                order.items.forEach(item => {
+                    const itemSubtotal = item.quantity * item.price;
+                    // 平均分配折扣到每個品項
+                    const itemDiscount = Math.round((order.discount || 0) / order.items.length);
+                    const itemTotal = itemSubtotal - itemDiscount;
+
+                    csv += `${order.orderNumber},${orderDate},${order.time},${item.name},${item.quantity},${item.price},${itemSubtotal},${itemDiscount},${itemTotal}\n`;
+                });
+            });
+
+            // 下載 CSV 檔案
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+
+            // 檔名使用日期區間
+            const filename = startDate === endDate
+                ? `結帳明細_${startDate}.csv`
+                : `結帳明細_${startDate}_至_${endDate}.csv`;
+
+            link.download = filename;
+            link.click();
+
+            alert(`✅ 已匯出 ${dates.length} 天的結帳明細！\n\n` +
+                `日期區間：${startDate} 至 ${endDate}\n` +
+                `訂單數：${totalOrderCount} 筆\n` +
+                `原價營業額：$${totalRevenue.toLocaleString()}\n` +
+                `實收金額：$${actualRevenue.toLocaleString()}\n\n` +
+                `檔名：${filename}`);
+        }
+
+        // 確認每日結帳（只保存，不清空）
+        function confirmDailyCheckout() {
+            if (!dailyStats.orders || dailyStats.orders.length === 0) {
+                alert('今日尚無訂單記錄！');
+                return;
+            }
+
+            const totalRevenue = dailyStats.totalRevenue || 0;
+            const totalDiscount = dailyStats.totalDiscount || 0;
+            const actualRevenue = totalRevenue - totalDiscount;
+
+            const message = `📊 每日結帳確認\n\n` +
+                `營業日：${dailyStats.date}\n` +
+                `訂單數：${dailyStats.orderCount} 筆\n` +
+                `原價營業額：$${totalRevenue.toLocaleString()}\n` +
+                `總折扣：-$${totalDiscount.toLocaleString()}\n` +
+                `實收金額：$${actualRevenue.toLocaleString()}\n\n` +
+                `注意：資料已自動儲存，此確認功能僅供提醒使用。`;
+
+            alert(message);
+        }
+
+        // 執行每日關帳（換日）
+        function performDailyCloseout() {
+            if (!dailyStats.orders || dailyStats.orders.length === 0) {
+                alert('今日尚無訂單記錄！');
+                return;
+            }
+
+            const totalRevenue = dailyStats.totalRevenue || 0;
+            const totalDiscount = dailyStats.totalDiscount || 0;
+            const actualRevenue = totalRevenue - totalDiscount;
+
+            const message = `🔒 每日關帳（換日）\n\n` +
+                `⚠️ 此操作將執行以��動作：\n` +
+                `1. 保存今日營業資料到歷史記錄\n` +
+                `2. 清空今日統計資料\n` +
+                `3. 重置訂單編號（明日從 #新日期-001 開始）\n\n` +
+                `日期：${dailyStats.date}\n` +
+                `訂單數：${dailyStats.orderCount} 筆\n` +
+                `原價營業額：$${totalRevenue.toLocaleString()}\n` +
+                `總折扣：-$${totalDiscount.toLocaleString()}\n` +
+                `實收金額：$${actualRevenue.toLocaleString()}\n\n` +
+                `⚠️ 確認要關帳嗎？此操作無法復原！`;
+
+            if (confirm(message)) {
+                // 第二次確認
+                if (!confirm('⚠️ 最後確認：真的要關帳嗎？\n\n關帳後今日所有統計資料將被清空，\n訂單編號將重新開始計算。')) {
+                    return;
+                }
+
+                // 關帳：資料已在每次付款後儲存到 localStorage，此處只需更新營業日
+                // 更新營業日到下一天
+                const nextBusinessDate = new Date(businessDate);
+                nextBusinessDate.setDate(nextBusinessDate.getDate() + 1);
+                businessDate = nextBusinessDate.toISOString().split('T')[0];
+                dailyStats.date = businessDate;
+
+                // 清空統計資料
+                dailyStats = {
+                    date: businessDate,
+                    totalRevenue: 0,
+                    totalDiscount: 0,
+                    orderCount: 0,
+                    orders: [],
+                    hourlyData: {
+                        '17': 0, '18': 0, '19': 0, '20': 0, '21': 0, '22': 0, '23': 0
+                    },
+                    itemSales: {},
+                    categorySales: {
+                        beef: 0,
+                        pork: 0,
+                        chicken: 0,
+                        vegetable: 0,
+                        skewer: 0,
+                        drink: 0
+                    }
+                };
+
+                // 儲存當前營業日（已更新）
+                localStorage.setItem('currentBusinessDate', businessDate);
+
+                // 儲存新營業日的初始資料
+                localStorage.setItem(`businessData_${businessDate}`, JSON.stringify(dailyStats));
+
+                // 重置訂單編號
+                orderCount = 1;
+
+                // 清空購物車
+                cart = [];
+                updateCart();
+
+                // 更新訂單編號顯示（如果結帳彈窗開啟）
+                const orderNumberEl = document.getElementById('orderNumber');
+                if (orderNumberEl) {
+                    updateOrderNumber();
+                }
+
+                // 更新主畫面營業日顯示
+                updateHeaderBusinessDate();
+
+                // 重新載入報表
+                loadDailyReport();
+
+                alert('✅ 關帳完成！\n\n' +
+                    `• 營業日已更新為 ${businessDate}\n` +
+                    `• 統計資料已清空\n` +
+                    `• 訂單編號已重置\n\n` +
+                    '🌟 明日營業準備就緒！');
+            }
+        }
+
+        // 更新訂單編號顯示
+        function updateOrderNumber() {
+            const orderNumberEl = document.getElementById('orderNumber');
+            if (orderNumberEl) {
+                const dateStr = businessDate.replace(/-/g, ''); // 使用營業日
+                orderNumberEl.textContent = `#${dateStr}${String(orderCount).padStart(3, '0')}`;
+            }
+        }
+
+        // 更新 header 顯示的營業日
+        function updateHeaderBusinessDate() {
+            const headerBusinessDateEl = document.getElementById('headerBusinessDate');
+            if (headerBusinessDateEl) {
+                headerBusinessDateEl.textContent = businessDate;
+            }
+        }
+
+        // ==================== 測試資料生成功能 ====================
+
+        // 生成測試資料（開發用）
+        function generateTestData() {
+            // 與實際選單對應的品項（使用實際 ID）
+            const testMenuItems = [
+                { id: 12, name: '烤香菇', price: 35, category: 'vegetable' }, // 單一品項折扣目標
+                { id: 1, name: '雞肉串', price: 50, category: 'chicken' },
+                { id: 2, name: '雞翅', price: 60, category: 'chicken' },
+                { id: 3, name: '雞心', price: 40, category: 'chicken' },
+                { id: 4, name: '牛五花', price: 120, category: 'beef' },
+                { id: 5, name: '牛排', price: 150, category: 'beef' },
+                { id: 6, name: '豬肋排', price: 80, category: 'pork' },
+                { id: 7, name: '培根捲', price: 50, category: 'skewer' },
+                { id: 15, name: '珍珠奶茶', price: 60, category: 'drink' },
+                { id: 16, name: '泡泡綠', price: 50, category: 'drink' }
+            ];
+
+            // 測試用的折扣規則（對應實際規則）
+            const testDiscountRules = [
+                { type: 'item', itemId: 12, itemName: '烤香菇', quantity: 3, discountAmount: 5 },
+                { type: 'category', categoryId: 'chicken', categoryName: '雞肉', quantity: 3, discountAmount: 5 },
+                { type: 'total', quantity: 5, discountAmount: 20 }
+            ];
+
+            const testData = [];
+
+            // 生成過去7天的資料
+            for (let daysAgo = 7; daysAgo >= 1; daysAgo--) {
+                const date = new Date();
+                date.setDate(date.getDate() - daysAgo);
+                const dateStr = date.toISOString().split('T')[0];
+
+                // 隨機生成該天的訂單數（25-50筆）
+                const orderCount = Math.floor(Math.random() * 25) + 25;
+                const orders = [];
+                let totalRevenue = 0;
+                let totalDiscount = 0;
+                const itemSales = {};
+                const categorySales = { beef: 0, pork: 0, chicken: 0, vegetable: 0, skewer: 0, drink: 0 };
+
+                for (let i = 0; i < orderCount; i++) {
+                    // 決定這筆訂單的類型（擴展支援手動折扣、客製化口味、多次折扣應用）
+                    // 0-1: 無折扣, 2-3: 單一折扣, 4-5: 雙重折扣, 6-7: 三重折扣
+                    // 8-9: 手動折扣, 10-11: 含客製化口味, 12-13: 同一折扣多次應用
+                    const orderType = Math.floor(Math.random() * 14);
+
+                    let orderItems = [];
+                    let orderSubtotal = 0;
+                    let manualDiscount = 0;
+                    let manualDiscountReason = '';
+
+                    // 根據訂單類型生成品項
+                    switch (orderType) {
+                        case 0: // 無折扣 - 簡單訂單
+                        case 1:
+                            orderItems = [
+                                { name: '牛五花肉', quantity: 1, price: 120 },
+                                { name: '珍珠奶茶', quantity: 1, price: 60 }
+                            ];
+                            break;
+
+                        case 2: // 單一品項折扣（烤香菇買3串）
+                            orderItems = [
+                                { name: '烤香菇', quantity: 3, price: 35 },
+                                { name: '珍珠奶茶', quantity: 1, price: 60 }
+                            ];
+                            break;
+
+                        case 3: // 分類折扣（雞肉買3串）
+                            orderItems = [
+                                { name: '雞肉串', quantity: 2, price: 50 },
+                                { name: '雞翅', quantity: 1, price: 60 },
+                                { name: '泡泡綠', quantity: 1, price: 50 }
+                            ];
+                            break;
+
+                        case 4: // 雙重折扣（烤香菇 + 雞肉）
+                            orderItems = [
+                                { name: '烤香菇', quantity: 3, price: 35 },
+                                { name: '雞肉串', quantity: 2, price: 50 },
+                                { name: '雞翅', quantity: 1, price: 60 },
+                                { name: '泡泡綠', quantity: 1, price: 50 }
+                            ];
+                            break;
+
+                        case 5: // 雙重折扣（雞肉 + 滿5件）
+                            orderItems = [
+                                { name: '雞肉串', quantity: 2, price: 50 },
+                                { name: '雞翅', quantity: 1, price: 60 },
+                                { name: '牛五花肉', quantity: 1, price: 120 },
+                                { name: '培根捲', quantity: 1, price: 50 }
+                            ];
+                            break;
+
+                        case 6: // 三重折扣（烤香菇 + 雞肉 + 滿5件）
+                        case 7:
+                            orderItems = [
+                                { name: '烤香菇', quantity: 3, price: 35 },
+                                { name: '雞肉串', quantity: 2, price: 50 },
+                                { name: '雞翅', quantity: 1, price: 60 },
+                                { name: '培根捲', quantity: 1, price: 50 }
+                            ];
+                            break;
+
+                        case 8: // 手動折扣 - 會員折扣
+                        case 9:
+                            orderItems = [
+                                { name: '牛五��肉', quantity: 2, price: 120 },
+                                { name: '豬肋排', quantity: 1, price: 80 },
+                                { name: '珍珠奶茶', quantity: 2, price: 60 }
+                            ];
+                            manualDiscount = orderType === 8 ? 50 : 30;
+                            manualDiscountReason = '會員折扣';
+                            break;
+
+                        case 10: // 含客製化口味 - 雞肉串（辣度+備註）
+                        case 11:
+                            orderItems = [
+                                {
+                                    name: '雞肉串',
+                                    quantity: 2,
+                                    price: 50,
+                                    spicy: '中辣',
+                                    custom: '加蔥、多醬'
+                                },
+                                {
+                                    name: '烤香菇',
+                                    quantity: 3,
+                                    price: 35,
+                                    spicy: '不辣'
+                                },
+                                {
+                                    name: '珍珠奶茶',
+                                    quantity: 1,
+                                    price: 60,
+                                    custom: '少冰'
+                                }
+                            ];
+                            break;
+
+                        case 12: // 單一品項折扣多次使用（烤香菇6�� = 折$10）
+                            orderItems = [
+                                { name: '烤香菇', quantity: 6, price: 35 },
+                                { name: '珍珠奶茶', quantity: 1, price: 60 },
+                                { name: '泡泡綠', quantity: 1, price: 50 }
+                            ];
+                            break;
+
+                        case 13: // 分類折扣多次使用（雞肉6串 = 折$10）
+                            orderItems = [
+                                { name: '雞肉串', quantity: 3, price: 50 },
+                                { name: '雞翅', quantity: 3, price: 60 },
+                                { name: '珍珠奶茶', quantity: 1, price: 60 }
+                            ];
+                            break;
+                    }
+
+                    // 計算小計和折扣
+                    orderItems.forEach(item => {
+                        const itemTotal = item.price * item.quantity;
+                        orderSubtotal += itemTotal;
+
+                        // 統計商品銷售
+                        if (!itemSales[item.name]) {
+                            itemSales[item.name] = {
+                                name: item.name,
+                                quantity: 0,
+                                revenue: 0,
+                                discount: 0
+                            };
+                        }
+                        itemSales[item.name].quantity += item.quantity;
+                        itemSales[item.name].revenue += itemTotal;
+
+                        // 統計分類銷售
+                        const menuItem = testMenuItems.find(m => m.name === item.name);
+                        if (menuItem && categorySales.hasOwnProperty(menuItem.category)) {
+                            categorySales[menuItem.category] += itemTotal;
+                        }
+                    });
+
+                    // 計算多個折扣
+                    let orderDiscount = 0;
+                    let appliedDiscounts = [];
+
+                    // 對自動折扣類型（0-7, 10-13）計算自動折扣
+                    // cases 8-9 為手動折扣，不計算自動折扣
+                    if (orderType <= 7 || orderType >= 10) {
+                        // 檢查單一品項折扣：烤香菇買3串折$5
+                        const mushroomQty = orderItems.filter(i => i.name === '烤香菇').reduce((sum, i) => sum + i.quantity, 0);
+                        if (mushroomQty >= 3) {
+                            const times = Math.floor(mushroomQty / 3);
+                            const discount = times * 5;
+                            orderDiscount += discount;
+                            appliedDiscounts.push({ type: '單一品項', name: '烤香菇買3串折$5', amount: discount, times: times });
+                        }
+
+                        // 檢查分類折扣：雞肉買3串折$5
+                        const chickenQty = orderItems.filter(i => ['雞肉串', '雞翅', '雞心'].includes(i.name))
+                            .reduce((sum, i) => sum + i.quantity, 0);
+                        if (chickenQty >= 3) {
+                            const times = Math.floor(chickenQty / 3);
+                            const discount = times * 5;
+                            orderDiscount += discount;
+                            appliedDiscounts.push({ type: '分類折扣', name: '雞肉類買3串折$5', amount: discount, times: times });
+                        }
+
+                        // 檢查總數量折扣：滿5件折$20
+                        const totalQty = orderItems.reduce((sum, i) => sum + i.quantity, 0);
+                        if (totalQty >= 5) {
+                            const times = Math.floor(totalQty / 5);
+                            const discount = times * 20;
+                            orderDiscount += discount;
+                            appliedDiscounts.push({ type: '總數量折扣', name: '滿5件折$20', amount: discount, times: times });
+                        }
+                    }
+
+                    // 手動折扣
+                    if (manualDiscount > 0) {
+                        orderDiscount += manualDiscount;
+                        appliedDiscounts.push({ type: '手動折扣', name: manualDiscountReason, amount: manualDiscount });
+                    }
+
+                    const orderTotal = orderSubtotal - orderDiscount;
+                    totalRevenue += orderSubtotal;
+                    totalDiscount += orderDiscount;
+
+                    orders.push({
+                        orderNumber: `#${dateStr.replace(/-/g, '')}${String(i + 1).padStart(3, '0')}`,
+                        time: `${String(17 + Math.floor(Math.random() * 6)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
+                        items: orderItems,
+                        subtotal: orderSubtotal,
+                        discount: orderDiscount,
+                        total: orderTotal,
+                        manualDiscount: manualDiscount,
+                        manualDiscountReason: manualDiscountReason,
+                        appliedDiscounts: appliedDiscounts
+                    });
+                }
+
+                // 時段資料
+                const hourlyData = {
+                    '17': Math.floor(Math.random() * 2000) + 500,
+                    '18': Math.floor(Math.random() * 3000) + 1000,
+                    '19': Math.floor(Math.random() * 4000) + 2000,
+                    '20': Math.floor(Math.random() * 3500) + 1500,
+                    '21': Math.floor(Math.random() * 2500) + 1000,
+                    '22': Math.floor(Math.random() * 1500) + 500,
+                    '23': Math.floor(Math.random() * 1000) + 300
+                };
+
+                const dayData = {
+                    date: dateStr,
+                    checkoutTime: new Date(date).toISOString(),
+                    totalRevenue: totalRevenue,
+                    totalDiscount: totalDiscount,
+                    actualRevenue: totalRevenue - totalDiscount,
+                    orderCount: orderCount,
+                    orders: orders,
+                    hourlyData: hourlyData,
+                    itemSales: itemSales,
+                    categorySales: categorySales,
+                    confirmed: true
+                };
+
+                testData.push(dayData);
+            }
+
+            // 儲存到 localStorage（使用 businessData_${date} 格式）
+            const testDates = [];
+            testData.forEach(dayData => {
+                localStorage.setItem(`businessData_${dayData.date}`, JSON.stringify(dayData));
+                testDates.push(dayData.date);
+            });
+
+            // 儲存測試資料日期列表
+            localStorage.setItem('testDataDates', JSON.stringify(testDates));
+
+            // 自動啟用測試模式
+            localStorage.setItem('testMode', 'true');
+            checkTestMode();
+
+            // 自動設定日報表日期選擇器並載入報表
+            const firstDate = testDates[0];
+            const lastDate = testDates[testDates.length - 1];
+            document.getElementById('dailyStartDateSelector').value = firstDate;
+            document.getElementById('dailyEndDateSelector').value = lastDate;
+
+            // 顯示報表頁面並載入測試資料
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('settingsPage').classList.remove('active');
+            document.getElementById('reportsPage').classList.add('active');
+            switchReport('daily');
+            loadDailyReportByDateRange();
+
+            // 統計折扣資訊
+            const totalOrders = testData.reduce((sum, d) => sum + d.orderCount, 0);
+            const discountOrders = testData.reduce((sum, d) => sum + d.orders.filter(o => o.discount > 0).length, 0);
+
+            // 統計各種折扣組合的使用次數
+            let singleDiscount = 0;
+            let doubleDiscount = 0;
+            let tripleDiscount = 0;
+            let manualDiscountCount = 0;
+            let customSpecCount = 0;
+
+            testData.forEach(day => {
+                day.orders.forEach(order => {
+                    if (order.appliedDiscounts) {
+                        if (order.appliedDiscounts.length === 1) {
+                            if (order.appliedDiscounts[0].type === '手動折扣') {
+                                manualDiscountCount++;
+                            } else {
+                                singleDiscount++;
+                            }
+                        }
+                        else if (order.appliedDiscounts.length === 2) doubleDiscount++;
+                        else if (order.appliedDiscounts.length === 3) tripleDiscount++;
+                    }
+
+                    // 統計含客製化口味的訂單
+                    const hasCustomSpec = order.items.some(item => item.spicy || item.custom);
+                    if (hasCustomSpec) {
+                        customSpecCount++;
+                    }
+                });
+            });
+
+            const totalDiscountAmount = testData.reduce((sum, d) => sum + d.totalDiscount, 0);
+
+            alert(`✅ 已生成 ${testData.length} 天的測試資料！\n\n` +
+                `日期範圍：${testData[0].date} 至 ${testData[testData.length - 1].date}\n` +
+                `總訂單數：${totalOrders} 筆\n` +
+                `有折扣訂單：${discountOrders} 筆 (${Math.round(discountOrders / totalOrders * 100)}%)\n\n` +
+                `折扣組合：\n` +
+                `• 單一自動折扣：${singleDiscount} 筆\n` +
+                `• 雙重自動折扣：${doubleDiscount} 筆\n` +
+                `• 三重自動折扣：${tripleDiscount} 筆\n` +
+                `• 手動折扣：${manualDiscountCount} 筆\n\n` +
+                `客製化口味：${customSpecCount} 筆訂單（辣度/備註）\n\n` +
+                `總折扣金額：$${totalDiscountAmount.toLocaleString()}\n\n` +
+                `折扣規則：\n` +
+                `• 烤香菇買3串折$5（單一品項）\n` +
+                `• 雞肉類買3串折$5（分類折扣）\n` +
+                `• 滿5件折$20（總數量折扣）\n` +
+                `• 會員折扣等手動折扣\n\n` +
+                `✨ 報表已自動載入，可立即查看測試資料！`);
+        }
+
+        // 清除測試資料
+        function clearTestData() {
+            if (confirm('確定要清除所有測試資料？')) {
+                // 讀取測試資料的日期列表
+                const testDates = JSON.parse(localStorage.getItem('testDataDates') || '[]');
+
+                // 刪除所有測試日期的資料
+                testDates.forEach(date => {
+                    localStorage.removeItem(`businessData_${date}`);
+                });
+
+                // 清除測試日期記錄
+                localStorage.removeItem('testDataDates');
+
+                // 關閉測試模式
+                localStorage.removeItem('testMode');
+
+                alert(`✅ 已清除 ${testDates.length} 天的測試資料！`);
+                checkTestMode();
+            }
         }
 
         // 顯示報表頁面
@@ -2104,16 +3507,57 @@
 
             // 更新對應報表資料
             if (type === 'daily') {
+                // 設定預設日期為營業日
+                document.getElementById('dailyStartDateSelector').value = businessDate;
+                document.getElementById('dailyEndDateSelector').value = businessDate;
                 updateDailyReport();
             } else if (type === 'weekly') {
+                // 設定預設週為本週
+                const today = new Date();
+                const weekNum = getWeekNumber(today);
+                const year = today.getFullYear();
+                document.getElementById('weeklyDateSelector').value = `${year}-W${weekNum.toString().padStart(2, '0')}`;
                 updateWeeklyReport();
             } else if (type === 'monthly') {
+                // 設定預設月份為本月
+                const today = new Date();
+                const yearMonth = today.toISOString().slice(0, 7);
+                document.getElementById('monthlyDateSelector').value = yearMonth;
                 updateMonthlyReport();
             }
         }
 
+        // 取得週數
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
         // 更新日報表
         function updateDailyReport() {
+            // 顯示關帳功能（查看當前營業日時）
+            const checkoutSection = document.getElementById('dailyCheckoutSection');
+            const checkoutTitle = document.getElementById('checkoutTitle');
+            const closeoutButton = document.getElementById('closeoutButton');
+
+            if (checkoutSection) {
+                checkoutSection.style.display = 'block';
+            }
+            if (checkoutTitle) {
+                checkoutTitle.textContent = '🔒 營業日結帳操作';
+            }
+            if (closeoutButton) {
+                closeoutButton.style.display = 'inline-flex';
+            }
+
+            // 重置標籤為今日
+            document.getElementById('revenueLabel').textContent = '今日營業額';
+            document.getElementById('discountLabel').textContent = '今日總折扣';
+            document.getElementById('profitLabel').textContent = '今日利潤';
+
             // 統計卡片
             document.getElementById('todayRevenue').textContent = `$${dailyStats.totalRevenue.toLocaleString()}`;
             document.getElementById('todayOrders').textContent = dailyStats.orderCount;
@@ -2215,101 +3659,73 @@
                 return;
             }
 
-            // 統計每個折扣規則的使用情況
-            const discountUsage = {};
+            // 統計自動折扣和手動折扣
+            const discountStats = {};
 
-            dailyStats.orders.forEach(order => {
-                if (order.discount > 0) {
-                    // 分析這筆訂單使用了哪些折扣
-                    // 暫時簡化處理：直接顯示總折扣
-                    const key = '總折扣';
-                    if (!discountUsage[key]) {
-                        discountUsage[key] = {
-                            count: 0,
-                            totalDiscount: 0
-                        };
-                    }
-                    discountUsage[key].count++;
-                    discountUsage[key].totalDiscount += order.discount;
-                }
-            });
-
-            // 根據實際的折扣規則統計
-            const ruleUsage = {};
-            discountRules.forEach(rule => {
-                ruleUsage[rule.id] = {
-                    name: '',
-                    count: 0,
-                    totalDiscount: 0
-                };
-
-                if (rule.type === 'item') {
-                    ruleUsage[rule.id].name = `${rule.itemName} 買${rule.quantity}串折$${rule.discountAmount}`;
-
-                    // 計算該規則使用次數
-                    dailyStats.orders.forEach(order => {
-                        const item = order.items.find(i => i.name === rule.itemName);
-                        if (item) {
-                            const times = Math.floor(item.quantity / rule.quantity);
-                            if (times > 0) {
-                                ruleUsage[rule.id].count += times;
-                                ruleUsage[rule.id].totalDiscount += times * rule.discountAmount;
+            if (dailyStats.orders && dailyStats.orders.length > 0) {
+                dailyStats.orders.forEach(order => {
+                    if (order.discount > 0) {
+                        // 檢查手動折扣（優先處理）
+                        if (order.manualDiscount > 0) {
+                            const name = `✋ ${order.manualDiscountReason || '手動折扣'}`;
+                            if (!discountStats[name]) {
+                                discountStats[name] = { count: 0, amount: 0, isManual: true };
                             }
+                            discountStats[name].count++;
+                            discountStats[name].amount += order.manualDiscount;
                         }
-                    });
-                } else if (rule.type === 'category') {
-                    ruleUsage[rule.id].name = `${categoryNames[rule.categoryId]} 買${rule.quantity}串折$${rule.discountAmount}`;
 
-                    // 計算該分類規則使用次數（簡化處理）
-                    let categoryQty = 0;
-                    dailyStats.orders.forEach(order => {
-                        order.items.forEach(item => {
-                            const menuItem = menuItems.find(m => m.name === item.name);
-                            if (menuItem && menuItem.category === rule.categoryId) {
-                                categoryQty += item.quantity;
+                        // 檢查自動折扣
+                        if (order.appliedDiscounts && order.appliedDiscounts.length > 0) {
+                            order.appliedDiscounts.forEach(d => {
+                                let name, amount;
+
+                                if (d.name && d.amount) {
+                                    // 舊格式（測試資料）
+                                    // 排除手動折扣
+                                    if (d.type === '手動折扣') return;
+                                    name = d.name;
+                                    amount = d.amount;
+                                } else if (d.description && d.discount) {
+                                    // 新格式
+                                    name = d.description;
+                                    amount = d.discount;
+                                }
+
+                                if (name && amount) {
+                                    if (!discountStats[name]) {
+                                        discountStats[name] = { count: 0, amount: 0, isManual: false };
+                                    }
+                                    discountStats[name].count++;
+                                    discountStats[name].amount += amount;
+                                }
+                            });
+                        } else if (order.manualDiscount === 0 && order.discount > 0) {
+                            // 沒有詳細資料且非手動折扣的，歸類為「其他折扣」
+                            if (!discountStats['其他折扣']) {
+                                discountStats['其他折扣'] = { count: 0, amount: 0, isManual: false };
                             }
-                        });
-                    });
-                    const times = Math.floor(categoryQty / rule.quantity);
-                    ruleUsage[rule.id].count = times;
-                    ruleUsage[rule.id].totalDiscount = times * rule.discountAmount;
-                } else if (rule.type === 'total') {
-                    ruleUsage[rule.id].name = `全館 買${rule.quantity}串折$${rule.discountAmount}`;
+                            discountStats['其他折扣'].count++;
+                            discountStats['其他折扣'].amount += order.discount;
+                        }
+                    }
+                });
+            }
 
-                    // 計算總數量規則使用次數
-                    let totalQty = 0;
-                    dailyStats.orders.forEach(order => {
-                        order.items.forEach(item => {
-                            totalQty += item.quantity;
-                        });
-                    });
-                    const times = Math.floor(totalQty / rule.quantity);
-                    ruleUsage[rule.id].count = times;
-                    ruleUsage[rule.id].totalDiscount = times * rule.discountAmount;
-                }
-            });
+            const discountList = Object.entries(discountStats)
+                .filter(([name, data]) => data.count > 0)
+                .map(([name, data]) => ({ name, ...data }))
+                .sort((a, b) => b.amount - a.amount);
 
-            // 顯示折扣明細
-            let hasDiscount = false;
-            Object.values(ruleUsage).forEach(usage => {
-                if (usage.count > 0) {
-                    hasDiscount = true;
-                    const detailDiv = document.createElement('div');
-                    detailDiv.className = 'discount-detail-item';
-                    detailDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #FFF3CD; border-radius: 6px; margin-bottom: 8px;';
-                    detailDiv.innerHTML = `
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; color: #2D3436; margin-bottom: 4px;">${usage.name}</div>
-                            <div style="font-size: 13px; color: #636E72;">套用 ${usage.count} 次</div>
-                        </div>
-                        <div style="font-size: 18px; font-weight: 700; color: #D63031;">-$${usage.totalDiscount.toLocaleString()}</div>
-                    `;
-                    discountDetailsEl.appendChild(detailDiv);
-                }
-            });
-
-            if (!hasDiscount) {
-                discountDetailsEl.innerHTML = '<div style="text-align: center; padding: 20px; color: #636E72;">今日尚無折扣記錄</div>';
+            if (discountList.length === 0) {
+                discountDetailsEl.innerHTML = '<div style="text-align: center; padding: 20px; color: #636E72;">無折扣記錄</div>';
+            } else {
+                discountDetailsEl.innerHTML = discountList.map(d => `
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #DFE6E9;">
+                        <span style="flex: 1;">${d.name}</span>
+                        <span style="color: ${d.isManual ? '#D63031' : '#0984E3'}; margin-left: 12px;">使用 ${d.count} 次，折 $${d.amount.toLocaleString()}</span>
+                    </div>
+                `).join('');
             }
         }
 
@@ -2379,6 +3795,524 @@
             }
         }
 
+        // ==================== 日期查詢功能 ====================
+
+        // 依日期區間載入日報表
+        function loadDailyReportByDateRange() {
+            const startDate = document.getElementById('dailyStartDateSelector').value;
+            const endDate = document.getElementById('dailyEndDateSelector').value;
+            const today = new Date().toISOString().split('T')[0];
+
+            if (!startDate || !endDate) {
+                alert('請選擇開始日期和結束日期！');
+                return;
+            }
+
+            if (startDate > endDate) {
+                alert('開始日期不能晚於結束日期！');
+                return;
+            }
+
+            // 如果查詢當前營業日且是單日查詢，使用即時資料
+            if (startDate === endDate && startDate === businessDate) {
+                updateDailyReport();
+                return;
+            }
+
+            // 計算日期區間內的所有日期
+            const dates = [];
+            let currentDate = new Date(startDate);
+            const endDateObj = new Date(endDate);
+
+            while (currentDate <= endDateObj) {
+                dates.push(currentDate.toISOString().split('T')[0]);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // 聚合區間內的所有資料
+            let aggregatedData = {
+                totalRevenue: 0,
+                totalDiscount: 0,
+                orderCount: 0,
+                orders: [],
+                hourlyData: { '17': 0, '18': 0, '19': 0, '20': 0, '21': 0, '22': 0, '23': 0 },
+                itemSales: {},
+                categorySales: { beef: 0, pork: 0, chicken: 0, vegetable: 0, skewer: 0, drink: 0 }
+            };
+
+            dates.forEach(date => {
+                let dayData;
+
+                if (date === businessDate) {
+                    // 當前營業日使用記憶體中的即時資料
+                    dayData = dailyStats;
+                } else {
+                    // 從 localStorage 讀取該營業日的資料
+                    const saved = localStorage.getItem(`businessData_${date}`);
+                    if (saved) {
+                        dayData = JSON.parse(saved);
+                    }
+                }
+
+                if (dayData) {
+                    aggregatedData.totalRevenue += dayData.totalRevenue || 0;
+                    aggregatedData.totalDiscount += dayData.totalDiscount || 0;
+                    aggregatedData.orderCount += dayData.orderCount || 0;
+                    aggregatedData.orders.push(...(dayData.orders || []));
+
+                    // 合併時段資料
+                    Object.keys(aggregatedData.hourlyData).forEach(hour => {
+                        aggregatedData.hourlyData[hour] += dayData.hourlyData?.[hour] || 0;
+                    });
+
+                    // 合併商品銷售
+                    Object.entries(dayData.itemSales || {}).forEach(([id, data]) => {
+                        if (!aggregatedData.itemSales[id]) {
+                            aggregatedData.itemSales[id] = { name: data.name, quantity: 0, revenue: 0, discount: 0 };
+                        }
+                        aggregatedData.itemSales[id].quantity += data.quantity;
+                        aggregatedData.itemSales[id].revenue += data.revenue;
+                        aggregatedData.itemSales[id].discount += data.discount || 0;
+                    });
+
+                    // 合併分類銷售
+                    Object.keys(aggregatedData.categorySales).forEach(category => {
+                        aggregatedData.categorySales[category] += dayData.categorySales?.[category] || 0;
+                    });
+                }
+            });
+
+            // 更新顯示標題
+            const dateRangeText = startDate === endDate
+                ? startDate
+                : `${startDate} ~ ${endDate} (${dates.length} 天)`;
+
+            // 更新報表
+            updateDailyReportWithData(aggregatedData, dateRangeText);
+        }
+
+        // 用指定資料更新日報表
+        function updateDailyReportWithData(data, dateRangeText = null) {
+            // 根據是否為日期區間查詢來顯示/隱藏關帳按鈕
+            const checkoutSection = document.getElementById('dailyCheckoutSection');
+            const checkoutTitle = document.getElementById('checkoutTitle');
+            const closeoutButton = document.getElementById('closeoutButton');
+
+            if (checkoutSection) {
+                checkoutSection.style.display = 'block'; // 始終顯示區塊
+            }
+
+            if (dateRangeText) {
+                // 查詢歷史資料時：隱藏關帳按鈕，更新標題
+                if (checkoutTitle) {
+                    checkoutTitle.textContent = '📊 資料匯出';
+                }
+                if (closeoutButton) {
+                    closeoutButton.style.display = 'none'; // 隱藏關帳按鈕
+                }
+            } else {
+                // 查看當前營業日時：顯示關帳按鈕，保持原標題
+                if (checkoutTitle) {
+                    checkoutTitle.textContent = '🔒 營業日結帳操作';
+                }
+                if (closeoutButton) {
+                    closeoutButton.style.display = 'inline-flex'; // 顯示關帳按鈕
+                }
+            }
+
+            // 更新標籤（如果是日期區間查詢）
+            if (dateRangeText) {
+                document.getElementById('revenueLabel').textContent = `${dateRangeText} 營業額`;
+                document.getElementById('discountLabel').textContent = `${dateRangeText} 總折扣`;
+                document.getElementById('profitLabel').textContent = `${dateRangeText} 利潤`;
+            } else {
+                document.getElementById('revenueLabel').textContent = '今日營業額';
+                document.getElementById('discountLabel').textContent = '今日總折扣';
+                document.getElementById('profitLabel').textContent = '今日利潤';
+            }
+
+            document.getElementById('todayRevenue').textContent = `$${(data.totalRevenue || 0).toLocaleString()}`;
+            document.getElementById('todayOrders').textContent = data.orderCount || 0;
+            document.getElementById('todayDiscount').textContent = `-$${(data.totalDiscount || 0).toLocaleString()}`;
+
+            const profit = (data.totalRevenue || 0) - (data.totalDiscount || 0);
+            document.getElementById('todayProfit').textContent = `$${profit.toLocaleString()}`;
+
+            // 分類銷售占比
+            const totalCategoryRevenue = Object.values(data.categorySales || {}).reduce((sum, val) => sum + val, 0) || 1;
+            const categoryLabels = {
+                beef: '🐂 牛肉',
+                pork: '🐖 豬肉',
+                chicken: '🐔 雞肉',
+                vegetable: '🥬 蔬菜'
+            };
+
+            const categoryStatsEl = document.getElementById('categoryStats');
+            categoryStatsEl.innerHTML = '';
+
+            Object.entries(data.categorySales || {}).forEach(([category, revenue]) => {
+                if (categoryLabels[category]) {
+                    const percentage = totalCategoryRevenue > 0 ? Math.round((revenue / totalCategoryRevenue) * 100) : 0;
+                    const item = document.createElement('div');
+                    item.className = 'category-stat-item';
+                    item.innerHTML = `
+                        <div class="category-stat-info">
+                            <span class="category-stat-name">${categoryLabels[category]}</span>
+                            <span class="category-stat-amount">$${revenue.toLocaleString()}</span>
+                        </div>
+                        <div class="category-stat-bar">
+                            <div class="category-stat-fill" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="category-stat-percent">${percentage}%</div>
+                    `;
+                    categoryStatsEl.appendChild(item);
+                }
+            });
+
+            // 時段分析
+            const hourlyBarsEl = document.getElementById('hourlyBars');
+            if (hourlyBarsEl) {
+                hourlyBarsEl.innerHTML = '';
+
+                const maxHourlyRevenue = Math.max(...Object.values(data.hourlyData || {}), 1);
+                const hours = ['17', '18', '19', '20', '21', '22'];
+
+                hours.forEach(hour => {
+                    const revenue = data.hourlyData?.[hour] || 0;
+                    const width = maxHourlyRevenue > 0 ? (revenue / maxHourlyRevenue) * 100 : 0;
+
+                    const bar = document.createElement('div');
+                    bar.className = 'hourly-bar';
+                    bar.innerHTML = `
+                        <div class="hourly-label">${hour}:00</div>
+                        <div class="hourly-bar-bg">
+                            <div class="hourly-bar-fill" style="width: ${width}%"></div>
+                        </div>
+                        <div class="hourly-value">$${revenue.toLocaleString()}</div>
+                    `;
+                    hourlyBarsEl.appendChild(bar);
+                });
+            }
+
+            // 熱銷商品 TOP 10
+            const topItemsEl = document.getElementById('topItemsList');
+
+            // 處理 itemSales（支援兩種格式）
+            let itemsArray = [];
+            if (data.itemSales) {
+                // 格式1: { itemId: { name, quantity, revenue } }
+                // 格式2: { itemName: { name, quantity, revenue } }
+                itemsArray = Object.values(data.itemSales);
+            }
+
+            const sortedItems = itemsArray
+                .sort((a, b) => b.quantity - a.quantity)
+                .slice(0, 10);
+
+            if (topItemsEl) {
+                topItemsEl.innerHTML = '';
+
+                if (sortedItems.length === 0 || sortedItems.every(item => item.quantity === 0)) {
+                    topItemsEl.innerHTML = '<li style="text-align: center; padding: 20px; color: #636E72;">暫無銷售資料</li>';
+                } else {
+                    sortedItems.forEach((item, index) => {
+                        if (item.quantity > 0) {
+                            const li = document.createElement('li');
+                            li.className = 'top-item';
+                            li.innerHTML = `
+                                <div class="top-item-rank">${index + 1}</div>
+                                <div class="top-item-info">
+                                    <div class="top-item-name">${item.name}</div>
+                                    <div class="top-item-qty">${item.quantity} 件</div>
+                                </div>
+                                <div class="top-item-revenue">$${item.revenue.toLocaleString()}</div>
+                            `;
+                            topItemsEl.appendChild(li);
+                        }
+                    });
+                }
+            }
+
+            // 折扣明細 - 從訂單中計算
+            const discountDetailsEl = document.getElementById('discountDetails');
+
+            // 統計自動折扣和手動折扣
+            const discountStats = {};
+
+            if (data.orders && data.orders.length > 0) {
+                data.orders.forEach(order => {
+                    if (order.discount > 0) {
+                        // 檢查手動折扣（優先處理）
+                        if (order.manualDiscount > 0) {
+                            const name = `✋ ${order.manualDiscountReason || '手動折扣'}`;
+                            if (!discountStats[name]) {
+                                discountStats[name] = { count: 0, amount: 0, isManual: true };
+                            }
+                            discountStats[name].count++;
+                            discountStats[name].amount += order.manualDiscount;
+                        }
+
+                        // 檢查自動折扣
+                        if (order.appliedDiscounts && order.appliedDiscounts.length > 0) {
+                            order.appliedDiscounts.forEach(d => {
+                                let name, amount;
+
+                                if (d.name && d.amount) {
+                                    // 舊格式（測試資料）
+                                    // 排除手動折扣
+                                    if (d.type === '手動折扣') return;
+                                    name = d.name;
+                                    amount = d.amount;
+                                } else if (d.description && d.discount) {
+                                    // 新格式
+                                    name = d.description;
+                                    amount = d.discount;
+                                }
+
+                                if (name && amount) {
+                                    if (!discountStats[name]) {
+                                        discountStats[name] = { count: 0, amount: 0, isManual: false };
+                                    }
+                                    discountStats[name].count++;
+                                    discountStats[name].amount += amount;
+                                }
+                            });
+                        } else if (order.manualDiscount === 0 && order.discount > 0) {
+                            // 沒有詳細資料且非手動折扣的，歸類為「其他折扣」
+                            if (!discountStats['其他折扣']) {
+                                discountStats['其他折扣'] = { count: 0, amount: 0, isManual: false };
+                            }
+                            discountStats['其他折扣'].count++;
+                            discountStats['其他折扣'].amount += order.discount;
+                        }
+                    }
+                });
+            }
+
+            const discountList = Object.entries(discountStats)
+                .filter(([name, data]) => data.count > 0)
+                .map(([name, data]) => ({ name, ...data }))
+                .sort((a, b) => b.amount - a.amount);
+
+            if (discountList.length === 0) {
+                discountDetailsEl.innerHTML = '<div style="text-align: center; padding: 20px; color: #636E72;">無折扣記錄</div>';
+            } else {
+                discountDetailsEl.innerHTML = discountList.map(d => `
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #DFE6E9;">
+                        <span style="flex: 1;">${d.name}</span>
+                        <span style="color: ${d.isManual ? '#D63031' : '#0984E3'}; margin-left: 12px;">使用 ${d.count} 次，折 $${d.amount.toLocaleString()}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 載入今日報表
+        function loadTodayReport() {
+            document.getElementById('dailyStartDateSelector').value = businessDate;
+            document.getElementById('dailyEndDateSelector').value = businessDate;
+            updateDailyReport();
+        }
+
+        // 載入昨日報表
+        function loadYesterdayReport() {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toISOString().split('T')[0];
+            document.getElementById('dailyStartDateSelector').value = yesterdayStr;
+            document.getElementById('dailyEndDateSelector').value = yesterdayStr;
+            loadDailyReportByDateRange();
+        }
+
+        // 依週載入週報表
+        function loadWeeklyReportByWeek() {
+            const selectedWeek = document.getElementById('weeklyDateSelector').value;
+            if (!selectedWeek) {
+                alert('請選擇週！');
+                return;
+            }
+
+            // 解析週數 (格式: YYYY-Www)
+            const [year, weekStr] = selectedWeek.split('-W');
+            const weekNum = parseInt(weekStr);
+
+            // 計算該週的日期範圍
+            const startDate = getWeekStartDate(year, weekNum);
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 6);
+
+            // 從 localStorage 讀取該週的所有資料
+            const history = JSON.parse(localStorage.getItem('checkoutHistory') || '[]');
+            const weekData = history.filter(h => {
+                const date = new Date(h.date);
+                return date >= startDate && date <= endDate;
+            });
+
+            // 計算該週總計
+            const weekRevenue = weekData.reduce((sum, d) => sum + (d.totalRevenue || 0), 0);
+            const weekOrders = weekData.reduce((sum, d) => sum + (d.orderCount || 0), 0);
+            const daysInWeek = weekData.length || 1;
+
+            document.getElementById('weekRevenue').textContent = `$${weekRevenue.toLocaleString()}`;
+            document.getElementById('weekOrders').textContent = weekOrders;
+
+            const weekAvg = Math.round(weekRevenue / daysInWeek);
+            document.getElementById('weekAvg').textContent = `$${weekAvg.toLocaleString()}`;
+
+            // 週趨勢圖
+            const weekTrendChartEl = document.getElementById('weekTrendChart');
+            weekTrendChartEl.innerHTML = '';
+
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startDate);
+                date.setDate(date.getDate() + i);
+                const dateStr = date.toISOString().split('T')[0];
+                const dayData = weekData.find(d => d.date === dateStr);
+                const revenue = dayData ? dayData.totalRevenue : 0;
+
+                const height = (revenue / 15000) * 150;
+
+                const bar = document.createElement('div');
+                bar.className = 'trend-bar';
+                bar.innerHTML = `
+                    <div class="trend-bar-value">$${Math.round(revenue / 1000)}k</div>
+                    <div class="trend-bar-fill" style="height: ${height}px"></div>
+                    <div class="trend-bar-label">${date.toLocaleDateString('zh-TW', { weekday: 'short' })}</div>
+                `;
+                weekTrendChartEl.appendChild(bar);
+            }
+        }
+
+        // 取得週開始日期（週一）
+        function getWeekStartDate(year, weekNum) {
+            const date = new Date(year, 0, 1 + (weekNum - 1) * 7);
+            const day = date.getDay();
+            const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(date.setDate(diff));
+        }
+
+        // 載入本週報表
+        function loadThisWeekReport() {
+            const today = new Date();
+            const weekNum = getWeekNumber(today);
+            const year = today.getFullYear();
+            document.getElementById('weeklyDateSelector').value = `${year}-W${weekNum.toString().padStart(2, '0')}`;
+            loadWeeklyReportByWeek();
+        }
+
+        // 載入上週報表
+        function loadLastWeekReport() {
+            const date = new Date();
+            date.setDate(date.getDate() - 7);
+            const weekNum = getWeekNumber(date);
+            const year = date.getFullYear();
+            document.getElementById('weeklyDateSelector').value = `${year}-W${weekNum.toString().padStart(2, '0')}`;
+            loadWeeklyReportByWeek();
+        }
+
+        // 依月份載入月報表
+        function loadMonthlyReportByMonth() {
+            const selectedMonth = document.getElementById('monthlyDateSelector').value;
+            if (!selectedMonth) {
+                alert('請選擇月份！');
+                return;
+            }
+
+            // 從 localStorage 讀取該月所有資料
+            const history = JSON.parse(localStorage.getItem('checkoutHistory') || '[]');
+            const monthData = history.filter(h => h.date.startsWith(selectedMonth));
+
+            const monthRevenue = monthData.reduce((sum, d) => sum + (d.totalRevenue || 0), 0);
+            const monthOrders = monthData.reduce((sum, d) => sum + (d.orderCount || 0), 0);
+
+            document.getElementById('monthRevenue').textContent = `$${monthRevenue.toLocaleString()}`;
+            document.getElementById('monthOrders').textContent = monthOrders;
+
+            // 計算當月天數
+            const [year, month] = selectedMonth.split('-').map(Number);
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const daysWithData = monthData.length || 1;
+            const monthAvg = Math.round(monthRevenue / daysWithData);
+            document.getElementById('monthAvg').textContent = `$${monthAvg.toLocaleString()}`;
+
+            // 月度趨勢圖
+            const monthTrendChartEl = document.getElementById('monthTrendChart');
+            monthTrendChartEl.innerHTML = '';
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${selectedMonth}-${day.toString().padStart(2, '0')}`;
+                const dayData = monthData.find(d => d.date === dateStr);
+                const revenue = dayData ? dayData.totalRevenue : 0;
+
+                const height = (revenue / 15000) * 150;
+
+                const bar = document.createElement('div');
+                bar.className = 'trend-bar';
+                bar.innerHTML = `
+                    <div class="trend-bar-value">$${Math.round(revenue / 1000)}k</div>
+                    <div class="trend-bar-fill" style="height: ${height}px"></div>
+                    <div class="trend-bar-label">${day}</div>
+                `;
+                monthTrendChartEl.appendChild(bar);
+            }
+        }
+
+        // 載入本月報表
+        function loadThisMonthReport() {
+            const today = new Date();
+            const yearMonth = today.toISOString().slice(0, 7);
+            document.getElementById('monthlyDateSelector').value = yearMonth;
+            loadMonthlyReportByMonth();
+        }
+
+        // 載入上月報表
+        function loadLastMonthReport() {
+            const date = new Date();
+            date.setMonth(date.getMonth() - 1);
+            const yearMonth = date.toISOString().slice(0, 7);
+            document.getElementById('monthlyDateSelector').value = yearMonth;
+            loadMonthlyReportByMonth();
+        }
+
+        // 計算折扣明細（從歷史訂單）
+        function calculateDiscountDetailsFromOrders(orders) {
+            const details = [];
+
+            discountRules.forEach(rule => {
+                let count = 0;
+                let amount = 0;
+
+                orders.forEach(order => {
+                    if (rule.type === 'item') {
+                        const item = order.items.find(i => i.name === rule.itemName);
+                        if (item) {
+                            const times = Math.floor(item.quantity / rule.quantity);
+                            if (times > 0) {
+                                count += times;
+                                amount += times * rule.discountAmount;
+                            }
+                        }
+                    } else if (rule.type === 'category') {
+                        // 簡化處理：假設 categorySales 已經存在
+                    }
+                });
+
+                if (count > 0) {
+                    let name = '';
+                    if (rule.type === 'item') {
+                        name = `${rule.itemName} 買${rule.quantity}折$${rule.discountAmount}`;
+                    } else if (rule.type === 'category') {
+                        name = `${rule.categoryName} 買${rule.quantity}折$${rule.discountAmount}`;
+                    } else if (rule.type === 'total') {
+                        name = `滿${rule.quantity}件折$${rule.discountAmount}`;
+                    }
+
+                    details.push({ name, count, amount });
+                }
+            });
+
+            return details;
+        }
+
         // 隱藏報表頁面
         function hideReports() {
             document.getElementById('mainPage').style.display = 'block';
@@ -2392,6 +4326,35 @@
             document.getElementById('reportsPage').classList.remove('active');
             document.getElementById('settingsPage').classList.add('active');
             updateDiscountRulesList();
+
+            // 檢查是否為測試模式
+            checkTestMode();
+        }
+
+        // 檢查測試模式
+        function checkTestMode() {
+            // 檢查 URL 參數或 localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const isTestMode = urlParams.get('test') === 'true' || localStorage.getItem('testMode') === 'true';
+
+            const testDataSection = document.getElementById('testDataSection');
+            if (testDataSection) {
+                testDataSection.style.display = isTestMode ? 'block' : 'none';
+            }
+        }
+
+        // 啟用測試模式
+        function enableTestMode() {
+            localStorage.setItem('testMode', 'true');
+            checkTestMode();
+            alert('✅ 測試模式已啟用！');
+        }
+
+        // 禁用測試模式
+        function disableTestMode() {
+            localStorage.setItem('testMode', 'false');
+            checkTestMode();
+            alert('✅ 測試模式已停用！');
         }
 
         // 隱藏設定頁面
@@ -2779,6 +4742,74 @@
                     deleteBtn.classList.remove('pressed');
                 }
             });
+
+            // 優化快速折扣按鈕（設定折扣，非累加）
+            const quickDiscountBtns = document.querySelectorAll('.quick-discount-btn');
+            quickDiscountBtns.forEach(btn => {
+                btn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.classList.add('pressed');
+
+                    if (navigator.vibrate) {
+                        navigator.vibrate(10);
+                    }
+
+                    const onclickValue = this.getAttribute('onclick');
+                    if (onclickValue) {
+                        const match = onclickValue.match(/(\w+)\((\d+)\)/);
+                        if (match) {
+                            const funcName = match[1];
+                            const amount = parseInt(match[2]);
+                            if (typeof window[funcName] === 'function') {
+                                window[funcName](amount);
+                            }
+                        }
+                    }
+                }, { passive: false });
+
+                btn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('pressed');
+                }, { passive: false });
+
+                btn.addEventListener('touchcancel', function(e) {
+                    this.classList.remove('pressed');
+                });
+            });
+
+            // 優化百分比折扣按鈕（設定折扣，非累加）
+            const percentageBtns = document.querySelectorAll('.percentage-btn');
+            percentageBtns.forEach(btn => {
+                btn.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.classList.add('pressed');
+
+                    if (navigator.vibrate) {
+                        navigator.vibrate(10);
+                    }
+
+                    const onclickValue = this.getAttribute('onclick');
+                    if (onclickValue) {
+                        const match = onclickValue.match(/(\w+)\((\d+)\)/);
+                        if (match) {
+                            const funcName = match[1];
+                            const percentage = parseInt(match[2]);
+                            if (typeof window[funcName] === 'function') {
+                                window[funcName](percentage);
+                            }
+                        }
+                    }
+                }, { passive: false });
+
+                btn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('pressed');
+                }, { passive: false });
+
+                btn.addEventListener('touchcancel', function(e) {
+                    this.classList.remove('pressed');
+                });
+            });
         });
 
         // 監聽輸入變化以更新預覽
@@ -2793,10 +4824,262 @@
             });
         });
 
+        // ========== 規格選擇功能 ==========
+
+        // 顯示規格選擇對話框
+        function showSpecModal(item) {
+            currentItem = item;
+            currentSpecQty = 1;
+            currentSpecSpicy = '不辣';
+            currentSpecCustom = [];
+
+            document.getElementById('specItemName').textContent = item.name;
+            document.getElementById('specItemPrice').textContent = `$${item.price}`;
+            document.getElementById('specQtyDisplay').textContent = '1';
+
+            // 重設辣度按鈕
+            document.querySelectorAll('.spec-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.spec-btn[data-spicy="不辣"]').classList.add('active');
+
+            // 重設備註 checkbox
+            document.querySelectorAll('.spec-checkboxes input').forEach(cb => {
+                cb.checked = false;
+            });
+
+            // 清空自訂輸入
+            document.getElementById('specCustomInput').value = '';
+
+            // 根據分類顯示/隱藏辣度、冰塊選項和調味選項
+            const spicySection = document.querySelector('.spicy-section');
+            const iceOptions = document.querySelectorAll('.ice-option');
+            const seasoningOptions = document.querySelectorAll('.seasoning-option');
+
+            if (item.category === 'drink') {
+                // 飲料類：隱藏辣度，只顯示冰塊選項
+                spicySection.style.display = 'none';
+                iceOptions.forEach(option => {
+                    option.style.display = 'inline-block';
+                });
+                seasoningOptions.forEach(option => {
+                    option.style.display = 'none';
+                });
+            } else {
+                // 其他分類：顯示辣度，只顯示調味選項
+                spicySection.style.display = 'block';
+                iceOptions.forEach(option => {
+                    option.style.display = 'none';
+                });
+                seasoningOptions.forEach(option => {
+                    option.style.display = 'inline-block';
+                });
+            }
+
+            document.getElementById('specModal').classList.add('active');
+        }
+
+        // 隱藏規格選擇對話框
+        function hideSpecModal() {
+            document.getElementById('specModal').classList.remove('active');
+            currentItem = null;
+        }
+
+        // 選擇辣度
+        function selectSpicy(spicy) {
+            currentSpecSpicy = spicy;
+            document.querySelectorAll('.spec-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.spec-btn[data-spicy="${spicy}"]`).classList.add('active');
+        }
+
+        // 更新客製化備註
+        function updateCustomNotes() {
+            currentSpecCustom = [];
+            document.querySelectorAll('.spec-checkboxes input:checked').forEach(cb => {
+                currentSpecCustom.push(cb.value);
+            });
+        }
+
+        // 調整規格數量
+        function adjustSpecQty(delta) {
+            currentSpecQty = Math.max(1, currentSpecQty + delta);
+            document.getElementById('specQtyDisplay').textContent = currentSpecQty;
+        }
+
+        // 確認規格並加入購物車
+        function confirmSpec() {
+            if (!currentItem) return;
+
+            // 獲取客製化備註
+            updateCustomNotes();
+            const customInput = document.getElementById('specCustomInput').value.trim();
+            const allCustomNotes = [...currentSpecCustom];
+            if (customInput) {
+                allCustomNotes.push(customInput);
+            }
+
+            // 建立購物車項目（包含規格）
+            const cartItem = {
+                ...currentItem,
+                quantity: currentSpecQty,
+                spicy: currentSpecSpicy,
+                custom: allCustomNotes.join(', ')
+            };
+
+            // 檢查購物車是否已有相同規格的品項
+            const existingIndex = cart.findIndex(i =>
+                i.id === cartItem.id &&
+                i.spicy === cartItem.spicy &&
+                i.custom === cartItem.custom
+            );
+
+            if (existingIndex >= 0) {
+                cart[existingIndex].quantity += cartItem.quantity;
+            } else {
+                cart.push(cartItem);
+            }
+
+            updateCart();
+            hideSpecModal();
+        }
+
+        // ========== 手動折扣功能 ==========
+
+        // 套用快速折扣（只能套用一次，直接設定而非累加）
+        function applyManualDiscount(amount) {
+            // 計算原價小計和自動折扣
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const autoDiscount = calculateDiscounts().totalDiscount;
+            const maxDiscount = subtotal - autoDiscount; // 最大可折扣金額（扣掉自動折扣後）
+
+            // 設定折扣金額（不累加），並確保不超過最大可折扣金額
+            currentManualDiscount = Math.min(amount, maxDiscount);
+            updateManualDiscountDisplay();
+            updateCheckoutTotal();
+        }
+
+        // 套用自訂金額（只能套用一次，直接設定而非累加）
+        function applyCustomDiscount() {
+            const input = document.getElementById('manualDiscountInput');
+            const amount = parseFloat(input.value);
+            if (!isNaN(amount) && amount > 0) {
+                // 計算原價小計和自動折扣
+                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const autoDiscount = calculateDiscounts().totalDiscount;
+                const maxDiscount = subtotal - autoDiscount; // 最大可折扣金額
+
+                // 設定折扣金額（不累加），並確保不超過最大可折扣金額
+                currentManualDiscount = Math.min(amount, maxDiscount);
+                input.value = '';
+                updateManualDiscountDisplay();
+                updateCheckoutTotal();
+            }
+        }
+
+        // 套用百分比折扣（只能套用一次，直接設定而非累加）
+        function applyPercentageDiscount(percentage) {
+            // 計算原價小計
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const autoDiscount = calculateDiscounts().totalDiscount;
+            const maxDiscount = subtotal - autoDiscount; // 扣掉自動折扣後的可折金額
+
+            // 計算折扣金額
+            const discountAmount = Math.round(maxDiscount * (percentage / 100));
+
+            // 設定折扣金額（不累加）
+            currentManualDiscount = discountAmount;
+            updateManualDiscountDisplay();
+            updateCheckoutTotal();
+        }
+
+        // 更新折扣原因
+        function updateDiscountReason() {
+            currentDiscountReason = document.getElementById('discountReason').value;
+        }
+
+        // 清除手動折扣
+        function clearManualDiscount() {
+            currentManualDiscount = 0;
+            currentDiscountReason = '';
+            document.getElementById('discountReason').value = '';
+            updateManualDiscountDisplay();
+            updateCheckoutTotal();
+        }
+
+        // 更新手動折扣顯示
+        function updateManualDiscountDisplay() {
+            const display = document.getElementById('manualDiscountDisplay');
+            const amountDisplay = document.getElementById('manualDiscountAmount');
+
+            if (currentManualDiscount > 0) {
+                display.style.display = 'block';
+                amountDisplay.textContent = `-$${currentManualDiscount}`;
+            } else {
+                display.style.display = 'none';
+            }
+        }
+
+        // 更新結帳總額
+        function updateCheckoutTotal() {
+            const checkoutTotal = document.getElementById('checkoutTotal');
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const autoDiscount = calculateDiscounts().totalDiscount;
+            const totalDiscount = autoDiscount + currentManualDiscount;
+            const total = Math.max(0, subtotal - totalDiscount); // ��保總金額不會是負數
+            checkoutTotal.textContent = `$${total}`;
+        }
+
         // 初始化
         window.onload = () => {
+            // 從 localStorage 恢復當前營業日資料
+            const savedBusinessDate = localStorage.getItem('currentBusinessDate');
+            if (savedBusinessDate) {
+                businessDate = savedBusinessDate;
+            }
+
+            const savedBusinessData = localStorage.getItem(`businessData_${businessDate}`);
+            if (savedBusinessData) {
+                const parsed = JSON.parse(savedBusinessData);
+                dailyStats = {
+                    date: parsed.date,
+                    totalRevenue: parsed.totalRevenue || 0,
+                    totalDiscount: parsed.totalDiscount || 0,
+                    orderCount: parsed.orderCount || 0,
+                    orders: parsed.orders || [],
+                    hourlyData: parsed.hourlyData || {
+                        '17': 0, '18': 0, '19': 0, '20': 0, '21': 0, '22': 0, '23': 0
+                    },
+                    itemSales: parsed.itemSales || {},
+                    categorySales: parsed.categorySales || {
+                        beef: 0, pork: 0, chicken: 0, vegetable: 0, skewer: 0, drink: 0
+                    }
+                };
+
+                // 恢復訂單編號（從營業日最大訂單號繼續）
+                if (dailyStats.orders && dailyStats.orders.length > 0) {
+                    const lastOrderNumber = dailyStats.orders[dailyStats.orders.length - 1].orderNumber;
+                    const match = lastOrderNumber.match(/-(\d+)$/);
+                    if (match) {
+                        orderCount = parseInt(match[1]) + 1;
+                    }
+                }
+
+                console.log(`✅ 已恢復營業日 ${businessDate} 的資料，共 ${dailyStats.orderCount} 筆訂單`);
+            }
+
             initMenu();
             initCategoryTabs();
+
+            // 更新主畫面營業日顯示
+            updateHeaderBusinessDate();
+
+            // 設定報表查詢區間預設值為營業日
+            document.getElementById('dailyStartDateSelector').value = businessDate;
+            document.getElementById('dailyEndDateSelector').value = businessDate;
+
+            checkTestMode(); // 檢查測試模式
         };
     </script>
 </body>
