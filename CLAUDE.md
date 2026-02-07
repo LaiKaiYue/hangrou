@@ -104,6 +104,7 @@ hangrou/
 - ✅ 銷售統計（日/週/月報表、歷史查詢、即時統計）
 - ✅ 每日結帳條（營業統計、銷售明細、匯出）
 - ✅ 觸控優化（零延遲響應、防止縮放）
+- ✅ **狀態管理重構完成**（統一 appState、StateManager、Utils，準備 Vue 3 轉換）
 - ⏳ Vue 3 專案建置（待開發）
 - ⏳ IndexedDB 資料庫整合（待開發）
 - ⏳ 列印機整合（待開發）
@@ -111,8 +112,15 @@ hangrou/
 **原型功能**：
 - 📍 主畫面：分類切換、選單展示、購物車管理
 - 🎯 規格選擇：
-  - 辣度選擇：不辣、微辣、中辣、特辣
-  - 客製化備註：少冰、去冰、加蔥、去蔥等
+  - 辣度選擇：不辣、微辣、中辣、大辣
+  - 蔵選擇：正常、蔥多、蔥少、去蔥（按鈕式）
+  - 蒜選擇：正常、蒜多、蒜少、去蒜（按鈕式）
+  - 醬選擇：正常、醬多、醬少、去醬（按鈕式）
+  - **飲料規格**：
+    - 溫度選擇：冰、熱（按鈕式）
+    - 冰塊選擇：正常冰、少冰、去冰（選「冰」時顯示）
+    - 甜度選擇：全糖、少糖、半糖、微糖、無糖（按鈕式，啤酒除外）
+    - 正常冰和全糖不顯示（簡化顯示）
   - 自訂備註輸入
   - 數量調整
 - 💳 結帳流程：
@@ -171,8 +179,40 @@ hangrou/
     - 營業日關帳功能
 - 🧪 測試資料：
   - 生成過去7天測試資料
+  - **使用實際品項**（可樂、啤酒）
+  - **同一訂單燒烤類統一的口味**
+  - **分別存儲 onion、garlic、sauce 欄位**
+  - **飲料隨機生成溫度、冰塊、甜度**
   - 自動載入報表查詢
   - 清除測試資料
+- 🖼️ **Modal 彈窗優化**：
+  - Flexbox 佈局（`display: flex; flex-direction: column;`）
+  - 最大高度 90vh，自動適應螢幕
+  - Header 固定（`flex-shrink: 0`）
+  - Body 自動填滿並可滾動（`flex: 1; overflow-y: auto;`）
+  - 外層不出現 scrollbar
+- 🔧 **狀態管理架構重構**（為 Vue 3 轉換做準備）：
+  - **統一 appState 物件**：整合 20+ 全域變數，分類管理
+    - `config`：選單品項、分類名稱、折扣類型
+    - `cart`：購物車品項、當前分類、訂單計數
+    - `spec`：規格選擇（辣度、蔵蒜醬、客製化、飲料規格）
+    - `discount`：手動折扣、折扣規則、折扣原因
+    - `business`：營業日、日統計、週統計、月統計
+    - `ui`：UI 狀態（購物車更新、編輯索引）
+  - **CONSTANTS 常數**：移除魔法數字（觸控閾值、震動時間等）
+  - **StateManager 工具**：統一的狀態存取 API
+    - `get(path)` - 取得狀態值
+    - `set(path, value)` - 設定狀態值
+    - `push(path, item)` - 新增到陣列
+    - `removeFrom(path, index)` - 從陣列移除
+  - **Utils 工具函數**：常用格式化和計算
+    - `formatCurrency()` - 格式化金額
+    - `generateOrderNumber()` - 生成訂單編號
+    - `getCartTotal()` - 計算購物車總金額
+    - `getCartTotalCount()` - 計算購物車總數量
+  - **向後兼容層**：使用 `window` 物件確保現有程式碼正常運作
+  - **移除重複變數宣告**：修復語法錯誤
+  - 詳細說明：`pos/docs/REFACTORING-SUMMARY.md`
 
 **快速測試原型**：
 ```bash
@@ -186,8 +226,11 @@ python -m http.server 8000
 ```
 
 詳細說明請參考：
+- [pos/docs/README.md](pos/docs/README.md) - **POS 系統文件導覽（推薦入口）**
 - [pos/docs/POS-PLANNER.md](pos/docs/POS-PLANNER.md) - 完整開發規劃
-- [pos/docs/VUE3-QUICKSTART.md](pos/docs/VUE3-QUICKSTART.md) - Vue 3 快速開始
+- [pos/docs/REFACTORING-SUMMARY.md](pos/docs/REFACTORING-SUMMARY.md) - 狀態管理重構總結
+- [pos/docs/VUE3-MIGRATION-GUIDE.md](pos/docs/VUE3-MIGRATION-GUIDE.md) - Vue 3 遷移指南
+- [pos/docs/DOCS-STRUCTURE.md](pos/docs/DOCS-STRUCTURE.md) - 文件結構說明
 
 ## 網站設計系統
 
@@ -365,6 +408,14 @@ python -m http.server 8000
   - [ ] 折扣明細正確顯示每個折扣規則的使用次數和金額
 - [ ] 完成付款後查看統計更新
 
+#### 狀態管理架構驗證
+- [ ] 驗證 appState 物件正確初始化
+- [ ] 驗證 StateManager API 正常運作
+- [ ] 驗證 Utils 工具函數正確運作
+- [ ] 驗證向後兼容層正常運作（無語法錯誤）
+- [ ] 驗證所有功能正常（點餐、結帳、報表）
+- [ ] 檢查瀏覽器控制台無錯誤訊息
+
 **Vue 3 專案開發（未來）**：
 
 ```bash
@@ -382,7 +433,9 @@ npm run dev
 ```
 
 詳細說明請參考���
+- [pos/docs/README.md](pos/docs/README.md) - **POS 系統文件導覽（推薦入口）**
 - [pos/docs/VUE3-QUICKSTART.md](pos/docs/VUE3-QUICKSTART.md) - Vue 3 快速開始
+- [pos/docs/VUE3-MIGRATION-GUIDE.md](pos/docs/VUE3-MIGRATION-GUIDE.md) - Vue 3 遷移指南
 - [pos/docs/POS-PLANNER.md](pos/docs/POS-PLANNER.md) - 完整開發規劃
 
 ### 測試暗黑模式
@@ -651,8 +704,12 @@ function updateCart() {
 - [docs/GITHUB-PAGES-DEPLOYMENT.md](docs/GITHUB-PAGES-DEPLOYMENT.md) - GitHub Pages 部署
 
 ### POS 系統相關
+- [pos/docs/README.md](pos/docs/README.md) - **POS 系統文件導覽（推薦入口）**
 - [pos/docs/POS-PLANNER.md](pos/docs/POS-PLANNER.md) - POS 開發規劃
+- [pos/docs/REFACTORING-SUMMARY.md](pos/docs/REFACTORING-SUMMARY.md) - 狀態管理重構總結
+- [pos/docs/VUE3-MIGRATION-GUIDE.md](pos/docs/VUE3-MIGRATION-GUIDE.md) - Vue 3 遷移指南
 - [pos/docs/VUE3-QUICKSTART.md](pos/docs/VUE3-QUICKSTART.md) - Vue 3 快速開始
+- [pos/docs/DOCS-STRUCTURE.md](pos/docs/DOCS-STRUCTURE.md) - 文件結構說明
 
 ## 發展階段
 
@@ -663,14 +720,14 @@ function updateCart() {
 - 部署上線（https://hangrou.com.tw）
 
 ### Phase 2：iPad POS 系統 🎨
-**當前狀態：原型開發中**
+**當前狀態：原型重構完成，準備 Vue 3 轉換**
 
 **已完成**：
 - ✅ 可操作原型（HTML/CSS/JavaScript）
 - ✅ 點餐功能（分類切換、選單展示、購物車）
 - ✅ 結帳功能（現金付款、找零計算）
-- ✅ 規格選擇（辣度、客製化備註）
-- ✅ 手動折扣（快速金額、自訂、百分比）
+- ✅ 規格選擇（辣度、蔥/蒜/醬按鈕式、客製化備註）
+- ✅ 手動折扣（快速金額、自訂）
 - ✅ 折扣系統（單一品項、分類、總數量）
 - ✅ 銷售統計（日/週/月報表、即時統計）
 - ✅ 歷史查詢（日期選擇、快速切換）
@@ -681,13 +738,18 @@ function updateCart() {
 - ✅ 折扣明細統計
 - ✅ 觸控優化（零延遲響應、觸覺回饋、防止干擾）
 - ✅ 測試資料生成（過去7天）
-- ✅ 結帳介面優化（總計含手動折扣）
+- ✅ 結帳介面優化（總計含手動折扣、金額明細分層、隱藏口味顯示）
 - ✅ 訂單編號優化（移除 '-' 符號）
 - ✅ 匯出功能優化（支援日期區間查詢匯出）
+- ✅ 介面優化（點餐卡片簡化、字體放大、按鈕樣式統一）
+- ✅ 口味調整（特辣改大辣、蔥/蒜/醬依序按鈕）
 - ✅ 修正所有繁體中文亂碼
+- ✅ **狀態管理架構重構**（appState、StateManager、Utils、向後兼容層）
+- ✅ **移除重複變數宣告，修復語法錯誤**
+- ✅ **為 Vue 3 轉換做好準備**（架構對照 Pinia Store）
 
 **待開發**：
-- ⏳ Vue 3 專案建置
+- ⏳ Vue 3 專案實際建置（狀態管理架構已準備完成）
 - ⏳ IndexedDB 資料庫整合
 - ⏳ 列印機整合（ESC/POS）
 - ⏳ 資料持久化
@@ -704,15 +766,25 @@ cd /Users/laikaiyue/Documents/Project/hangrou/pos
 python -m http.server 8000
 ```
 
-### Phase 3：功能擴展 📋
+### Phase 3：庫存管理與進階功能 📦
+- 庫存進貨管理
+- 自動庫存扣減
+- 庫存預警系統
+- 庫存盤點功能
+- 庫存報表
+
+### Phase 4：功能擴展 📋
 - 會員系統
 - 掃碼點餐
 - 外送整合
 - 行銷推播
+- Capacitor 打包為 iOS App
+- PWA 漸進式 Web App
+- 電子付款整合
 
 ---
 
-**最後更新**：2026-02-07
+**最後更新**：2026-02-08
 **維護者**：Claude Code Assistant
 **專案狀態**：多專案管理（網站已營運，POS 原型開發中）
 

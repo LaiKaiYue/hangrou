@@ -1,4 +1,8 @@
-# Vue 3 + Capacitor 快速開始指南
+# Vue 3 快速開始指南
+
+> **目的**：建立 Vue 3 + TypeScript + Pinia + Vant 4 專案
+>
+> **📑 文件導覽**：[README](./README.md) | [POS-PLANNER](./POS-PLANNER.md) | [VUE3-MIGRATION](./VUE3-MIGRATION-GUIDE.md)
 
 ## 專案初始化步驟
 
@@ -435,8 +439,16 @@ npx cap open android    # 開啟 Android Studio
 4. 測試 Capacitor 原生功能
 5. 打包並上架
 
+## 📚 相關文件
+
+- **[README](./README.md)** - POS 系統文件導覽
+- **[POS-PLANNER.md](./POS-PLANNER.md)** - 完整開發規劃
+- **[REFACTORING-SUMMARY.md](./REFACTORING-SUMMARY.md)** - 狀態管理重構總結
+- **[VUE3-MIGRATION-GUIDE.md](./VUE3-MIGRATION-GUIDE.md)** - Vue 3 遷移指南
+
 ---
 
 **文件版本**：v1.0
 **建立日期**：2026-01-26
+**最後更新**：2026-02-08
 **適用專案**：夯肉 HANGROU iPad POS 系統

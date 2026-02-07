@@ -23,8 +23,8 @@
         }
 
         html {
-            /* 防止整體頁面縮放 */
-            touch-action: pan-x pan-y;
+            /* 允許正常的手勢操作，但禁用手勢縮放 */
+            touch-action: manipulation;
         }
 
         body {
@@ -32,9 +32,19 @@
             background: #F8F9FA;
             color: #2D3436;
             overflow-x: hidden;
-            /* 防止雙擊縮放 */
-            touch-action: pan-x pan-y;
+            /* 允許正常手勢，但禁用縮放 */
+            touch-action: manipulation;
             -webkit-overflow-scrolling: touch;
+        }
+
+        /* 頂部固定區塊 */
+        .top-fixed-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: white;
         }
 
         /* 頂部導航 */
@@ -45,10 +55,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            /* 固定高度以方便計算 */
+            height: 56px;
         }
 
         .header h1 {
@@ -99,16 +108,28 @@
             overflow-x: auto;
             white-space: nowrap;
             border-bottom: 1px solid #DFE6E9;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            /* 固定高度以方便計算 */
+            height: 56px;
+            /* iPad Safari 滾動優化 */
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-x;
+            overscroll-behavior: contain;
         }
 
         .category-tab {
-            padding: 8px 20px;
+            padding: 6px 20px;
             background: #F8F9FA;
             border: 2px solid #F8F9FA;
             border-radius: 20px;
             cursor: pointer;
             font-size: 16px;
+            line-height: 1.4;
             transition: all 0.2s;
+            /* 確保按鈕高度合適 */
+            height: 32px;
+            display: flex;
+            align-items: center;
         }
 
         .category-tab.active {
@@ -120,7 +141,13 @@
         /* 主內容區 */
         .main-content {
             display: flex;
-            height: calc(100vh - 140px);
+            /* 固定在頂部區塊下方 */
+            position: fixed;
+            top: 112px; /* header(56px) + category-tabs(56px) */
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* 高度自動填滿剩餘空間 */
         }
 
         /* 選單區域 */
@@ -128,6 +155,15 @@
             flex: 1;
             padding: 20px;
             overflow-y: auto;
+            /* iPad Safari 滾動優化 */
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            /* 允許正常滾動手勢 */
+            touch-action: pan-y;
+            overscroll-behavior: contain;
+            /* 確保 flex 高度正確計算 */
+            min-height: 0;
+            height: 100%;
         }
 
         .menu-grid {
@@ -144,10 +180,14 @@
             cursor: pointer;
             /* 移除過渡動畫以提升觸控響應速度 */
             transition: none;
-            touch-action: manipulation;
+            /* 允許正常的手勢操作，由 JavaScript 判斷是點擊還是滾動 */
+            touch-action: auto;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             -webkit-user-select: none;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
         }
 
         .menu-item:hover {
@@ -165,34 +205,19 @@
             background: #F8F9FA;
         }
 
-        .menu-item-image {
-            width: 100%;
-            height: 120px;
-            background: linear-gradient(135deg, #FF6B35, #FF8C42);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-        }
-
         .menu-item-info {
-            padding: 12px;
+            padding: 16px;
+            width: 100%;
         }
 
         .menu-item-name {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .menu-item-desc {
-            font-size: 12px;
-            color: #636E72;
             margin-bottom: 8px;
         }
 
         .menu-item-price {
-            font-size: 18px;
+            font-size: 20px;
             color: #FF6B35;
             font-weight: 600;
         }
@@ -204,6 +229,9 @@
             border-left: 1px solid #DFE6E9;
             display: flex;
             flex-direction: column;
+            /* 高度由父容器自動決定 */
+            height: 100%;
+            overflow: hidden;
         }
 
         .cart-header {
@@ -212,12 +240,21 @@
             color: white;
             font-size: 18px;
             font-weight: 600;
+            /* 確保 header 不可壓縮 */
+            flex-shrink: 0;
         }
 
         .cart-items {
             flex: 1;
             overflow-y: auto;
             padding: 12px;
+            /* iPad Safari 滾動優化 */
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            touch-action: pan-y;
+            overscroll-behavior: contain;
+            /* 確保 flex 高度正確計算 */
+            min-height: 0;
         }
 
         .cart-item {
@@ -365,6 +402,8 @@
             padding: 16px 20px;
             background: #F8F9FA;
             border-top: 1px solid #DFE6E9;
+            /* 確保 footer 不可壓縮，始終可見 */
+            flex-shrink: 0;
         }
 
         .cart-summary {
@@ -390,7 +429,7 @@
             padding: 12px;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
@@ -438,7 +477,12 @@
             width: 90%;
             max-width: 500px;
             max-height: 90vh;
-            overflow-y: auto;
+            overflow: hidden;
+            /* iPad Safari 滾動優化 */
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
         .modal-header {
@@ -466,6 +510,15 @@
 
         .modal-body {
             padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-y;
+            overscroll-behavior: contain;
+        }
+
+        .modal-header {
+            flex-shrink: 0;
         }
 
         .order-info {
@@ -488,8 +541,9 @@
         .checkout-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 12px 0;
             border-bottom: 1px solid #F8F9FA;
+            font-size: 18px;
         }
 
         .payment-section {
@@ -504,6 +558,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 20px;
         }
 
         .input-group {
@@ -514,14 +569,15 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
+            font-size: 18px;
         }
 
         .input-field {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: 2px solid #DFE6E9;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 20px;
         }
 
         .input-field:focus {
@@ -537,12 +593,13 @@
 
         .quick-amount-btn {
             flex: 1;
-            padding: 8px;
+            padding: 12px;
             background: #F8F9FA;
             border: 2px solid #F8F9FA;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 16px;
             /* 移除過渡動畫以提升觸控響應速度 */
             transition: none;
             touch-action: manipulation;
@@ -592,6 +649,19 @@
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
+            /* 避開頂部固定區塊（只有 header） */
+            padding-top: 76px; /* 56px header + 20px padding */
+            box-sizing: border-box;
+        }
+
+        .reports-page.active ~ .category-tabs,
+        .reports-page.active {
+            /* 報表頁面顯示時隱藏分類標籤 */
+        }
+
+        /* 隱藏分類標籤（當在報表或設定頁面時） */
+        .category-tabs.hidden {
+            display: none;
         }
 
         .reports-page.active {
@@ -911,6 +981,9 @@
             padding: 20px;
             max-width: 800px;
             margin: 0 auto;
+            /* 避開頂部固定區塊（只有 header）*/
+            padding-top: 76px; /* 56px header + 20px padding */
+            box-sizing: border-box;
         }
 
         .settings-page.active {
@@ -1105,12 +1178,22 @@
         @media (max-width: 968px) {
             .main-content {
                 flex-direction: column;
+                /* 手機版保持相同的定位 */
+            }
+
+            .menu-section {
+                /* 手機版選單區域使用自動高度 */
+                flex: 1;
+                min-height: 0;
             }
 
             .cart-sidebar {
                 width: 100%;
                 border-left: none;
                 border-top: 1px solid #DFE6E9;
+                /* 手機版購物車固定高度，確保按鈕可見 */
+                height: 400px;
+                flex-shrink: 0;
             }
         }
 
@@ -1141,7 +1224,7 @@
 
         .spec-section h4 {
             margin-bottom: 12px;
-            font-size: 16px;
+            font-size: 20px;
             color: #2D3436;
         }
 
@@ -1152,12 +1235,13 @@
         }
 
         .spec-btn {
-            padding: 10px;
+            padding: 14px 10px;
             border: 2px solid #DFE6E9;
             background: white;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
+            font-weight: 600;
             transition: all 0.2s;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
@@ -1264,7 +1348,7 @@
 
         .manual-discount-section h4 {
             margin: 0 0 12px 0;
-            font-size: 16px;
+            font-size: 20px;
             color: #2D3436;
         }
 
@@ -1281,7 +1365,7 @@
             color: white;
             border: none;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: none;
@@ -1307,7 +1391,7 @@
             color: white;
             border: none;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: none;
@@ -1322,20 +1406,20 @@
     </style>
 </head>
 <body>
-    <!-- 頂部導航 -->
-    <header class="header">
-        <h1>夯肉 HANGROU</h1>
-        <div class="header-buttons">
-            <div class="header-business-date">
-                📅 <span id="headerBusinessDate">-</span>
+    <!-- 頂部固定區塊（Header + 分類標籤） -->
+    <div class="top-fixed-bar">
+        <!-- 頂部導航 -->
+        <header class="header">
+            <h1>夯肉 HANGROU</h1>
+            <div class="header-buttons">
+                <div class="header-business-date">
+                    📅 <span id="headerBusinessDate">-</span>
+                </div>
+                <button class="header-btn" onclick="showReports()">📊 報表</button>
+                <button class="header-btn" onclick="showSettings()">⚙️ 設定</button>
             </div>
-            <button class="header-btn" onclick="showReports()">📊 報表</button>
-            <button class="header-btn" onclick="showSettings()">⚙️ 設定</button>
-        </div>
-    </header>
+        </header>
 
-    <!-- 主畫面 -->
-    <div id="mainPage">
         <!-- 分類標籤 -->
         <div class="category-tabs" id="categoryTabs">
             <div class="category-tab active" data-category="all">🐔 全部</div>
@@ -1346,7 +1430,10 @@
             <div class="category-tab" data-category="skewer">🍢 串燒</div>
             <div class="category-tab" data-category="drink">🍺 飲料</div>
         </div>
+    </div>
 
+    <!-- 主畫面 -->
+    <div id="mainPage">
         <!-- 主內容區 -->
         <div class="main-content">
             <!-- 選單區域 -->
@@ -1650,12 +1737,12 @@
 
     <!-- 訂單列表彈窗 -->
     <div class="modal-overlay" id="orderListModal">
-        <div class="modal" style="max-width: 800px;">
-            <div class="modal-header">
+        <div class="modal" style="max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="flex-shrink: 0;">
                 <div class="modal-title" id="orderListModalTitle">訂單明細</div>
                 <button class="modal-close" onclick="hideOrderListModal()">×</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="flex: 1; overflow-y: auto; padding: 20px;">
                 <div id="orderListDate" style="margin-bottom: 12px; color: #636E72;"></div>
 
                 <!-- 訂單搜尋框 -->
@@ -1670,10 +1757,8 @@
                     >
                 </div>
 
-                <div style="max-height: 500px; overflow-y: auto;">
-                    <div id="orderListContainer">
-                        <!-- 訂單會由 JavaScript 動態生成 -->
-                    </div>
+                <div id="orderListContainer">
+                    <!-- 訂單會由 JavaScript 動態生成 -->
                 </div>
 
                 <div class="modal-actions" style="margin-top: 20px;">
@@ -1685,12 +1770,12 @@
 
     <!-- 結帳彈窗 -->
     <div class="modal-overlay" id="checkoutModal">
-        <div class="modal">
-            <div class="modal-header">
+        <div class="modal" style="max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="flex-shrink: 0;">
                 <div class="modal-title">結帳付款</div>
                 <button class="modal-close" onclick="hideCheckout()">×</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="flex: 1; overflow-y: auto; padding: 20px;">
                 <div class="order-info">
                     <div class="order-info-row">
                         <span>訂單號：</span>
@@ -1704,6 +1789,61 @@
 
                 <div class="checkout-items" id="checkoutItems">
                     <!-- 訂單項目會由 JavaScript 動態生成 -->
+                </div>
+
+                <!-- 統一規格選擇區塊 -->
+                <div class="unified-spec-section" style="background: #F8F9FA; padding: 16px; border-radius: 8px; margin: 16px 0;">
+                    <h4 style="margin: 0 0 12px 0; color: #2D3436;">🍽️ 口味</h4>
+
+                    <!-- 辣度選擇 -->
+                    <div class="spicy-section" style="margin-bottom: 12px;">
+                        <div style="font-size: 18px; color: #2D3436; margin-bottom: 8px;">🌶️ 辣度：</div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="spec-btn unified-spec-btn" data-spicy="不辣" onclick="selectUnifiedSpicy('不辣')">不辣</button>
+                            <button class="spec-btn unified-spec-btn" data-spicy="微辣" onclick="selectUnifiedSpicy('微辣')">微辣</button>
+                            <button class="spec-btn unified-spec-btn" data-spicy="中辣" onclick="selectUnifiedSpicy('中辣')">中辣</button>
+                            <button class="spec-btn unified-spec-btn" data-spicy="大辣" onclick="selectUnifiedSpicy('大辣')">大辣</button>
+                        </div>
+                    </div>
+
+                    <!-- 蔵選擇 -->
+                    <div class="onion-section" style="margin-bottom: 12px;">
+                        <div style="font-size: 18px; color: #2D3436; margin-bottom: 8px;">🧅 蔥：</div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="spec-btn unified-onion-btn active" data-onion="" onclick="selectUnifiedOnion('')">正常</button>
+                            <button class="spec-btn unified-onion-btn" data-onion="蔥多" onclick="selectUnifiedOnion('蔥多')">蔥多</button>
+                            <button class="spec-btn unified-onion-btn" data-onion="蔥少" onclick="selectUnifiedOnion('蔥少')">蔥少</button>
+                            <button class="spec-btn unified-onion-btn" data-onion="去蔥" onclick="selectUnifiedOnion('去蔥')">去蔥</button>
+                        </div>
+                    </div>
+
+                    <!-- 蒜選擇 -->
+                    <div class="garlic-section" style="margin-bottom: 12px;">
+                        <div style="font-size: 18px; color: #2D3436; margin-bottom: 8px;">🧄 蒜：</div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="spec-btn unified-garlic-btn active" data-garlic="" onclick="selectUnifiedGarlic('')">正常</button>
+                            <button class="spec-btn unified-garlic-btn" data-garlic="蒜多" onclick="selectUnifiedGarlic('蒜多')">蒜多</button>
+                            <button class="spec-btn unified-garlic-btn" data-garlic="蒜少" onclick="selectUnifiedGarlic('蒜少')">蒜少</button>
+                            <button class="spec-btn unified-garlic-btn" data-garlic="去蒜" onclick="selectUnifiedGarlic('去蒜')">去蒜</button>
+                        </div>
+                    </div>
+
+                    <!-- 醬選擇 -->
+                    <div class="sauce-section" style="margin-bottom: 12px;">
+                        <div style="font-size: 18px; color: #2D3436; margin-bottom: 8px;">🥫 醬：</div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="spec-btn unified-sauce-btn active" data-sauce="" onclick="selectUnifiedSauce('')">正常</button>
+                            <button class="spec-btn unified-sauce-btn" data-sauce="醬多" onclick="selectUnifiedSauce('醬多')">醬多</button>
+                            <button class="spec-btn unified-sauce-btn" data-sauce="醬少" onclick="selectUnifiedSauce('醬少')">醬少</button>
+                            <button class="spec-btn unified-sauce-btn" data-sauce="去醬" onclick="selectUnifiedSauce('去醬')">去醬</button>
+                        </div>
+                    </div>
+
+                    <!-- 自訂備註 -->
+                    <div>
+                        <div style="font-size: 18px; color: #2D3436; margin-bottom: 8px;">📝 自訂備註：</div>
+                        <input type="text" id="unifiedCustomInput" class="input-field" placeholder="其他特殊需求..." style="width: 100%;" oninput="updateUnifiedCustom()">
+                    </div>
                 </div>
 
                 <!-- 手動折扣區塊 -->
@@ -1722,11 +1862,11 @@
                             <div style="flex: 1;">
                                 <input type="number" id="manualDiscountInput" class="input-field" placeholder="自訂金額" style="margin-bottom: 0;">
                             </div>
-                            <button class="btn btn-secondary" onclick="applyCustomDiscount()" style="padding: 12px 16px;">套用</button>
+                            <button class="quick-discount-btn" onclick="applyCustomDiscount()">套用</button>
                         </div>
 
                         <!-- 百分比折扣 -->
-                        <div class="percentage-discount">
+                        <div class="percentage-discount" style="display: none;">
                             <button class="percentage-btn" onclick="applyPercentageDiscount(10)">打9折</button>
                             <button class="percentage-btn" onclick="applyPercentageDiscount(20)">打8折</button>
                         </div>
@@ -1749,13 +1889,24 @@
                                 <span>已套用手動折扣：</span>
                                 <span id="manualDiscountAmount" style="font-weight: 600; color: #D63031;">$0</span>
                             </div>
-                            <button onclick="clearManualDiscount()" style="width: 100%; margin-top: 8px; padding: 6px; background: #D63031; color: white; border: none; border-radius: 4px; cursor: pointer;">清除手動折扣</button>
+                            <button onclick="clearManualDiscount()" class="quick-discount-btn" style="width: 100%; margin-top: 8px; background: #D63031;">清除手動折扣</button>
                         </div>
                     </div>
 
                     <!-- 總計顯示 -->
                     <div class="order-info" style="margin-bottom: 16px;">
+                        <!-- 小計 -->
                         <div class="order-info-row">
+                            <span style="font-size: 16px; color: #636E72;">小計：</span>
+                            <span id="checkoutSubtotal" style="font-size: 16px; color: #636E72;">$0</span>
+                        </div>
+                        <!-- 折扣 -->
+                        <div class="order-info-row" id="checkoutDiscountRow" style="display: none;">
+                            <span style="font-size: 16px; color: #D63031;">折扣：</span>
+                            <span id="checkoutDiscount" style="font-size: 16px; color: #D63031;">-$0</span>
+                        </div>
+                        <!-- 總計 -->
+                        <div class="order-info-row" style="border-top: 2px solid #DFE6E9; padding-top: 8px; margin-top: 8px;">
                             <span style="font-size: 18px; font-weight: 600;">總計：</span>
                             <span class="cart-total" id="checkoutTotal" style="font-size: 20px;">$0</span>
                         </div>
@@ -1774,8 +1925,8 @@
                             <button class="quick-amount-btn" onclick="addAmount(100)">$100</button>
                             <button class="quick-amount-btn" onclick="addAmount(500)">$500</button>
                             <button class="quick-amount-btn" onclick="addAmount(1000)">$1000</button>
-                            <button class="quick-amount-btn" onclick="setFullAmount()" style="background: #FF6B35; color: white; border-color: #FF6B35;">💰 收全額</button>
-                            <button class="quick-amount-btn" onclick="clearAmount()" style="background: #D63031; color: white; border-color: #D63031;">🗑️ 歸零</button>
+                            <button class="quick-amount-btn" onclick="setFullAmount()" style="background: #FF6B35; color: white; border-color: #FF6B35;">全額</button>
+                            <button class="quick-amount-btn" onclick="clearAmount()" style="background: #D63031; color: white; border-color: #D63031;">歸零</button>
                         </div>
                     </div>
 
@@ -1828,11 +1979,18 @@
                     </button>
                 </div>
 
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+                    <button class="btn btn-secondary" onclick="clearAllLocalStorage()" style="flex: 1; min-width: 200px; background: #636E72;">
+                        🧹 清除所有資料
+                    </button>
+                </div>
+
                 <div style="margin-top: 12px; padding: 12px; background: #FFF3CD; border-radius: 8px; font-size: 14px; color: #856404;">
                     <strong>說明：</strong><br>
                     • 點擊「生成測試資料」會自動建立過去7天的模擬銷售資料<br>
                     • 生成的資料可用於測試日報表、週報表、月報表的歷史查詢功能<br>
                     • 測試完成後可點擊「清除測試資料」刪除<br>
+                    • <strong>「清除所有資料」</strong>會清除 localStorage 中的所有資料（包括設定、折扣規則、營業資料等），會重置為初始狀態<br>
                     <strong style="color: #856404;">💡 提示：此區塊僅在測試模式下顯示（URL 加 ?test=true）</strong>
                 </div>
             </div>
@@ -1841,12 +1999,12 @@
 
     <!-- 規格選擇彈窗 -->
     <div class="modal-overlay" id="specModal">
-        <div class="modal">
-            <div class="modal-header">
+        <div class="modal" style="max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="flex-shrink: 0;">
                 <div class="modal-title">選擇規格</div>
                 <button class="modal-close" onclick="hideSpecModal()">×</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="flex: 1; overflow-y: auto; padding: 20px;">
                 <!-- 品項資訊 -->
                 <div class="spec-item-info">
                     <h3 id="specItemName">雞肉串</h3>
@@ -1860,21 +2018,79 @@
                         <button class="spec-btn active" data-spicy="不辣" onclick="selectSpicy('不辣')">不辣</button>
                         <button class="spec-btn" data-spicy="微辣" onclick="selectSpicy('微辣')">微辣</button>
                         <button class="spec-btn" data-spicy="中辣" onclick="selectSpicy('中辣')">中辣</button>
-                        <button class="spec-btn" data-spicy="特辣" onclick="selectSpicy('特辣')">特辣</button>
+                        <button class="spec-btn" data-spicy="大辣" onclick="selectSpicy('大辣')">大辣</button>
                     </div>
                 </div>
 
                 <!-- 客製化備註 -->
                 <div class="spec-section">
                     <h4>📝 客製化</h4>
-                    <div class="spec-checkboxes">
-                        <label class="ice-option"><input type="checkbox" value="少冰" onchange="updateCustomNotes()"> 少冰</label>
-                        <label class="ice-option"><input type="checkbox" value="去冰" onchange="updateCustomNotes()"> 去冰</label>
-                        <label class="seasoning-option"><input type="checkbox" value="加蔥" onchange="updateCustomNotes()"> 加蔥</label>
-                        <label class="seasoning-option"><input type="checkbox" value="去蔥" onchange="updateCustomNotes()"> 去蔥</label>
-                        <label class="seasoning-option"><input type="checkbox" value="多醬" onchange="updateCustomNotes()"> 多醬</label>
-                        <label class="seasoning-option"><input type="checkbox" value="少醬" onchange="updateCustomNotes()"> 少醬</label>
+
+                    <!-- 飲料類：冰/熱選項 -->
+                    <div class="drink-options" style="display: none;">
+                        <div style="margin-bottom: 12px;">
+                            <div style="font-size: 20px; color: #2D3436; margin-bottom: 8px;">🧊 溫度：</div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="spec-btn temp-btn" data-temp="冰" onclick="selectDrinkTemp('冰')">冰</button>
+                                <button class="spec-btn temp-btn" data-temp="熱" onclick="selectDrinkTemp('熱')">熱</button>
+                            </div>
+                        </div>
+                        <div id="iceOptions" style="display: none;">
+                            <div style="font-size: 20px; color: #2D3436; margin-bottom: 8px;">🧊 冰塊：</div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="spec-btn ice-level-btn" data-ice="正常冰" onclick="selectIceLevel('正常冰')">正常</button>
+                                <button class="spec-btn ice-level-btn" data-ice="少冰" onclick="selectIceLevel('少冰')">少冰</button>
+                                <button class="spec-btn ice-level-btn" data-ice="去冰" onclick="selectIceLevel('去冰')">去冰</button>
+                            </div>
+                        </div>
+                        <div id="sugarOptions" style="margin-top: 12px;">
+                            <div style="font-size: 20px; color: #2D3436; margin-bottom: 8px;">🍬 甜度：</div>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <button class="spec-btn sugar-level-btn active" data-sugar="全糖" onclick="selectSugarLevel('全糖')">全糖</button>
+                                <button class="spec-btn sugar-level-btn" data-sugar="少糖" onclick="selectSugarLevel('少糖')">少糖</button>
+                                <button class="spec-btn sugar-level-btn" data-sugar="半糖" onclick="selectSugarLevel('半糖')">半糖</button>
+                                <button class="spec-btn sugar-level-btn" data-sugar="微糖" onclick="selectSugarLevel('微糖')">微糖</button>
+                                <button class="spec-btn sugar-level-btn" data-sugar="無糖" onclick="selectSugarLevel('無糖')">無糖</button>
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- 其他類別：調味選項 -->
+                    <div class="seasoning-options">
+                        <!-- 蔵選擇 -->
+                        <div class="spec-section onion-section" style="margin-bottom: 12px;">
+                            <h4>🧅 蔥</h4>
+                            <div class="spec-buttons">
+                                <button class="spec-btn onion-btn active" data-onion="" onclick="selectOnion('')">正常</button>
+                                <button class="spec-btn onion-btn" data-onion="蔥多" onclick="selectOnion('蔥多')">蔥多</button>
+                                <button class="spec-btn onion-btn" data-onion="蔥少" onclick="selectOnion('蔥少')">蔥少</button>
+                                <button class="spec-btn onion-btn" data-onion="去蔥" onclick="selectOnion('去蔥')">去蔥</button>
+                            </div>
+                        </div>
+
+                        <!-- 蒜選擇 -->
+                        <div class="spec-section garlic-section" style="margin-bottom: 12px;">
+                            <h4>🧄 蒜</h4>
+                            <div class="spec-buttons">
+                                <button class="spec-btn garlic-btn active" data-garlic="" onclick="selectGarlic('')">正常</button>
+                                <button class="spec-btn garlic-btn" data-garlic="蒜多" onclick="selectGarlic('蒜多')">蒜多</button>
+                                <button class="spec-btn garlic-btn" data-garlic="蒜少" onclick="selectGarlic('蒜少')">蒜少</button>
+                                <button class="spec-btn garlic-btn" data-garlic="去蒜" onclick="selectGarlic('去蒜')">去蒜</button>
+                            </div>
+                        </div>
+
+                        <!-- 醬選擇 -->
+                        <div class="spec-section sauce-section">
+                            <h4>🥫 醬</h4>
+                            <div class="spec-buttons">
+                                <button class="spec-btn sauce-btn active" data-sauce="" onclick="selectSauce('')">正常</button>
+                                <button class="spec-btn sauce-btn" data-sauce="醬多" onclick="selectSauce('醬多')">醬多</button>
+                                <button class="spec-btn sauce-btn" data-sauce="醬少" onclick="selectSauce('醬少')">醬少</button>
+                                <button class="spec-btn sauce-btn" data-sauce="去醬" onclick="selectSauce('去醬')">去醬</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <input type="text" id="specCustomInput" class="spec-custom-input" placeholder="其他需求（選填）">
                 </div>
 
@@ -1899,12 +2115,12 @@
 
     <!-- 新增/編輯折扣規則彈窗 -->
     <div class="modal-overlay" id="discountModal">
-        <div class="modal">
-            <div class="modal-header">
+        <div class="modal" style="max-height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header" style="flex-shrink: 0;">
                 <div class="modal-title" id="discountModalTitle">新增折扣規則</div>
                 <button class="modal-close" onclick="hideDiscountModal()">×</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="flex: 1; overflow-y: auto; padding: 20px;">
                 <div class="input-group">
                     <label class="input-label">折扣類型</label>
                     <select class="input-field" id="discountType" onchange="onDiscountTypeChange()">
@@ -1965,108 +2181,257 @@
     </div>
 
     <script>
-        // 菜品資料
-        const menuItems = [
-            { id: 1, name: '牛五花', category: 'beef', price: 120, icon: '🥩', desc: '澳洲進口牛五花' },
-            { id: 2, name: '牛小排', category: 'beef', price: 150, icon: '🥩', desc: '厚切牛小排' },
-            { id: 3, name: '牛舌', category: 'beef', price: 130, icon: '👅', desc: '鹽烤牛舌' },
-            { id: 4, name: '豬肋排', category: 'pork', price: 80, icon: '🍖', desc: '醃製豬肋排' },
-            { id: 5, name: '培根捲', category: 'pork', price: 50, icon: '🥓', desc: '培根捲芦筍' },
-            { id: 6, name: '香腸', category: 'pork', price: 40, icon: '🌭', desc: '台式香腸' },
-            { id: 7, name: '雞肉串', category: 'chicken', price: 50, icon: '🍢', desc: '新鮮雞腿肉' },
-            { id: 8, name: '雞翅', category: 'chicken', price: 60, icon: '🍗', desc: '鹽烤雞翅' },
-            { id: 9, name: '烤玉米', category: 'vegetable', price: 40, icon: '🌽', desc: '碳烤玉米' },
-            { id: 10, name: '烤青椒', category: 'vegetable', price: 30, icon: '🫑', desc: '青椒塞肉' },
-            { id: 11, name: '串燒組合', category: 'skewer', price: 100, icon: '🍢', desc: '綜合串燒' },
-            { id: 12, name: '烤香菇', category: 'vegetable', price: 35, icon: '🍄', desc: '碳烤香菇' },
-            { id: 13, name: '可樂', category: 'drink', price: 30, icon: '🥤', desc: '可口可樂' },
-            { id: 14, name: '啤酒', category: 'drink', price: 60, icon: '🍺', desc: '台灣啤酒' },
-        ];
+        // ==================== 狀態管理架構（為 Vue 3 轉換做準備）===================
 
-        // 購物車資料
-        let cart = [];
-        let currentCategory = 'all';
-        let orderCount = 1;
-
-        // 規格選擇相關變數
-        let currentItem = null;
-        let currentSpecQty = 1;
-        let currentSpecSpicy = '不辣';
-        let currentSpecCustom = [];
-
-        // 手動折扣相關變數
-        let currentManualDiscount = 0;
-        let currentDiscountReason = '';
-
-        // 營業日系統日期
-        let businessDate = new Date().toISOString().split('T')[0];
-
-        // 當日銷售統計
-        let dailyStats = {
-            date: businessDate,  // 使用營業日
-            totalRevenue: 0,         // 原價營業額（未折扣）
-            totalDiscount: 0,        // 總折扣金額
-            orderCount: 0,
-            orders: [],
-            hourlyData: {
-                '17': 0, '18': 0, '19': 0, '20': 0, '21': 0, '22': 0, '23': 0
+        // 統一的應用狀態（整合所有全域變數）
+        const appState = {
+            // ===== 資料配置 =====
+            config: {
+                menuItems: [
+                    { id: 1, name: '牛五花', category: 'beef', price: 120, icon: '🥩', desc: '澳洲進口牛五花' },
+                    { id: 2, name: '牛小排', category: 'beef', price: 150, icon: '🥩', desc: '厚切牛小排' },
+                    { id: 3, name: '牛舌', category: 'beef', price: 130, icon: '👅', desc: '鹽烤牛舌' },
+                    { id: 4, name: '豬肋排', category: 'pork', price: 80, icon: '🍖', desc: '醃製豬肋排' },
+                    { id: 5, name: '培根捲', category: 'pork', price: 50, icon: '🥓', desc: '培根捲芦筍' },
+                    { id: 6, name: '香腸', category: 'pork', price: 40, icon: '🌭', desc: '台式香腸' },
+                    { id: 7, name: '雞肉串', category: 'chicken', price: 50, icon: '🍢', desc: '新鮮雞腿肉' },
+                    { id: 8, name: '雞翅', category: 'chicken', price: 60, icon: '🍗', desc: '鹽烤雞翅' },
+                    { id: 9, name: '烤玉米', category: 'vegetable', price: 40, icon: '🌽', desc: '碳烤玉米' },
+                    { id: 10, name: '烤青椒', category: 'vegetable', price: 30, icon: '🫑', desc: '青椒塞肉' },
+                    { id: 11, name: '串燒組合', category: 'skewer', price: 100, icon: '🍢', desc: '綜合串燒' },
+                    { id: 12, name: '烤香菇', category: 'vegetable', price: 35, icon: '🍄', desc: '碳烤香菇' },
+                    { id: 13, name: '可樂', category: 'drink', price: 30, icon: '🥤', desc: '可口可樂' },
+                    { id: 14, name: '啤酒', category: 'drink', price: 60, icon: '🍺', desc: '台灣啤酒' }
+                ],
+                categoryNames: {
+                    beef: '牛肉',
+                    pork: '豬肉',
+                    chicken: '雞肉',
+                    vegetable: '蔬菜',
+                    skewer: '串燒',
+                    drink: '飲品'
+                },
+                discountTypes: {
+                    item: { name: '單一品項', desc: '指定單一商品達到數量後折扣' },
+                    category: { name: '分類折扣', desc: '同分類商品總數達到數量後折扣' },
+                    total: { name: '總數量', desc: '購物車總數達到數量後折扣' }
+                }
             },
-            itemSales: {},  // 商品銷售統計 {itemId: {name, quantity, revenue}}
-            categorySales: {
-                beef: 0,
-                pork: 0,
-                chicken: 0,
-                vegetable: 0,
-                skewer: 0,
-                drink: 0
+
+            // ===== 購物車狀態 =====
+            cart: {
+                items: [],
+                currentCategory: 'all',
+                orderCount: 1
+            },
+
+            // ===== 規格選擇狀態 =====
+            spec: {
+                currentItem: null,
+                qty: 1,
+                spicy: '不辣',
+                onion: '',
+                garlic: '',
+                sauce: '',
+                custom: [],
+                drinkTemp: '冰',
+                iceLevel: '正常冰',
+                sugarLevel: '全糖'
+            },
+
+            // ===== 手動折扣狀態 =====
+            discount: {
+                current: 0,
+                reason: '',
+                rules: [
+                    {
+                        id: 1,
+                        type: 'item',
+                        itemId: 12,
+                        itemName: '烤香菇',
+                        quantity: 3,
+                        discountAmount: 5
+                    }
+                ],
+                editingId: null
+            },
+
+            // ===== 營業日與統計狀態 =====
+            business: {
+                businessDate: new Date().toISOString().split('T')[0],
+                dailyStats: {
+                    date: '',
+                    totalRevenue: 0,
+                    totalDiscount: 0,
+                    orderCount: 0,
+                    orders: [],
+                    hourlyData: {
+                        '17': 0, '18': 0, '19': 0, '20': 0, '21': 0, '22': 0, '23': 0
+                    },
+                    itemSales: {},
+                    categorySales: {
+                        beef: 0,
+                        pork: 0,
+                        chicken: 0,
+                        vegetable: 0,
+                        skewer: 0,
+                        drink: 0
+                    }
+                },
+                weeklyStats: {
+                    dailyData: [],
+                    totalRevenue: 0,
+                    totalOrders: 0,
+                    prevWeekRevenue: 0,
+                    prevWeekOrders: 0
+                },
+                monthlyStats: {
+                    dailyData: [],
+                    totalRevenue: 0,
+                    totalOrders: 0
+                }
+            },
+
+            // ===== UI 狀態 =====
+            ui: {
+                pendingCartUpdateFrame: null,
+                cartNeedsUpdate: false,
+                currentEditIndex: -1  // 用於追蹤編輯模式
             }
         };
 
-        // 週統計（模擬資料）
-        let weeklyStats = {
-            dailyData: [],  // 過去7天的資料
-            totalRevenue: 0,
-            totalOrders: 0,
-            prevWeekRevenue: 0,
-            prevWeekOrders: 0
+        // 初始化營業日
+        appState.business.dailyStats.date = appState.business.businessDate;
+
+        // ==================== 常量定義 ====================
+        const CONSTANTS = {
+            TOUCH_TAP_THRESHOLD: 800,      // ms - 觸控判斷為點擊的時間閾值
+            SCROLL_THRESHOLD: 10,          // px - 判斷為滾動的移動距離
+            VIBRATION_DURATION: 10,        // ms - 觸覺回饋震動時間
+            MAX_REPORT_DAYS: 7,            // days - 測試資料生成天數
+            CATEGORY_ALL: 'all'             // 全部分類的標識
         };
 
-        // 月統計（模擬資料）
-        let monthlyStats = {
-            dailyData: [],  // 當月每天的資料
-            totalRevenue: 0,
-            totalOrders: 0
-        };
+        // ==================== 向後兼容的快捷引用（逐步淘汰）====================
+        // 這些是為了保持現有程式碼正常運作，未來會逐步移除
+        let cart = appState.cart.items;
+        let currentCategory = appState.cart.currentCategory;
+        let orderCount = appState.cart.orderCount;
+        let currentItem = appState.spec.currentItem;
+        let currentSpecQty = appState.spec.qty;
+        let currentSpecSpicy = appState.spec.spicy;
+        let currentSpecOnion = appState.spec.onion;
+        let currentSpecGarlic = appState.spec.garlic;
+        let currentSpecSauce = appState.spec.sauce;
+        let currentSpecCustom = appState.spec.custom;
+        let currentDrinkTemp = appState.spec.drinkTemp;
+        let currentIceLevel = appState.spec.iceLevel;
+        let currentSugarLevel = appState.spec.sugarLevel;
+        let currentManualDiscount = appState.discount.current;
+        let currentDiscountReason = appState.discount.reason;
+        let businessDate = appState.business.businessDate;
+        let dailyStats = appState.business.dailyStats;
+        let weeklyStats = appState.business.weeklyStats;
+        let monthlyStats = appState.business.monthlyStats;
+        let discountRules = appState.discount.rules;
+        let editingDiscountId = appState.discount.editingId;
+        let pendingCartUpdateFrame = appState.ui.pendingCartUpdateFrame;
+        let cartNeedsUpdate = appState.ui.cartNeedsUpdate;
+        // ==================== 向後兼容層 ====================
+        // 由於現有程式碼使用全域變數，這裡創建指向 appState 的引用
+        // 使用 window 物件避免重複宣告錯誤
+        if (typeof window.cart === 'undefined') {
+            window.cart = appState.cart.items;
+            window.currentCategory = appState.cart.currentCategory;
+            window.orderCount = appState.cart.orderCount;
+            window.currentItem = appState.spec.currentItem;
+            window.currentSpecQty = appState.spec.qty;
+            window.currentSpecSpicy = appState.spec.spicy;
+            window.currentSpecOnion = appState.spec.onion;
+            window.currentSpecGarlic = appState.spec.garlic;
+            window.currentSpecSauce = appState.spec.sauce;
+            window.currentSpecCustom = appState.spec.custom;
+            window.currentDrinkTemp = appState.spec.drinkTemp;
+            window.currentIceLevel = appState.spec.iceLevel;
+            window.currentSugarLevel = appState.spec.sugarLevel;
+            window.currentManualDiscount = appState.discount.current;
+            window.currentDiscountReason = appState.discount.reason;
+            window.menuItems = appState.config.menuItems;
+            window.categoryNames = appState.config.categoryNames;
+            window.discountTypes = appState.config.discountTypes;
+            window.businessDate = appState.business.businessDate;
+            window.dailyStats = appState.business.dailyStats;
+            window.weeklyStats = appState.business.weeklyStats;
+            window.monthlyStats = appState.business.monthlyStats;
+            window.discountRules = appState.discount.rules;
+            window.editingDiscountId = appState.discount.editingId;
+            window.pendingCartUpdateFrame = appState.ui.pendingCartUpdateFrame;
+            window.cartNeedsUpdate = appState.ui.cartNeedsUpdate;
+            window.currentEditIndex = appState.ui.currentEditIndex;
+        }
 
-        // 折扣規則
-        let discountRules = [
-            {
-                id: 1,
-                type: 'item', // 'item' | 'category' | 'total'
-                itemId: 12,
-                itemName: '烤香菇',
-                quantity: 3,
-                discountAmount: 5
+        // ==================== 業務邏輯層 ====================
+        // 注意：weeklyStats, monthlyStats, discountRules, editingDiscountId 已在 appState 中定義
+
+        // 狀態管理工具函數
+        const StateManager = {
+            // 取得狀態的值
+            get(path) {
+                return path.split('.').reduce((obj, key) => obj?.[key], appState);
+            },
+
+            // 設定狀態的值
+            set(path, value) {
+                const keys = path.split('.');
+                const lastKey = keys.pop();
+                const target = keys.reduce((obj, key) => obj[key], appState);
+                target[lastKey] = value;
+            },
+
+            // 更新陣列狀態
+            push(path, item) {
+                const array = this.get(path);
+                if (Array.isArray(array)) {
+                    array.push(item);
+                }
+            },
+
+            // 從陣列移除
+            removeFrom(path, index) {
+                const array = this.get(path);
+                if (Array.isArray(array) && index >= 0 && index < array.length) {
+                    array.splice(index, 1);
+                }
             }
-        ];
-
-        let editingDiscountId = null;
-
-        // 折扣類型設定
-        const discountTypes = {
-            item: { name: '單一品項', desc: '指定單一商品達到數量後折扣' },
-            category: { name: '分類折扣', desc: '同分類商品總數達到數量後折扣' },
-            total: { name: '總數量', desc: '購物車總數達到數量後折扣' }
         };
 
-        // 分類對應表
-        const categoryNames = {
-            beef: '牛肉',
-            pork: '豬肉',
-            chicken: '雞肉',
-            vegetable: '蔬菜',
-            skewer: '串燒',
-            drink: '飲品'
+        // 整合狀態的工具函數（未來轉換成 Vue 3 時使用）
+        const Utils = {
+            // 格式化金額
+            formatCurrency(amount) {
+                return `$${amount.toLocaleString()}`;
+            },
+
+            // 格式化日期
+            formatDate(date) {
+                return date.replace(/-/g, '');
+            },
+
+            // 生成訂單編號
+            generateOrderNumber(businessDate, orderCount) {
+                const dateStr = businessDate.replace(/-/g, '');
+                return `#${dateStr}${String(orderCount).padStart(3, '0')}`;
+            },
+
+            // 計算購物車總數
+            getCartTotal(cart) {
+                return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            },
+
+            // 計算購物車總數量
+            getCartTotalCount(cart) {
+                return cart.reduce((sum, item) => sum + item.quantity, 0);
+            }
         };
 
         // 初始化選單
@@ -2082,32 +2447,64 @@
                 const menuItem = document.createElement('div');
                 menuItem.className = 'menu-item';
                 menuItem.innerHTML = `
-                    <div class="menu-item-image">${item.icon}</div>
                     <div class="menu-item-info">
                         <div class="menu-item-name">${item.name}</div>
-                        <div class="menu-item-desc">${item.desc}</div>
                         <div class="menu-item-price">$${item.price}</div>
                     </div>
                 `;
 
-                // 優化觸控響應 - 使用 touchstart 事件
+                // 優化觸控響應 - 區分點擊和滾動
+                let touchStartTime = 0;
+                let touchStartX = 0;
+                let touchStartY = 0;
+                let hasMoved = false;
+
                 menuItem.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
+                    touchStartTime = Date.now();
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                    hasMoved = false;
+
+                    // 添加視覺回饋
                     this.classList.add('pressed');
 
                     // 觸覺回饋
                     if (navigator.vibrate) {
                         navigator.vibrate(10);
                     }
+                }, { passive: true });
 
-                    // 立即執行 addToCart
-                    addToCart(item);
+                menuItem.addEventListener('touchmove', function(e) {
+                    const touch = e.touches[0];
+                    const moveX = Math.abs(touch.clientX - touchStartX);
+                    const moveY = Math.abs(touch.clientY - touchStartY);
 
-                    // 短暫延遲後移除按下狀態
-                    setTimeout(() => {
+                    // 如果移動超過 10px，視為滾動
+                    if (moveX > 10 || moveY > 10) {
+                        hasMoved = true;
                         this.classList.remove('pressed');
-                    }, 100);
+                    }
+                }, { passive: true });
+
+                menuItem.addEventListener('touchend', function(e) {
+                    const touchDuration = Date.now() - touchStartTime;
+
+                    // 移除視覺回饋
+                    this.classList.remove('pressed');
+
+                    // 只有在沒有���動且觸控時間短於 500ms 時才觸發點擊
+                    if (!hasMoved && touchDuration < 800) {
+                        // 阻止 default 防止雙擊放大等干擾
+                        e.preventDefault();
+                        // 這是點擊，不是滾動
+                        addToCart(item);
+                    }
                 }, { passive: false });
+
+                // 觸控取消時也要移除視覺回饋
+                menuItem.addEventListener('touchcancel', function(e) {
+                    this.classList.remove('pressed');
+                }, { passive: true });
 
                 // 保留 click 作為備用（非觸控設備）
                 menuItem.onclick = (e) => {
@@ -2136,8 +2533,40 @@
 
         // 新增到購物車
         function addToCart(item) {
-            // 顯示規格選擇對話框
-            showSpecModal(item);
+            // 根據品項類別使用不同的預設規格
+            const defaultCustom = item.category === 'drink' ? '正常冰' : '';
+            const defaultSpicy = item.category === 'drink' ? '' : '不辣';
+            const defaultOnion = item.category === 'drink' ? '' : '';
+            const defaultGarlic = item.category === 'drink' ? '' : '';
+            const defaultSauce = item.category === 'drink' ? '' : '';
+
+            const cartItem = {
+                ...item,
+                quantity: 1,
+                spicy: defaultSpicy,
+                onion: defaultOnion,
+                garlic: defaultGarlic,
+                sauce: defaultSauce,
+                custom: defaultCustom
+            };
+
+            // 檢查購物車是否已有相同規格的品項
+            const existingIndex = cart.findIndex(i =>
+                i.id === cartItem.id &&
+                i.spicy === cartItem.spicy &&
+                i.onion === cartItem.onion &&
+                i.garlic === cartItem.garlic &&
+                i.sauce === cartItem.sauce &&
+                i.custom === cartItem.custom
+            );
+
+            if (existingIndex >= 0) {
+                cart[existingIndex].quantity += cartItem.quantity;
+            } else {
+                cart.push(cartItem);
+            }
+
+            updateCart();
         }
 
         // 計算折扣總額
@@ -2203,8 +2632,26 @@
             return { totalDiscount, appliedDiscounts };
         }
 
-        // 更新購物車顯示
+        // 更新購物車顯示（注意：pendingCartUpdateFrame 和 cartNeedsUpdate 已在前面宣告）
         function updateCart() {
+            // 標記需要更新
+            cartNeedsUpdate = true;
+
+            // 如果已有待處理的更新，不重複排程
+            if (!pendingCartUpdateFrame) {
+                pendingCartUpdateFrame = requestAnimationFrame(() => {
+                    // 只有在確實需要更新時才渲染
+                    if (cartNeedsUpdate) {
+                        renderCart();
+                        cartNeedsUpdate = false;
+                    }
+                    pendingCartUpdateFrame = null;
+                });
+            }
+        }
+
+        // 實際執行購物車渲染
+        function renderCart() {
             const cartItemsContainer = document.getElementById('cartItems');
             const totalItemsEl = document.getElementById('totalItems');
             const cartTotalEl = document.getElementById('cartTotal');
@@ -2237,6 +2684,15 @@
                 let specsHtml = '';
                 if (item.spicy && item.spicy !== '不辣') {
                     specsHtml += `<span class="spec-tag">🌶️ ${item.spicy}</span>`;
+                }
+                if (item.onion) {
+                    specsHtml += `<span class="spec-tag">🧅 ${item.onion}</span>`;
+                }
+                if (item.garlic) {
+                    specsHtml += `<span class="spec-tag">🧄 ${item.garlic}</span>`;
+                }
+                if (item.sauce) {
+                    specsHtml += `<span class="spec-tag">🥫 ${item.sauce}</span>`;
                 }
                 if (item.custom && item.custom.trim()) {
                     specsHtml += `<span class="spec-tag">📝 ${item.custom}</span>`;
@@ -2343,62 +2799,11 @@
             document.getElementById('manualDiscountAmount').value = '';
             updateManualDiscountDisplay();
 
-            // 顯示訂單項目
-            checkoutItems.innerHTML = '';
-            let subtotal = 0;
+            // 初始化統一規格選擇
+            initUnifiedSpec();
 
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
-
-                // 建立規格資訊
-                let specsText = [];
-                if (item.spicy && item.spicy !== '不辣') {
-                    specsText.push(`🌶️ ${item.spicy}`);
-                }
-                if (item.custom && item.custom.trim()) {
-                    specsText.push(`📝 ${item.custom}`);
-                }
-
-                const checkoutItem = document.createElement('div');
-                checkoutItem.className = 'checkout-item';
-                checkoutItem.innerHTML = `
-                    <div>
-                        <strong>${item.name}</strong>
-                        <span style="margin-left: 8px; color: #636E72;">× ${item.quantity}</span>
-                        ${specsText.length > 0 ? `<div style="font-size: 12px; color: #636E72; margin-top: 4px;">${specsText.join(' | ')}</div>` : ''}
-                    </div>
-                    <div>$${itemTotal}</div>
-                `;
-                checkoutItems.appendChild(checkoutItem);
-            });
-
-            // 計算並顯示折扣
-            const { totalDiscount, appliedDiscounts } = calculateDiscounts();
-
-            if (totalDiscount > 0) {
-                const discountDiv = document.createElement('div');
-                discountDiv.className = 'checkout-item';
-                discountDiv.style.cssText = 'background: #FFF3CD; color: #856404;';
-                discountDiv.innerHTML = `
-                    <div>
-                        <strong>🏷️ 折扣優惠</strong>
-                    </div>
-                    <div style="color: #856404;">-$${totalDiscount}</div>
-                `;
-                checkoutItems.appendChild(discountDiv);
-
-                // 顯示折扣明細
-                appliedDiscounts.forEach(discount => {
-                    const discountInfo = document.createElement('div');
-                    discountInfo.style.cssText = 'padding: 8px 12px; font-size: 12px; color: #636E72; background: #F8F9FA;';
-                    discountInfo.textContent = discount.description;
-                    checkoutItems.appendChild(discountInfo);
-                });
-            }
-
-            const total = subtotal - totalDiscount;
-            checkoutTotal.textContent = `$${total}`;
+            // 使用統一函數渲染訂單項目（這會計算 subtotal）
+            renderCheckoutItems();
 
             // 重置輸入
             document.getElementById('receivedAmount').value = '';
@@ -2543,6 +2948,62 @@
                         '</div>';
                 }
 
+                // 計算口味備註區塊（僅顯示非飲料類的備註）
+                const allSpecs = [];
+                // 兼容舊資料：過濾出非飲料類品項
+                const nonDrinkItems = order.items.filter(item => {
+                    if (item.category) {
+                        return item.category !== 'drink';
+                    }
+                });
+
+                if (nonDrinkItems.length > 0) {
+                    // 收集非飲料類的統一口味標籤
+                    const unifiedSpecTags = [];
+
+                    // 檢查辣度是否統一且不是「不辣」
+                    const spicyValues = nonDrinkItems.map(item => item.spicy).filter(s => s && s !== '不辣');
+                    if (spicyValues.length > 0 && spicyValues.every(v => v === spicyValues[0])) {
+                        unifiedSpecTags.push(`<span style="display: inline-block; padding: 3px 10px; background: #FFEAA7; color: #D63031; border-radius: 4px; font-size: 12px; margin-right: 4px; margin-bottom: 5px;">${spicyValues[0]}</span>`);
+                    }
+
+                    // 檢查蔥是否統一
+                    const onionValues = nonDrinkItems.map(item => item.onion).filter(o => o);
+                    if (onionValues.length > 0 && onionValues.every(v => v === onionValues[0])) {
+                        unifiedSpecTags.push(`<span style="display: inline-block; padding: 3px 10px; background: #C8F7DC; color: #00B894; border-radius: 4px; font-size: 12px; margin-right: 4px; margin-bottom: 5px;">${onionValues[0]}</span>`);
+                    }
+
+                    // 檢查蒜是否統一
+                    const garlicValues = nonDrinkItems.map(item => item.garlic).filter(g => g);
+                    if (garlicValues.length > 0 && garlicValues.every(v => v === garlicValues[0])) {
+                        unifiedSpecTags.push(`<span style="display: inline-block; padding: 3px 10px; background: #E0D6F7; color: #6C5CE7; border-radius: 4px; font-size: 12px; margin-right: 4px; margin-bottom: 5px;">${garlicValues[0]}</span>`);
+                    }
+
+                    // 檢查醬是否統一
+                    const sauceValues = nonDrinkItems.map(item => item.sauce).filter(s => s);
+                    if (sauceValues.length > 0 && sauceValues.every(v => v === sauceValues[0])) {
+                        unifiedSpecTags.push(`<span style="display: inline-block; padding: 3px 10px; background: #F5E6D3; color: #A0522D; border-radius: 4px; font-size: 12px; margin-right: 4px; margin-bottom: 5px;">${sauceValues[0]}</span>`);
+                    }
+
+                    // 合併統一口味標籤
+                    if (unifiedSpecTags.length > 0) {
+                        allSpecs.push(`<div style="font-size: 13px; line-height: 1.8; margin-bottom: 8px;">${unifiedSpecTags.join('')}</div>`);
+                    }
+
+                    // 自訂備註（非飲料類只顯示一次）
+                    // const customNote = nonDrinkItems.find(item => item.custom && item.custom.trim());
+                    // if (customNote) {
+                    //     allSpecs.push(`<div style="font-size: 12px; line-height: 1.6; margin-bottom: 6px;"><span style="display: inline-block; padding: 2px 8px; background: #FFE0D6; color: #E17055; border-radius: 4px; font-size: 11px;">📝 ${customNote.custom}</span></div>`);
+                    // }
+                }
+
+                const tasteNotesHTML = allSpecs.length > 0 ? `
+                    <div style="background: #F8F9FA; padding: 14px; border-radius: 8px; margin-top: 12px; margin-bottom: 12px;">
+                        <div style="font-size: 14px; font-weight: 600; color: #2D3436; margin-bottom: 10px;">📝 口味備註</div>
+                        ${allSpecs.join('')}
+                    </div>
+                ` : '';
+
                 return `
                     <div style="background: #F8F9FA; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
                         <!-- 訂單標題 -->
@@ -2564,31 +3025,41 @@
 
                         <!-- 品項明細 -->
                         <div style="border-top: 1px solid #DFE6E9; padding-top: 12px;">
-                            <div style="margin-bottom: 8px; font-size: 13px; font-weight: 600; color: #2D3436;">品項明細</div>
+                            <div style="margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #2D3436;">品項明細</div>
                             ${order.items.map(item => {
-                                // 處理客製化口味標籤
+                                // 收集該品項的規格備註（僅飲料類顯示在品項明細下方）
                                 const specTags = [];
-                                if (item.spicy && item.spicy !== '不辣') {
-                                    specTags.push(`<span style="display: inline-block; background: #FFEAA7; color: #D63031; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-right: 4px;">🌶️ ${item.spicy}</span>`);
+                                // 兼容舊資料：如果沒有 category 屬性，透過品項名稱判斷
+                                const isDrink = item.category === 'drink' ||
+                                    (!item.category && ['珍珠奶茶', '泡泡綠', '可樂', '啤酒'].includes(item.name));
+
+                                if (isDrink) {
+                                    // 飲料：只顯示自訂備註在品項下方
+                                    if (item.custom && item.custom.trim()) {
+                                        specTags.push(`<span style="display: inline-block; padding: 3px 10px; background: #FFE0D6; color: #E17055; border-radius: 4px; font-size: 12px; margin-right: 4px; margin-bottom: 3px;">${item.custom}</span>`);
+                                    }
                                 }
-                                if (item.custom) {
-                                    specTags.push(`<span style="display: inline-block; background: #E3F2FD; color: #1976D2; padding: 2px 6px; border-radius: 4px; font-size: 11px; margin-right: 4px;">📝 ${item.custom}</span>`);
-                                }
+                                // 非飲料品項不在品項明細下方顯示備註（改在「口味備註」區塊統一顯示）
+
 
                                 return `
-                                    <div style="padding: 8px 0; border-bottom: 1px solid #ECF0F1;">
-                                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
+                                    <div style="padding: 10px 0; border-bottom: 1px solid #ECF0F1;">
+                                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                                             <div style="flex: 1;">
-                                                <div style="font-weight: 500; color: #2D3436; margin-bottom: 4px;">
+                                                <div style="font-weight: 500; color: #2D3436; font-size: 15px;">
                                                     ${item.name}
                                                 </div>
-                                                ${specTags.length > 0 ? `<div style="margin-top: 4px;">${specTags.join('')}</div>` : ''}
+                                                ${specTags.length > 0 ? `
+                                                    <div style="margin-top: 8px; line-height: 1.8;">
+                                                        ${specTags.join('')}
+                                                    </div>
+                                                ` : ''}
                                             </div>
                                             <div style="text-align: right;">
-                                                <div style="font-size: 16px; font-weight: 600; color: #2D3436;">
+                                                <div style="font-size: 17px; font-weight: 600; color: #2D3436;">
                                                     $${(item.price * item.quantity).toLocaleString()}
                                                 </div>
-                                                <div style="font-size: 13px; color: #636E72;">
+                                                <div style="font-size: 14px; color: #636E72; margin-top: 2px;">
                                                     $${item.price} x ${item.quantity}
                                                 </div>
                                             </div>
@@ -2597,6 +3068,9 @@
                                 `;
                             }).join('')}
                         </div>
+
+                        <!-- 口味備註區塊（整個訂單統一顯示） -->
+                        ${tasteNotesHTML}
 
                         <!-- 價格明細 -->
                         <div style="border-top: 1px solid #DFE6E9; padding-top: 12px; margin-top: 8px;">
@@ -2811,7 +3285,11 @@
                     name: i.name,
                     quantity: i.quantity,
                     price: i.price,
+                    category: i.category || null,
                     spicy: i.spicy || null,
+                    onion: i.onion || null,
+                    garlic: i.garlic || null,
+                    sauce: i.sauce || null,
                     custom: i.custom || null
                 })),
                 subtotal: subtotal,
@@ -3114,18 +3592,82 @@
 
         // 生成測試資料（開發用）
         function generateTestData() {
+            // 隨機生成口味輔助函數
+            const generateRandomSpec = (item) => {
+                if (item.category === 'drink') {
+                    // 飲料類：隨機生成溫度、冰塊、甜度
+                    const temps = ['冰', '冰', '冰', '熱']; // 冰的機率較高
+                    const iceLevels = ['正常冰', '少冰', '去冰'];
+                    const sugarLevels = ['全糖', '全糖', '少糖', '半糖', '微糖', '無糖'];
+
+                    const temp = temps[Math.floor(Math.random() * temps.length)];
+                    const custom = [];
+
+                    if (temp === '熱') {
+                        custom.push('熱');
+                        // 熱飲隨機甜度（啤酒除外）
+                        if (item.name !== '啤酒') {
+                            const sugar = sugarLevels[Math.floor(Math.random() * sugarLevels.length)];
+                            if (sugar !== '全糖') {
+                                custom.push(sugar);
+                            }
+                        }
+                    } else {
+                        // 冰飲隨機冰塊（正常冰不顯示）
+                        const ice = iceLevels[Math.floor(Math.random() * iceLevels.length)];
+                        if (ice !== '正常冰') {
+                            custom.push(ice);
+                        }
+                        // 隨機甜度（啤酒除外，全糖不顯示）
+                        if (item.name !== '啤酒') {
+                            const sugar = sugarLevels[Math.floor(Math.random() * sugarLevels.length)];
+                            if (sugar !== '全糖') {
+                                custom.push(sugar);
+                            }
+                        }
+                    }
+
+                    return {
+                        custom: custom.length > 0 ? custom.join('、') : ''
+                    };
+                } else {
+                    // 非飲料類：隨機生成辣度、蔥、蒜、醬
+                    const spicyLevels = ['不辣', '不辣', '不辣', '微辣', '微辣', '中辣', '大辣'];
+                    const onionOptions = ['', '', '蔥多', '蔥少', '去蔥'];
+                    const garlicOptions = ['', '', '蒜多', '蒜少', '去蒜'];
+                    const sauceOptions = ['', '', '醬多', '醬少', '去醬'];
+
+                    const spicy = spicyLevels[Math.floor(Math.random() * spicyLevels.length)];
+                    const onion = onionOptions[Math.floor(Math.random() * onionOptions.length)];
+                    const garlic = garlicOptions[Math.floor(Math.random() * garlicOptions.length)];
+                    const sauce = sauceOptions[Math.floor(Math.random() * sauceOptions.length)];
+
+                    const custom = [];
+                    if (onion) custom.push(onion);
+                    if (garlic) custom.push(garlic);
+                    if (sauce) custom.push(sauce);
+
+                    return {
+                        spicy: spicy,
+                        custom: custom.length > 0 ? custom.join('、') : ''
+                    };
+                }
+            };
+
             // 與實際選單對應的品項（使用實際 ID）
             const testMenuItems = [
                 { id: 12, name: '烤香菇', price: 35, category: 'vegetable' }, // 單一品項折扣目標
-                { id: 1, name: '雞肉串', price: 50, category: 'chicken' },
-                { id: 2, name: '雞翅', price: 60, category: 'chicken' },
-                { id: 3, name: '雞心', price: 40, category: 'chicken' },
-                { id: 4, name: '牛五花', price: 120, category: 'beef' },
-                { id: 5, name: '牛排', price: 150, category: 'beef' },
-                { id: 6, name: '豬肋排', price: 80, category: 'pork' },
-                { id: 7, name: '培根捲', price: 50, category: 'skewer' },
-                { id: 15, name: '珍珠奶茶', price: 60, category: 'drink' },
-                { id: 16, name: '泡泡綠', price: 50, category: 'drink' }
+                { id: 1, name: '牛五花', price: 120, category: 'beef' },
+                { id: 2, name: '牛小排', price: 150, category: 'beef' },
+                { id: 3, name: '牛舌', price: 130, category: 'beef' },
+                { id: 4, name: '豬肋排', price: 80, category: 'pork' },
+                { id: 5, name: '培根捲', price: 50, category: 'pork' },
+                { id: 6, name: '香腸', price: 40, category: 'pork' },
+                { id: 7, name: '雞肉串', price: 50, category: 'chicken' },
+                { id: 8, name: '雞翅', price: 60, category: 'chicken' },
+                { id: 11, name: '串燒組合', price: 100, category: 'skewer' },
+                { id: 13, name: '可樂', price: 30, category: 'drink' },
+                { id: 14, name: '啤酒', price: 60, category: 'drink' }
             ];
 
             // 測試用的折扣規則（對應實際規則）
@@ -3162,20 +3704,37 @@
                     let manualDiscount = 0;
                     let manualDiscountReason = '';
 
+                    // 為這筆訂單生成統一的燒烤口味
+                    const unifiedSpicyLevels = ['不辣', '不辣', '不辣', '微辣', '微辣', '中辣', '大辣'];
+                    const unifiedOnionOptions = ['', '', '蔥多', '蔥少', '去蔥'];
+                    const unifiedGarlicOptions = ['', '', '蒜多', '蒜少', '去蒜'];
+                    const unifiedSauceOptions = ['', '', '醬多', '醬少', '去醬'];
+
+                    const orderUnifiedSpicy = unifiedSpicyLevels[Math.floor(Math.random() * unifiedSpicyLevels.length)];
+                    const orderUnifiedOnion = unifiedOnionOptions[Math.floor(Math.random() * unifiedOnionOptions.length)];
+                    const orderUnifiedGarlic = unifiedGarlicOptions[Math.floor(Math.random() * unifiedGarlicOptions.length)];
+                    const orderUnifiedSauce = unifiedSauceOptions[Math.floor(Math.random() * unifiedSauceOptions.length)];
+
+                    const orderUnifiedCustom = [];
+                    if (orderUnifiedOnion) orderUnifiedCustom.push(orderUnifiedOnion);
+                    if (orderUnifiedGarlic) orderUnifiedCustom.push(orderUnifiedGarlic);
+                    if (orderUnifiedSauce) orderUnifiedCustom.push(orderUnifiedSauce);
+                    const orderUnifiedCustomStr = orderUnifiedCustom.length > 0 ? orderUnifiedCustom.join('、') : '';
+
                     // 根據訂單類型生成品項
                     switch (orderType) {
                         case 0: // 無折扣 - 簡單訂單
                         case 1:
                             orderItems = [
-                                { name: '牛五花肉', quantity: 1, price: 120 },
-                                { name: '珍珠奶茶', quantity: 1, price: 60 }
+                                { name: '牛五花', quantity: 1, price: 120 },
+                                { name: '可樂', quantity: 1, price: 30 }
                             ];
                             break;
 
                         case 2: // 單一品項折扣（烤香菇買3串）
                             orderItems = [
                                 { name: '烤香菇', quantity: 3, price: 35 },
-                                { name: '珍珠奶茶', quantity: 1, price: 60 }
+                                { name: '可樂', quantity: 1, price: 30 }
                             ];
                             break;
 
@@ -3183,7 +3742,7 @@
                             orderItems = [
                                 { name: '雞肉串', quantity: 2, price: 50 },
                                 { name: '雞翅', quantity: 1, price: 60 },
-                                { name: '泡泡綠', quantity: 1, price: 50 }
+                                { name: '啤酒', quantity: 1, price: 60 }
                             ];
                             break;
 
@@ -3192,7 +3751,7 @@
                                 { name: '烤香菇', quantity: 3, price: 35 },
                                 { name: '雞肉串', quantity: 2, price: 50 },
                                 { name: '雞翅', quantity: 1, price: 60 },
-                                { name: '泡泡綠', quantity: 1, price: 50 }
+                                { name: '可樂', quantity: 1, price: 30 }
                             ];
                             break;
 
@@ -3200,8 +3759,8 @@
                             orderItems = [
                                 { name: '雞肉串', quantity: 2, price: 50 },
                                 { name: '雞翅', quantity: 1, price: 60 },
-                                { name: '牛五花肉', quantity: 1, price: 120 },
-                                { name: '培根捲', quantity: 1, price: 50 }
+                                { name: '牛五花', quantity: 1, price: 120 },
+                                { name: '啤酒', quantity: 1, price: 60 }
                             ];
                             break;
 
@@ -3211,16 +3770,18 @@
                                 { name: '烤香菇', quantity: 3, price: 35 },
                                 { name: '雞肉串', quantity: 2, price: 50 },
                                 { name: '雞翅', quantity: 1, price: 60 },
-                                { name: '培根捲', quantity: 1, price: 50 }
+                                { name: '培根捲', quantity: 1, price: 50 },
+                                { name: '可樂', quantity: 1, price: 30 }
                             ];
                             break;
 
                         case 8: // 手動折扣 - 會員折扣
                         case 9:
                             orderItems = [
-                                { name: '牛五��肉', quantity: 2, price: 120 },
+                                { name: '牛五花', quantity: 2, price: 120 },
                                 { name: '豬肋排', quantity: 1, price: 80 },
-                                { name: '珍珠奶茶', quantity: 2, price: 60 }
+                                { name: '可樂', quantity: 2, price: 30 },
+                                { name: '啤酒', quantity: 1, price: 60 }
                             ];
                             manualDiscount = orderType === 8 ? 50 : 30;
                             manualDiscountReason = '會員折扣';
@@ -3234,28 +3795,35 @@
                                     quantity: 2,
                                     price: 50,
                                     spicy: '中辣',
-                                    custom: '加蔥、多醬'
+                                    onion: '蔥多',
+                                    garlic: '蒜多',
+                                    sauce: '',
+                                    custom: '蔥多、蒜多'
                                 },
                                 {
                                     name: '烤香菇',
                                     quantity: 3,
                                     price: 35,
-                                    spicy: '不辣'
+                                    spicy: '不辣',
+                                    onion: '',
+                                    garlic: '',
+                                    sauce: '',
+                                    custom: ''
                                 },
                                 {
-                                    name: '珍珠奶茶',
+                                    name: '可樂',
                                     quantity: 1,
-                                    price: 60,
-                                    custom: '少冰'
+                                    price: 30,
+                                    custom: '少冰、半糖'
                                 }
                             ];
                             break;
 
-                        case 12: // 單一品項折扣多次使用（烤香菇6�� = 折$10）
+                        case 12: // 單一品項折扣多次使用（烤香菇6串 = 折$10）
                             orderItems = [
                                 { name: '烤香菇', quantity: 6, price: 35 },
-                                { name: '珍珠奶茶', quantity: 1, price: 60 },
-                                { name: '泡泡綠', quantity: 1, price: 50 }
+                                { name: '可樂', quantity: 1, price: 30 },
+                                { name: '啤酒', quantity: 1, price: 60 }
                             ];
                             break;
 
@@ -3263,10 +3831,46 @@
                             orderItems = [
                                 { name: '雞肉串', quantity: 3, price: 50 },
                                 { name: '雞翅', quantity: 3, price: 60 },
-                                { name: '珍珠奶茶', quantity: 1, price: 60 }
+                                { name: '可樂', quantity: 1, price: 30 }
                             ];
                             break;
                     }
+
+                    // 補充 category 屬性到 orderItems（從 testMenuItems 查找）
+                    // 並生成口味（燒烤類使用統一口味，飲料類各自隨機）
+                    orderItems = orderItems.map(item => {
+                        const menuItem = testMenuItems.find(m => m.name === item.name);
+                        const category = menuItem ? menuItem.category : 'other';
+
+                        // 如果已經有定義 spicy 或 custom，保留原值（case 10/11 的測試資料）
+                        if (item.spicy || item.custom) {
+                            return {
+                                ...item,
+                                category: category
+                            };
+                        }
+
+                        // 飲料類：各自隨機生成口味
+                        if (category === 'drink') {
+                            const randomSpec = generateRandomSpec({ name: item.name, category: category });
+                            return {
+                                ...item,
+                                category: category,
+                                custom: randomSpec.custom
+                            };
+                        }
+
+                        // 燒烤類：使用統一的口味（分別存儲各欄位）
+                        return {
+                            ...item,
+                            category: category,
+                            spicy: orderUnifiedSpicy,
+                            onion: orderUnifiedOnion,
+                            garlic: orderUnifiedGarlic,
+                            sauce: orderUnifiedSauce,
+                            custom: orderUnifiedCustomStr
+                        };
+                    });
 
                     // 計算小計和折扣
                     orderItems.forEach(item => {
@@ -3286,9 +3890,8 @@
                         itemSales[item.name].revenue += itemTotal;
 
                         // 統計分類銷售
-                        const menuItem = testMenuItems.find(m => m.name === item.name);
-                        if (menuItem && categorySales.hasOwnProperty(menuItem.category)) {
-                            categorySales[menuItem.category] += itemTotal;
+                        if (item.category && categorySales.hasOwnProperty(item.category)) {
+                            categorySales[item.category] += itemTotal;
                         }
                     });
 
@@ -3482,11 +4085,27 @@
             }
         }
 
+        // 清除所有 localStorage 資料
+        function clearAllLocalStorage() {
+            if (confirm('⚠️ 警告：此操作會清除所有資料！\n\n包括：\n• 折扣規則設定\n• 營業資料\n• 測試資料\n• 所有其他設定\n\n確定要執行此操作嗎？')) {
+                // 清除所有 localStorage
+                localStorage.clear();
+                
+                alert('✅ 已清除所有資料！\n\n系統將重新載入並重置為初始狀態。');
+                
+                // 重新載入頁面
+                location.reload();
+            }
+        }
+
+
         // 顯示報表頁面
         function showReports() {
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('settingsPage').classList.remove('active');
             document.getElementById('reportsPage').classList.add('active');
+            // 隱藏分類標籤
+            document.getElementById('categoryTabs').classList.add('hidden');
             // 預設顯示日報表
             updateDailyReport();
         }
@@ -4318,6 +4937,8 @@
             document.getElementById('mainPage').style.display = 'block';
             document.getElementById('reportsPage').classList.remove('active');
             document.getElementById('settingsPage').classList.remove('active');
+            // 顯示分類標籤
+            document.getElementById('categoryTabs').classList.remove('hidden');
         }
 
         // 顯示設定頁面
@@ -4325,6 +4946,8 @@
             document.getElementById('mainPage').style.display = 'none';
             document.getElementById('reportsPage').classList.remove('active');
             document.getElementById('settingsPage').classList.add('active');
+            // 隱藏分類標籤
+            document.getElementById('categoryTabs').classList.add('hidden');
             updateDiscountRulesList();
 
             // 檢查是否為測試模式
@@ -4362,6 +4985,8 @@
             document.getElementById('settingsPage').classList.remove('active');
             document.getElementById('reportsPage').classList.remove('active');
             document.getElementById('mainPage').style.display = 'block';
+            // 顯示分類標籤
+            document.getElementById('categoryTabs').classList.remove('hidden');
         }
 
         // 更新折扣規則列表
@@ -4826,26 +5451,63 @@
 
         // ========== 規格選擇功能 ==========
 
-        // 顯示規格選擇對話框
-        function showSpecModal(item) {
+        // 目前正在編輯的品項索引（用於結帳時編輯規格）- 已移至 appState.ui.currentEditIndex
+
+        // 編輯品項規格（從結帳視窗）
+        function editItemSpec(itemIndex) {
+            const item = cart[itemIndex];
+            if (!item) return;
+
+            currentEditIndex = itemIndex;
             currentItem = item;
-            currentSpecQty = 1;
-            currentSpecSpicy = '不辣';
-            currentSpecCustom = [];
+
+            // 設定當前規格
+            currentSpecQty = item.quantity;
+            currentSpecSpicy = item.spicy || '不辣';
+            currentSpecOnion = item.onion || '';
+            currentSpecGarlic = item.garlic || '';
+            currentSpecSauce = item.sauce || '';
+            currentSpecCustom = item.custom ? item.custom.split(', ') : [];
 
             document.getElementById('specItemName').textContent = item.name;
             document.getElementById('specItemPrice').textContent = `$${item.price}`;
-            document.getElementById('specQtyDisplay').textContent = '1';
+            document.getElementById('specQtyDisplay').textContent = currentSpecQty;
 
-            // 重設辣度按鈕
+            // 設定辣度按鈕
             document.querySelectorAll('.spec-btn').forEach(btn => {
                 btn.classList.remove('active');
+                if (btn.dataset.spicy === currentSpecSpicy) {
+                    btn.classList.add('active');
+                }
             });
-            document.querySelector('.spec-btn[data-spicy="不辣"]').classList.add('active');
 
-            // 重設備註 checkbox
+            // 設定蔥按鈕
+            document.querySelectorAll('.onion-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.onion === currentSpecOnion) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // 設定蒜按鈕
+            document.querySelectorAll('.garlic-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.garlic === currentSpecGarlic) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // 設定醬按鈕
+            document.querySelectorAll('.sauce-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.sauce === currentSpecSauce) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // 重設並勾選備註 checkbox
             document.querySelectorAll('.spec-checkboxes input').forEach(cb => {
-                cb.checked = false;
+                cb.checked = currentSpecCustom.includes(cb.value);
             });
 
             // 清空自訂輸入
@@ -4853,27 +5515,22 @@
 
             // 根據分類顯示/隱藏辣度、冰塊選項和調味選項
             const spicySection = document.querySelector('.spicy-section');
-            const iceOptions = document.querySelectorAll('.ice-option');
-            const seasoningOptions = document.querySelectorAll('.seasoning-option');
+            const drinkOptions = document.querySelector('.drink-options');
+            const sugarOptions = document.getElementById('sugarOptions');
+            const seasoningOptions = document.querySelector('.seasoning-options');
 
             if (item.category === 'drink') {
-                // 飲料類：隱藏辣度，只顯示冰塊選項
+                // 飲料類：隱藏辣度和調味選項，顯示冰塊和甜度選項
                 spicySection.style.display = 'none';
-                iceOptions.forEach(option => {
-                    option.style.display = 'inline-block';
-                });
-                seasoningOptions.forEach(option => {
-                    option.style.display = 'none';
-                });
+                drinkOptions.style.display = 'block';
+                sugarOptions.style.display = 'block';
+                seasoningOptions.style.display = 'none';
             } else {
-                // 其他分類：顯示辣度，只顯示調味選項
+                // 其他分類：顯示辣度和調味選項，隱藏冰塊和甜度選項
                 spicySection.style.display = 'block';
-                iceOptions.forEach(option => {
-                    option.style.display = 'none';
-                });
-                seasoningOptions.forEach(option => {
-                    option.style.display = 'inline-block';
-                });
+                drinkOptions.style.display = 'none';
+                sugarOptions.style.display = 'none';
+                seasoningOptions.style.display = 'block';
             }
 
             document.getElementById('specModal').classList.add('active');
@@ -4888,18 +5545,162 @@
         // 選擇辣度
         function selectSpicy(spicy) {
             currentSpecSpicy = spicy;
-            document.querySelectorAll('.spec-btn').forEach(btn => {
+            document.querySelectorAll('.spec-btn:not(.temp-btn):not(.ice-level-btn):not(.unified-spec-btn)').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.querySelector(`.spec-btn[data-spicy="${spicy}"]`).classList.add('active');
+            const spicyBtn = document.querySelector(`.spec-btn[data-spicy="${spicy}"]`);
+            if (spicyBtn) spicyBtn.classList.add('active');
         }
 
-        // 更新客製化備註
+        // 飲料溫度選擇
+        function selectDrinkTemp(temp) {
+            currentDrinkTemp = temp;
+
+            // 更新按鈕狀態
+            document.querySelectorAll('.temp-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.temp-btn[data-temp="${temp}"]`).classList.add('active');
+
+            // 顯示/隱藏冰塊選項
+            const iceOptions = document.getElementById('iceOptions');
+            if (temp === '冰') {
+                iceOptions.style.display = 'block';
+            } else {
+                iceOptions.style.display = 'none';
+                currentIceLevel = '正常冰'; // 重設冰塊選項
+            }
+
+            // 更新客製化備註
+            updateDrinkCustomNotes();
+        }
+
+        function selectIceLevel(level) {
+            currentIceLevel = level;
+
+            // 更新按鈕狀態
+            document.querySelectorAll('.ice-level-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.ice-level-btn[data-ice="${level}"]`).classList.add('active');
+
+            // 更新客製化備註
+            updateDrinkCustomNotes();
+        }
+
+        function selectSugarLevel(sugar) {
+            currentSugarLevel = sugar;
+
+            // 更新按鈕狀態
+            document.querySelectorAll('.sugar-level-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.sugar-level-btn[data-sugar="${sugar}"]`).classList.add('active');
+
+            // 更新客製化備註
+            updateDrinkCustomNotes();
+        }
+
+        // 選擇蔥
+        function selectOnion(onion) {
+            currentSpecOnion = onion;
+            document.querySelectorAll('.onion-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const onionBtn = document.querySelector(`.onion-btn[data-onion="${onion}"]`);
+            if (onionBtn) onionBtn.classList.add('active');
+        }
+
+        // 選擇蒜
+        function selectGarlic(garlic) {
+            currentSpecGarlic = garlic;
+            document.querySelectorAll('.garlic-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const garlicBtn = document.querySelector(`.garlic-btn[data-garlic="${garlic}"]`);
+            if (garlicBtn) garlicBtn.classList.add('active');
+        }
+
+        // 選擇醬
+        function selectSauce(sauce) {
+            currentSpecSauce = sauce;
+            document.querySelectorAll('.sauce-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const sauceBtn = document.querySelector(`.sauce-btn[data-sauce="${sauce}"]`);
+            if (sauceBtn) sauceBtn.classList.add('active');
+        }
+
+        // 選擇統一蔥
+        function selectUnifiedOnion(onion) {
+            unifiedSpec.onion = onion;
+            document.querySelectorAll('.unified-onion-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.unified-onion-btn[data-onion="${onion}"]`).classList.add('active');
+            applyUnifiedSpec();
+        }
+
+        // 選擇統一蒜
+        function selectUnifiedGarlic(garlic) {
+            unifiedSpec.garlic = garlic;
+            document.querySelectorAll('.unified-garlic-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.unified-garlic-btn[data-garlic="${garlic}"]`).classList.add('active');
+            applyUnifiedSpec();
+        }
+
+        // 選擇統一醬
+        function selectUnifiedSauce(sauce) {
+            unifiedSpec.sauce = sauce;
+            document.querySelectorAll('.unified-sauce-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.unified-sauce-btn[data-sauce="${sauce}"]`).classList.add('active');
+            applyUnifiedSpec();
+        }
+
+        // 更新飲料客製化備註
+        function updateDrinkCustomNotes() {
+            currentSpecCustom = [];
+
+            // 添加溫度
+            if (currentDrinkTemp === '熱') {
+                currentSpecCustom.push('熱');
+            } else {
+                // 冰的話添加冰塊選項
+                if (currentIceLevel !== '正常冰') {
+                    currentSpecCustom.push(currentIceLevel);
+                }
+            }
+
+            // 添加甜度（如果不是全糖）
+            if (currentSugarLevel !== '全糖') {
+                currentSpecCustom.push(currentSugarLevel);
+            }
+        }
+
+        // 更新客製化備註（非飲料類）
         function updateCustomNotes() {
             currentSpecCustom = [];
-            document.querySelectorAll('.spec-checkboxes input:checked').forEach(cb => {
-                currentSpecCustom.push(cb.value);
-            });
+
+            // 收集蔥/蒜/醬選項
+            if (currentSpecOnion) {
+                currentSpecCustom.push(currentSpecOnion);
+            }
+            if (currentSpecGarlic) {
+                currentSpecCustom.push(currentSpecGarlic);
+            }
+            if (currentSpecSauce) {
+                currentSpecCustom.push(currentSpecSauce);
+            }
+
+            // 獲取自訂輸入
+            const customInput = document.getElementById('specCustomInput').value.trim();
+            if (customInput) {
+                currentSpecCustom.push(customInput);
+            }
         }
 
         // 調整規格數量
@@ -4912,37 +5713,306 @@
         function confirmSpec() {
             if (!currentItem) return;
 
-            // 獲取客製化備註
-            updateCustomNotes();
-            const customInput = document.getElementById('specCustomInput').value.trim();
-            const allCustomNotes = [...currentSpecCustom];
-            if (customInput) {
-                allCustomNotes.push(customInput);
+            let allCustomNotes = [];
+
+            // 根據品項類別獲取客製化備註
+            if (currentItem.category === 'drink') {
+                // 飲料類：使用飲料客製選項
+                updateDrinkCustomNotes();
+                allCustomNotes = [...currentSpecCustom];
+            } else {
+                // 其他類別：使用調味選項
+                updateCustomNotes();
+                allCustomNotes = [...currentSpecCustom];
             }
 
-            // 建立購物車項目（包含規格）
-            const cartItem = {
-                ...currentItem,
-                quantity: currentSpecQty,
-                spicy: currentSpecSpicy,
-                custom: allCustomNotes.join(', ')
-            };
+            // 如果是編輯模式（���結帳視窗編輯飲料類品項）
+            if (currentEditIndex >= 0) {
+                // 更新現有品項的規格（不修改數量）
+                cart[currentEditIndex].spicy = currentSpecSpicy;
+                cart[currentEditIndex].onion = currentSpecOnion;
+                cart[currentEditIndex].garlic = currentSpecGarlic;
+                cart[currentEditIndex].sauce = currentSpecSauce;
+                cart[currentEditIndex].custom = allCustomNotes.join(', ');
 
-            // 檢查購物車是否已有相同規格的品項
-            const existingIndex = cart.findIndex(i =>
-                i.id === cartItem.id &&
-                i.spicy === cartItem.spicy &&
-                i.custom === cartItem.custom
-            );
+                currentEditIndex = -1;
 
-            if (existingIndex >= 0) {
-                cart[existingIndex].quantity += cartItem.quantity;
+                // 立即刷新結帳視窗顯示
+                renderCheckoutItems();
             } else {
-                cart.push(cartItem);
+                // 新增模式：建立購物車項目（包含規格）
+                const cartItem = {
+                    ...currentItem,
+                    quantity: currentSpecQty,
+                    spicy: currentSpecSpicy,
+                    onion: currentSpecOnion,
+                    garlic: currentSpecGarlic,
+                    sauce: currentSpecSauce,
+                    custom: allCustomNotes.join(', ')
+                };
+
+                // 檢查購物車是否已有相同規格的品項
+                const existingIndex = cart.findIndex(i =>
+                    i.id === cartItem.id &&
+                    i.spicy === cartItem.spicy &&
+                    i.onion === cartItem.onion &&
+                    i.garlic === cartItem.garlic &&
+                    i.sauce === cartItem.sauce &&
+                    i.custom === cartItem.custom
+                );
+
+                if (existingIndex >= 0) {
+                    cart[existingIndex].quantity += cartItem.quantity;
+                } else {
+                    cart.push(cartItem);
+                }
             }
 
             updateCart();
             hideSpecModal();
+        }
+
+        // ========== 統一規格選擇功能 ==========
+
+        // 統一規格設定
+        let unifiedSpec = {
+            spicy: '不辣',
+            onion: '',
+            garlic: '',
+            sauce: '',
+            custom: []
+        };
+
+        // 初始化統一規格選擇
+        function initUnifiedSpec() {
+            unifiedSpec = {
+                spicy: '不辣',
+                onion: '',
+                garlic: '',
+                sauce: '',
+                custom: []
+            };
+
+            // 重設辣度按鈕
+            document.querySelectorAll('.unified-spec-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.unified-spec-btn[data-spicy="不辣"]').classList.add('active');
+
+            // 重設蔥按鈕
+            document.querySelectorAll('.unified-onion-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.unified-onion-btn[data-onion=""]').classList.add('active');
+
+            // 重設蒜按鈕
+            document.querySelectorAll('.unified-garlic-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.unified-garlic-btn[data-garlic=""]').classList.add('active');
+
+            // 重設醬按鈕
+            document.querySelectorAll('.unified-sauce-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.unified-sauce-btn[data-sauce=""]').classList.add('active');
+
+            // 重設自訂��入
+            document.getElementById('unifiedCustomInput').value = '';
+        }
+
+        // 選擇統一辣度
+        function selectUnifiedSpicy(spicy) {
+            unifiedSpec.spicy = spicy;
+
+            // 更新按鈕狀態
+            document.querySelectorAll('.unified-spec-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.unified-spec-btn[data-spicy="${spicy}"]`).classList.add('active');
+
+            // 立即套用統一規格到購物車
+            applyUnifiedSpec();
+        }
+
+        // 更新統一客製化備註
+        function updateUnifiedCustom() {
+            unifiedSpec.custom = [];
+
+            // 獲取自訂輸入
+            const customInput = document.getElementById('unifiedCustomInput').value.trim();
+            if (customInput) {
+                unifiedSpec.custom.push(customInput);
+            }
+
+            // 立即套用統一規格到購物車
+            applyUnifiedSpec();
+        }
+
+        // 套用統一規格到所有非飲料類品項
+        function applyUnifiedSpec() {
+            cart.forEach(item => {
+                // 只套用到非飲料類品項
+                if (item.category !== 'drink') {
+                    item.spicy = unifiedSpec.spicy;
+                    item.onion = unifiedSpec.onion;
+                    item.garlic = unifiedSpec.garlic;
+                    item.sauce = unifiedSpec.sauce;
+
+                    // 收集所有客製化備註
+                    const allCustoms = [];
+                    if (unifiedSpec.onion) allCustoms.push(unifiedSpec.onion);
+                    if (unifiedSpec.garlic) allCustoms.push(unifiedSpec.garlic);
+                    if (unifiedSpec.sauce) allCustoms.push(unifiedSpec.sauce);
+                    if (unifiedSpec.custom.length > 0) {
+                        allCustoms.push(...unifiedSpec.custom);
+                    }
+                    item.custom = allCustoms.join(', ');
+                }
+            });
+
+            // 重新渲染結帳視窗的品項列表
+            renderCheckoutItems();
+        }
+
+        // 編輯飲料類品項的規格
+        function editDrinkSpec(itemIndex) {
+            const item = cart[itemIndex];
+            if (!item || item.category !== 'drink') return;
+
+            currentItem = item;
+            currentEditIndex = itemIndex;
+
+            // 設定當前規格
+            currentSpecQty = item.quantity;
+            currentSpecCustom = item.custom ? item.custom.split(', ') : [];
+
+            // 解析溫度和冰塊選項
+            currentDrinkTemp = '冰';
+            currentIceLevel = '正常冰';
+
+            // 從 custom 中解析溫度和冰塊
+            if (currentSpecCustom.includes('熱')) {
+                currentDrinkTemp = '熱';
+            } else if (currentSpecCustom.includes('少冰')) {
+                currentIceLevel = '少冰';
+            } else if (currentSpecCustom.includes('去冰')) {
+                currentIceLevel = '去冰';
+            } else if (currentSpecCustom.includes('正常冰')) {
+                currentIceLevel = '正常冰';
+            }
+
+            document.getElementById('specItemName').textContent = item.name;
+            document.getElementById('specItemPrice').textContent = `$${item.price}`;
+            document.getElementById('specQtyDisplay').textContent = currentSpecQty;
+
+            // 重設按鈕狀態
+            document.querySelectorAll('.temp-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.temp-btn[data-temp="${currentDrinkTemp}"]`).classList.add('active');
+
+            document.querySelectorAll('.ice-level-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.ice-level-btn[data-ice="${currentIceLevel}"]`).classList.add('active');
+
+            // 顯示/隱藏冰塊選項
+            const iceOptions = document.getElementById('iceOptions');
+            if (currentDrinkTemp === '冰') {
+                iceOptions.style.display = 'block';
+            } else {
+                iceOptions.style.display = 'none';
+            }
+
+            // 飲料類：只顯示溫度/冰塊選項，不能修改數量
+            const modalBody = document.querySelector('#specModal .modal-body');
+
+            // 隱藏辣度區塊
+            const spicySection = modalBody.querySelector('.spicy-section');
+            if (spicySection) spicySection.style.display = 'none';
+
+            // 隱藏調味選項
+            const seasoningOptions = modalBody.querySelector('.seasoning-options');
+            if (seasoningOptions) seasoningOptions.style.display = 'none';
+
+            // 隱藏自訂輸入
+            const customInput = document.getElementById('specCustomInput');
+            if (customInput) customInput.style.display = 'none';
+
+            // 隱藏數量選擇區塊
+            const quantitySection = modalBody.querySelector('.spec-quantity')?.closest('.spec-section');
+            if (quantitySection) quantitySection.style.display = 'none';
+
+            // 顯示飲料選項
+            const drinkOptions = modalBody.querySelector('.drink-options');
+            if (drinkOptions) drinkOptions.style.display = 'block';
+
+            document.getElementById('specModal').classList.add('active');
+        }
+
+        // 重新渲染結帳視窗的品項列表
+        function renderCheckoutItems() {
+            const checkoutItems = document.getElementById('checkoutItems');
+            checkoutItems.innerHTML = '';
+            let subtotal = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                const checkoutItem = document.createElement('div');
+                checkoutItem.className = 'checkout-item';
+                checkoutItem.innerHTML = `
+                    <div style="flex: 1;">
+                        <strong>${item.name}</strong>
+                        <span style="margin-left: 8px; color: #636E72;">× ${item.quantity}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        ${item.category === 'drink' ? `<button class="btn-edit-spec" onclick="editDrinkSpec(${index})" style="padding: 6px 16px; font-size: 16px; background: #FF6B35; color: white; border: none; border-radius: 4px; cursor: pointer;">編輯</button>` : ''}
+                        <div>$${itemTotal}</div>
+                    </div>
+                `;
+                checkoutItems.appendChild(checkoutItem);
+            });
+
+            // 計算並顯示折扣
+            const { totalDiscount, appliedDiscounts } = calculateDiscounts();
+
+            if (totalDiscount > 0) {
+                const discountDiv = document.createElement('div');
+                discountDiv.className = 'checkout-item';
+                discountDiv.style.cssText = 'background: #FFF3CD; color: #856404;';
+                discountDiv.innerHTML = `
+                    <div>
+                        <strong>🏷️ 折扣優惠</strong>
+                    </div>
+                    <div style="color: #856404;">-$${totalDiscount}</div>
+                `;
+                checkoutItems.appendChild(discountDiv);
+
+                // 顯示折扣明細
+                appliedDiscounts.forEach(discount => {
+                    const discountInfo = document.createElement('div');
+                    discountInfo.style.cssText = 'padding: 8px 12px; font-size: 12px; color: #636E72; background: #F8F9FA;';
+                    discountInfo.textContent = discount.description;
+                    checkoutItems.appendChild(discountInfo);
+                });
+            }
+
+            // 更新小計、折扣和總計
+            const total = subtotal - totalDiscount;
+            document.getElementById('checkoutSubtotal').textContent = `$${subtotal}`;
+            document.getElementById('checkoutTotal').textContent = `$${total}`;
+
+            // 顯示/隱藏折扣行
+            const discountRow = document.getElementById('checkoutDiscountRow');
+            if (totalDiscount > 0) {
+                discountRow.style.display = 'flex';
+                document.getElementById('checkoutDiscount').textContent = `-$${totalDiscount}`;
+            } else {
+                discountRow.style.display = 'none';
+            }
         }
 
         // ========== 手動折扣功能 ==========
@@ -5027,7 +6097,20 @@
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const autoDiscount = calculateDiscounts().totalDiscount;
             const totalDiscount = autoDiscount + currentManualDiscount;
-            const total = Math.max(0, subtotal - totalDiscount); // ��保總金額不會是負數
+            const total = Math.max(0, subtotal - totalDiscount); // 確保總金額不會是負數
+
+            // 更新小計
+            document.getElementById('checkoutSubtotal').textContent = `$${subtotal}`;
+
+            // 更新折扣顯示
+            const discountRow = document.getElementById('checkoutDiscountRow');
+            if (totalDiscount > 0) {
+                discountRow.style.display = 'flex';
+                document.getElementById('checkoutDiscount').textContent = `-$${totalDiscount}`;
+            } else {
+                discountRow.style.display = 'none';
+            }
+
             checkoutTotal.textContent = `$${total}`;
         }
 
