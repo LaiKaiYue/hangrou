@@ -534,6 +534,57 @@
             margin-bottom: 8px;
         }
 
+        .order-header {
+            transition: background-color 0.2s;
+        }
+
+        .order-header:hover {
+            background-color: #E8EAED !important;
+        }
+
+        .order-header:active {
+            background-color: #D8DADD !important;
+        }
+
+        .expand-arrow {
+            display: inline-block;
+            /* 移除 transition 以提升響應速度 */
+            user-select: none;
+        }
+
+        .order-details {
+            /* 移除動畫以提升效能 */
+        }
+
+        .order-action-link {
+            display: inline-block;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .order-action-link:hover {
+            background: #F8F9FA;
+            transform: scale(1.05);
+        }
+
+        .order-action-link:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .checkout-items {
             margin-bottom: 16px;
         }
@@ -692,6 +743,21 @@
             transition: all 0.2s ease;
         }
 
+        .clickable-card {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .clickable-card:hover {
+            background: #FFF8F0;
+            box-shadow: 0 4px 16px rgba(255, 107, 53, 0.2);
+        }
+
+        .clickable-card:hover .stat-hint {
+            color: #FF6B35;
+            font-weight: 600;
+        }
+
         .stat-label {
             font-size: 14px;
             color: #636E72;
@@ -702,6 +768,14 @@
             font-size: 32px;
             font-weight: 600;
             color: #FF6B35;
+        }
+
+        .stat-hint {
+            font-size: 14px;
+            color: #636E72;
+            margin-top: 8px;
+            text-align: right;
+            font-weight: 500;
         }
 
         .chart-container {
@@ -1505,9 +1579,10 @@
                     <div class="stat-label" id="revenueLabel">今日營業額</div>
                     <div class="stat-value" id="todayRevenue">$0</div>
                 </div>
-                <div class="stat-card" style="cursor: pointer;" onclick="showOrderListModal()">
+                <div class="stat-card clickable-card" onclick="showOrderListModal()">
                     <div class="stat-label">訂單數</div>
                     <div class="stat-value" id="todayOrders">0</div>
+                    <div class="stat-hint">>> 詳細資料</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label" id="discountLabel">今日總折扣</div>
@@ -1661,9 +1736,10 @@
                     <div class="stat-label">本週營業額</div>
                     <div class="stat-value" id="weekRevenue">$0</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card clickable-card" onclick="showOrderListModal()">
                     <div class="stat-label">本週訂單數</div>
                     <div class="stat-value" id="weekOrders">0</div>
+                    <div class="stat-hint">>> 詳細資料</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">日均營業額</div>
@@ -1716,9 +1792,10 @@
                     <div class="stat-label">本月營業額</div>
                     <div class="stat-value" id="monthRevenue">$0</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card clickable-card" onclick="showOrderListModal()">
                     <div class="stat-label">本月訂單數</div>
                     <div class="stat-value" id="monthOrders">0</div>
+                    <div class="stat-hint">>> 詳細資料</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">日均營業額</div>
@@ -1755,6 +1832,11 @@
                         style="width: 100%;"
                         oninput="filterOrderList()"
                     >
+                    <div style="text-align: right; margin-top: 8px; font-size: 14px;">
+                        <span class="order-action-link" style="color: #00B894;" onclick="expandAllOrders()">全部展開</span>
+                        <span style="color: #636E72; margin: 0 8px;">|</span>
+                        <span class="order-action-link" style="color: #636E72;" onclick="collapseAllOrders()">全部收起</span>
+                    </div>
                 </div>
 
                 <div id="orderListContainer">
@@ -1981,7 +2063,7 @@
 
                 <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
                     <button class="btn btn-secondary" onclick="clearAllLocalStorage()" style="flex: 1; min-width: 200px; background: #636E72;">
-                        🧹 清除所有資料
+                        🔄 系統重置
                     </button>
                 </div>
 
@@ -1990,7 +2072,7 @@
                     • 點擊「生成測試資料」會自動建立過去7天的模擬銷售資料<br>
                     • 生成的資料可用於測試日報表、週報表、月報表的歷史查詢功能<br>
                     • 測試完成後可點擊「清除測試資料」刪除<br>
-                    • <strong>「清除所有資料」</strong>會清除 localStorage 中的所有資料（包括設定、折扣規則、營業資料等），會重置為初始狀態<br>
+                    • <strong>「系統重置」</strong>會清除所有資料並重置為初始狀態（包括設定、折扣規則、營業資料等），請謹慎使用<br>
                     <strong style="color: #856404;">💡 提示：此區塊僅在測試模式下顯示（URL 加 ?test=true）</strong>
                 </div>
             </div>
@@ -2883,6 +2965,9 @@
                 : `${startDate} ~ ${endDate}`;
             document.getElementById('orderListDate').textContent = displayDate;
 
+            // 依訂單編號遞減排序（最新的在上面）
+            orders.sort((a, b) => b.orderNumber.localeCompare(a.orderNumber));
+
             // 顯示所有訂單
             renderOrderList(orders);
 
@@ -3004,14 +3089,19 @@
                     </div>
                 ` : '';
 
+                const orderId = `order-${order.orderNumber.replace(/[^a-zA-Z0-9]/g, '-')}`;
+
                 return `
-                    <div style="background: #F8F9FA; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
-                        <!-- 訂單標題 -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                            <div>
-                                <div style="font-weight: 600; font-size: 16px; color: #2D3436;">${order.orderNumber}</div>
-                                <div style="color: #636E72; font-size: 14px;">
-                                    📅 ${order.businessDate || businessDate} ${order.time}
+                    <div class="order-card" style="background: #F8F9FA; border-radius: 8px; margin-bottom: 12px; overflow: hidden;">
+                        <!-- 訂單標題（可點擊展開） -->
+                        <div class="order-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; cursor: pointer;" onclick="toggleOrderDetails('${orderId}')">
+                            <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                                <span class="expand-arrow" style="font-size: 20px; color: #636E72; transition: transform 0.2s;">▶</span>
+                                <div>
+                                    <div style="font-weight: 600; font-size: 16px; color: #2D3436;">${order.orderNumber}</div>
+                                    <div style="color: #636E72; font-size: 14px;">
+                                        📅 ${order.businessDate || businessDate} ${order.time}
+                                    </div>
                                 </div>
                             </div>
                             <div style="text-align: right;">
@@ -3020,13 +3110,15 @@
                             </div>
                         </div>
 
-                        <!-- 折扣明細 -->
-                        ${discountDetails}
+                        <!-- 訂單明細（可折疊） -->
+                        <div id="${orderId}" class="order-details" style="display: none; padding: 0 16px 16px 16px;">
+                            <!-- 折扣明細 -->
+                            ${discountDetails}
 
-                        <!-- 品項明細 -->
-                        <div style="border-top: 1px solid #DFE6E9; padding-top: 12px;">
-                            <div style="margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #2D3436;">品項明細</div>
-                            ${order.items.map(item => {
+                            <!-- 品項明細 -->
+                            <div style="border-top: 1px solid #DFE6E9; padding-top: 12px;">
+                                <div style="margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #2D3436;">品項明細</div>
+                                ${order.items.map(item => {
                                 // 收集該品項的規格備註（僅飲料類顯示在品項明細下方）
                                 const specTags = [];
                                 // 兼容舊資料：如果沒有 category 屬性，透過品項名稱判斷
@@ -3089,9 +3181,73 @@
                                 <span style="color: #00B894;">$${order.total.toLocaleString()}</span>
                             </div>
                         </div>
-                    </div>
+                        </div><!-- 关闭 order-details -->
+                    </div><!-- 关闭 order-card -->
                 `;
             }).join('');
+        }
+
+        // 切換訂單明細顯示/隱藏（優化版本）
+        function toggleOrderDetails(orderId) {
+            const details = document.getElementById(orderId);
+            if (!details) return;
+
+            const header = details.previousElementSibling;
+            const arrow = header?.querySelector('.expand-arrow');
+            const isHidden = details.style.display === 'none' || details.style.display === '';
+
+            // 使用 classList 來管理狀態，效能更好
+            if (isHidden) {
+                // 展開
+                details.style.display = 'block';
+                if (arrow) {
+                    arrow.style.transform = 'rotate(90deg)';
+                    arrow.textContent = '▼';
+                }
+            } else {
+                // 收起
+                details.style.display = 'none';
+                if (arrow) {
+                    arrow.style.transform = 'rotate(0deg)';
+                    arrow.textContent = '▶';
+                }
+            }
+        }
+
+        // 展開所有訂單（優化版本）
+        function expandAllOrders() {
+            const allDetails = document.querySelectorAll('.order-details');
+            const allArrows = document.querySelectorAll('.expand-arrow');
+
+            // 使用 requestAnimationFrame 確保流暢
+            requestAnimationFrame(() => {
+                allDetails.forEach(details => {
+                    details.style.display = 'block';
+                });
+
+                allArrows.forEach(arrow => {
+                    arrow.style.transform = 'rotate(90deg)';
+                    arrow.textContent = '▼';
+                });
+            });
+        }
+
+        // 收起所有訂單（優化版本）
+        function collapseAllOrders() {
+            const allDetails = document.querySelectorAll('.order-details');
+            const allArrows = document.querySelectorAll('.expand-arrow');
+
+            // 使用 requestAnimationFrame 確保流暢
+            requestAnimationFrame(() => {
+                allDetails.forEach(details => {
+                    details.style.display = 'none';
+                });
+
+                allArrows.forEach(arrow => {
+                    arrow.style.transform = 'rotate(0deg)';
+                    arrow.textContent = '▶';
+                });
+            });
         }
 
         // 過濾訂單列表（根據訂單編號搜尋）
@@ -4085,14 +4241,14 @@
             }
         }
 
-        // 清除所有 localStorage 資料
+        // 清除所有 localStorage 資料（系統重置）
         function clearAllLocalStorage() {
-            if (confirm('⚠️ 警告：此操作會清除所有資料！\n\n包括：\n• 折扣規則設定\n• 營業資料\n• 測試資料\n• 所有其他設定\n\n確定要執行此操作嗎？')) {
+            if (confirm('⚠️ 警告：此操作將執行系統重置！\n\n會清除：\n• 折扣規則設定\n• 所有營業資料\n• 測試資料\n• 所有其他設定\n\n系統將恢復為初始狀態。\n\n確定要執行系統重置嗎？')) {
                 // 清除所有 localStorage
                 localStorage.clear();
-                
-                alert('✅ 已清除所有資料！\n\n系統將重新載入並重置為初始狀態。');
-                
+
+                alert('✅ 系統重置完成！\n\n系統將重新載入並恢復為初始狀態。');
+
                 // 重新載入頁面
                 location.reload();
             }
