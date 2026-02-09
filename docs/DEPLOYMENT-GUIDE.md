@@ -188,7 +188,7 @@ python3 -m http.server 8000
 # 訪問：http://localhost:8000
 ```
 
-### ngrok ��部分享
+### ngrok 內部分享
 ```bash
 # 新終端
 ngrok http 8000

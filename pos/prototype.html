@@ -263,8 +263,8 @@
             padding: 12px;
             margin-bottom: 8px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .cart-item-info {
@@ -281,10 +281,23 @@
             font-size: 14px;
         }
 
+        .cart-item-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .cart-item-actions {
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .cart-item-total-price {
+            font-weight: 600;
+            color: #2D3436;
+            font-size: 16px;
+            text-align: right;
         }
 
         .quantity-btn {
@@ -1298,7 +1311,7 @@
 
         .spec-section h4 {
             margin-bottom: 12px;
-            font-size: 20px;
+            font-size: 16px;
             color: #2D3436;
         }
 
@@ -1309,23 +1322,76 @@
         }
 
         .spec-btn {
-            padding: 14px 10px;
+            padding: 10px 8px;
             border: 2px solid #DFE6E9;
             background: white;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
-            transition: all 0.2s;
+            /* 移除過渡動畫以提升觸控響應速度 */
+            transition: none;
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
 
         .spec-btn.active {
+            background: #FF6B35 !important;
+            color: white !important;
+            border-color: #FF6B35 !important;
+        }
+
+        .spec-btn.pressed {
+            transform: scale(0.95);
+            background: #F8F9FA !important;
+        }
+
+        .spicy-section .spec-btn.active {
             background: #FF6B35;
             color: white;
             border-color: #FF6B35;
+        }
+
+        /* 調味按鈕 active 樣式 */
+        .pepper-btn.active,
+        .sauce-btn.active {
+            background: #FF6B35 !important;
+            color: white !important;
+            border-color: #FF6B35 !important;
+        }
+
+        /* 飲料按鈕 active 樣式 */
+        .temp-btn.active,
+        .ice-level-btn.active,
+        .sugar-level-btn.active {
+            background: #FF6B35 !important;
+            color: white !important;
+            border-color: #FF6B35 !important;
+        }
+
+        /* 規格選項群組 */
+        .spec-option-group {
+            margin-bottom: 12px;
+        }
+
+        /* 不同欄位數的按鈕容器 */
+        .spec-buttons-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .spec-buttons-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .spec-buttons-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
         }
 
         .spec-checkboxes {
@@ -1349,7 +1415,27 @@
             margin-right: 6px;
             width: 18px;
             height: 18px;
+        }
+
+        .discount-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #FF6B35;
+            background: white;
+            border-radius: 4px;
             cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #FF6B35;
+            transition: all 0.2s;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        .discount-btn:active {
+            background: #FF6B35;
+            color: white;
+            transform: scale(0.95);
         }
 
         .spec-custom-input {
@@ -1409,6 +1495,12 @@
             margin-right: 4px;
             margin-bottom: 2px;
             font-size: 11px;
+        }
+
+        /* 折扣標籤 */
+        .cart-item-specs .discount-tag {
+            background: #D63031;
+            color: white;
         }
 
         /* 手動折扣區塊樣式 */
@@ -1520,7 +1612,7 @@
             <!-- 購物車側邊欄 -->
             <div class="cart-sidebar">
                 <div class="cart-header">
-                    🛒 目前訂單
+                    🛒 購物車
                 </div>
                 <div class="cart-items" id="cartItems">
                     <div class="empty-cart">
@@ -1874,7 +1966,7 @@
                 </div>
 
                 <!-- 統一規格選擇區塊 -->
-                <div class="unified-spec-section" style="background: #F8F9FA; padding: 16px; border-radius: 8px; margin: 16px 0;">
+                <div class="unified-spec-section" style="display: none; background: #F8F9FA; padding: 16px; border-radius: 8px; margin: 16px 0;">
                     <h4 style="margin: 0 0 12px 0; color: #2D3436;">🍽️ 口味</h4>
 
                     <!-- 辣度選擇 -->
@@ -1888,25 +1980,14 @@
                         </div>
                     </div>
 
-                    <!-- 蔵選擇 -->
-                    <div class="onion-section" style="margin-bottom: 12px;">
-                        <div style="font-size: 18px; color: #2D3436; margin-bottom: 8px;">🧅 蔥：</div>
+                    <!-- 胡椒選擇 -->
+                    <div class="pepper-section" style="margin-bottom: 12px;">
+                        <div style="font-size: 18px; color: #2D3436; margin-bottom: 8px;">🌶️ 胡椒：</div>
                         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button class="spec-btn unified-onion-btn active" data-onion="" onclick="selectUnifiedOnion('')">正常</button>
-                            <button class="spec-btn unified-onion-btn" data-onion="蔥多" onclick="selectUnifiedOnion('蔥多')">蔥多</button>
-                            <button class="spec-btn unified-onion-btn" data-onion="蔥少" onclick="selectUnifiedOnion('蔥少')">蔥少</button>
-                            <button class="spec-btn unified-onion-btn" data-onion="去蔥" onclick="selectUnifiedOnion('去蔥')">去蔥</button>
-                        </div>
-                    </div>
-
-                    <!-- 蒜選擇 -->
-                    <div class="garlic-section" style="margin-bottom: 12px;">
-                        <div style="font-size: 18px; color: #2D3436; margin-bottom: 8px;">🧄 蒜：</div>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                            <button class="spec-btn unified-garlic-btn active" data-garlic="" onclick="selectUnifiedGarlic('')">正常</button>
-                            <button class="spec-btn unified-garlic-btn" data-garlic="蒜多" onclick="selectUnifiedGarlic('蒜多')">蒜多</button>
-                            <button class="spec-btn unified-garlic-btn" data-garlic="蒜少" onclick="selectUnifiedGarlic('蒜少')">蒜少</button>
-                            <button class="spec-btn unified-garlic-btn" data-garlic="去蒜" onclick="selectUnifiedGarlic('去蒜')">去蒜</button>
+                            <button class="spec-btn unified-pepper-btn active" data-pepper="" onclick="selectUnifiedPepper('')">正常</button>
+                            <button class="spec-btn unified-pepper-btn" data-pepper="胡椒多" onclick="selectUnifiedPepper('胡椒多')">胡椒多</button>
+                            <button class="spec-btn unified-pepper-btn" data-pepper="胡椒少" onclick="selectUnifiedPepper('胡椒少')">胡椒少</button>
+                            <button class="spec-btn unified-pepper-btn" data-pepper="去胡椒" onclick="selectUnifiedPepper('去胡椒')">去胡椒</button>
                         </div>
                     </div>
 
@@ -1928,8 +2009,8 @@
                     </div>
                 </div>
 
-                <!-- 手動折扣區塊 -->
-                    <div class="manual-discount-section">
+                <!-- 手動折扣區塊（已停用，改用品項折扣） -->
+                    <div class="manual-discount-section" style="display: none;">
                         <h4>💰 手動折扣</h4>
 
                         <!-- 快速折扣按鈕 -->
@@ -2093,41 +2174,37 @@
                     <p id="specItemPrice">$50</p>
                 </div>
 
-                <!-- 辣度選擇 -->
+                <!-- 規格選擇 -->
                 <div class="spec-section spicy-section">
-                    <h4>🌶️ 辣度</h4>
-                    <div class="spec-buttons">
+                    <!-- 辣度選擇 -->
+                    <h4 class="spicy-label">🌶️ 辣度</h4>
+                    <div class="spec-buttons" style="margin-bottom: 16px;">
                         <button class="spec-btn active" data-spicy="不辣" onclick="selectSpicy('不辣')">不辣</button>
                         <button class="spec-btn" data-spicy="微辣" onclick="selectSpicy('微辣')">微辣</button>
                         <button class="spec-btn" data-spicy="中辣" onclick="selectSpicy('中辣')">中辣</button>
                         <button class="spec-btn" data-spicy="大辣" onclick="selectSpicy('大辣')">大辣</button>
                     </div>
-                </div>
-
-                <!-- 客製化備註 -->
-                <div class="spec-section">
-                    <h4>📝 客製化</h4>
 
                     <!-- 飲料類：冰/熱選項 -->
                     <div class="drink-options" style="display: none;">
-                        <div style="margin-bottom: 12px;">
-                            <div style="font-size: 20px; color: #2D3436; margin-bottom: 8px;">🧊 溫度：</div>
-                            <div style="display: flex; gap: 8px;">
+                        <div class="spec-option-group">
+                            <h4>🧊 溫度</h4>
+                            <div class="spec-buttons spec-buttons-2">
                                 <button class="spec-btn temp-btn" data-temp="冰" onclick="selectDrinkTemp('冰')">冰</button>
                                 <button class="spec-btn temp-btn" data-temp="熱" onclick="selectDrinkTemp('熱')">熱</button>
                             </div>
                         </div>
-                        <div id="iceOptions" style="display: none;">
-                            <div style="font-size: 20px; color: #2D3436; margin-bottom: 8px;">🧊 冰塊：</div>
-                            <div style="display: flex; gap: 8px;">
+                        <div id="iceOptions" class="spec-option-group" style="display: none;">
+                            <h4>🧊 冰塊</h4>
+                            <div class="spec-buttons spec-buttons-3">
                                 <button class="spec-btn ice-level-btn" data-ice="正常冰" onclick="selectIceLevel('正常冰')">正常</button>
                                 <button class="spec-btn ice-level-btn" data-ice="少冰" onclick="selectIceLevel('少冰')">少冰</button>
                                 <button class="spec-btn ice-level-btn" data-ice="去冰" onclick="selectIceLevel('去冰')">去冰</button>
                             </div>
                         </div>
-                        <div id="sugarOptions" style="margin-top: 12px;">
-                            <div style="font-size: 20px; color: #2D3436; margin-bottom: 8px;">🍬 甜度：</div>
-                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <div id="sugarOptions" class="spec-option-group">
+                            <h4>🍬 甜度</h4>
+                            <div class="spec-buttons spec-buttons-5">
                                 <button class="spec-btn sugar-level-btn active" data-sugar="全糖" onclick="selectSugarLevel('全糖')">全糖</button>
                                 <button class="spec-btn sugar-level-btn" data-sugar="少糖" onclick="selectSugarLevel('少糖')">少糖</button>
                                 <button class="spec-btn sugar-level-btn" data-sugar="半糖" onclick="selectSugarLevel('半糖')">半糖</button>
@@ -2139,30 +2216,17 @@
 
                     <!-- 其他類別：調味選項 -->
                     <div class="seasoning-options">
-                        <!-- 蔵選擇 -->
-                        <div class="spec-section onion-section" style="margin-bottom: 12px;">
-                            <h4>🧅 蔥</h4>
+                        <div class="spec-option-group">
+                            <h4>🌶️ 胡椒</h4>
                             <div class="spec-buttons">
-                                <button class="spec-btn onion-btn active" data-onion="" onclick="selectOnion('')">正常</button>
-                                <button class="spec-btn onion-btn" data-onion="蔥多" onclick="selectOnion('蔥多')">蔥多</button>
-                                <button class="spec-btn onion-btn" data-onion="蔥少" onclick="selectOnion('蔥少')">蔥少</button>
-                                <button class="spec-btn onion-btn" data-onion="去蔥" onclick="selectOnion('去蔥')">去蔥</button>
+                                <button class="spec-btn pepper-btn active" data-pepper="" onclick="selectPepper('')">正常</button>
+                                <button class="spec-btn pepper-btn" data-pepper="胡椒多" onclick="selectPepper('胡椒多')">胡椒多</button>
+                                <button class="spec-btn pepper-btn" data-pepper="胡椒少" onclick="selectPepper('胡椒少')">胡椒少</button>
+                                <button class="spec-btn pepper-btn" data-pepper="去胡椒" onclick="selectPepper('去胡椒')">去胡椒</button>
                             </div>
                         </div>
 
-                        <!-- 蒜選擇 -->
-                        <div class="spec-section garlic-section" style="margin-bottom: 12px;">
-                            <h4>🧄 蒜</h4>
-                            <div class="spec-buttons">
-                                <button class="spec-btn garlic-btn active" data-garlic="" onclick="selectGarlic('')">正常</button>
-                                <button class="spec-btn garlic-btn" data-garlic="蒜多" onclick="selectGarlic('蒜多')">蒜多</button>
-                                <button class="spec-btn garlic-btn" data-garlic="蒜少" onclick="selectGarlic('蒜少')">蒜少</button>
-                                <button class="spec-btn garlic-btn" data-garlic="去蒜" onclick="selectGarlic('去蒜')">去蒜</button>
-                            </div>
-                        </div>
-
-                        <!-- 醬選擇 -->
-                        <div class="spec-section sauce-section">
+                        <div class="spec-option-group">
                             <h4>🥫 醬</h4>
                             <div class="spec-buttons">
                                 <button class="spec-btn sauce-btn active" data-sauce="" onclick="selectSauce('')">正常</button>
@@ -2173,7 +2237,30 @@
                         </div>
                     </div>
 
-                    <input type="text" id="specCustomInput" class="spec-custom-input" placeholder="其他需求（選填）">
+                    <!-- 自訂備註 -->
+                    <div class="spec-option-group">
+                        <h4>📝 自訂備註</h4>
+                        <input type="text" id="specCustomInput" class="spec-custom-input" placeholder="其他需求（選填）">
+                    </div>
+
+                    <!-- 品項折扣 -->
+                    <div class="spec-option-group">
+                        <h4>💰 品項折扣</h4>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="discount-btn" onclick="applyItemDiscount(10)">-$10</button>
+                            <button class="discount-btn" onclick="applyItemDiscount(20)">-$20</button>
+                            <button class="discount-btn" onclick="applyItemDiscount(50)">-$50</button>
+                            <button class="discount-btn" onclick="applyItemDiscount(100)">-$100</button>
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-top: 8px; align-items: center;">
+                            <input type="text" id="itemDiscountInput" class="spec-custom-input" placeholder="自訂折扣" style="flex: 1; margin: 0;" inputmode="numeric" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="4">
+                            <button class="btn btn-secondary" onclick="applyCustomItemDiscount()" style="padding: 8px 16px;">套用</button>
+                            <button class="btn btn-secondary" onclick="clearItemDiscount()" style="padding: 8px 16px;">清除</button>
+                        </div>
+                        <div id="itemDiscountDisplay" style="display: none; margin-top: 8px; padding: 8px; background: #FFF3CD; border-radius: 4px; color: #856404; font-size: 14px;">
+                            品項折扣：-$<span id="itemDiscountAmount">0</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 數量選擇 -->
@@ -2312,8 +2399,7 @@
                 currentItem: null,
                 qty: 1,
                 spicy: '不辣',
-                onion: '',
-                garlic: '',
+                pepper: '',
                 sauce: '',
                 custom: [],
                 drinkTemp: '冰',
@@ -2402,13 +2488,13 @@
         let currentItem = appState.spec.currentItem;
         let currentSpecQty = appState.spec.qty;
         let currentSpecSpicy = appState.spec.spicy;
-        let currentSpecOnion = appState.spec.onion;
-        let currentSpecGarlic = appState.spec.garlic;
+        let currentSpecPepper = appState.spec.pepper;
         let currentSpecSauce = appState.spec.sauce;
         let currentSpecCustom = appState.spec.custom;
         let currentDrinkTemp = appState.spec.drinkTemp;
         let currentIceLevel = appState.spec.iceLevel;
         let currentSugarLevel = appState.spec.sugarLevel;
+        let currentItemDiscount = 0;  // 當前品項的折扣
         let currentManualDiscount = appState.discount.current;
         let currentDiscountReason = appState.discount.reason;
         let businessDate = appState.business.businessDate;
@@ -2429,8 +2515,7 @@
             window.currentItem = appState.spec.currentItem;
             window.currentSpecQty = appState.spec.qty;
             window.currentSpecSpicy = appState.spec.spicy;
-            window.currentSpecOnion = appState.spec.onion;
-            window.currentSpecGarlic = appState.spec.garlic;
+            window.currentSpecPepper = appState.spec.pepper;
             window.currentSpecSauce = appState.spec.sauce;
             window.currentSpecCustom = appState.spec.custom;
             window.currentDrinkTemp = appState.spec.drinkTemp;
@@ -2574,7 +2659,7 @@
                     // 移除視覺回饋
                     this.classList.remove('pressed');
 
-                    // 只有在沒有���動且觸控時間短於 500ms 時才觸發點擊
+                    // 只有在沒有移動且觸控時間短於 500ms 時才觸發點擊
                     if (!hasMoved && touchDuration < 800) {
                         // 阻止 default 防止雙擊放大等干擾
                         e.preventDefault();
@@ -2613,42 +2698,251 @@
             });
         }
 
-        // 新增到購物車
+        // 優化規格按鈕的觸控響應
+        function initSpecButtons() {
+            const specButtons = document.querySelectorAll('.spec-btn');
+
+            specButtons.forEach(btn => {
+                let touchStartTime = 0;
+                let touchStartX = 0;
+                let touchStartY = 0;
+                let hasMoved = false;
+                let handler = null;
+
+                // 根據按鈕的 class 和 data 屬性決定處理器
+                const isUnified = btn.classList.contains('unified-spec-btn') ||
+                                btn.classList.contains('unified-pepper-btn') ||
+                                btn.classList.contains('unified-sauce-btn');
+
+                if (isUnified) {
+                    // 統一規格按鈕
+                    if (btn.dataset.spicy) {
+                        handler = () => selectUnifiedSpicy(btn.dataset.spicy);
+                    } else if (btn.dataset.pepper) {
+                        handler = () => selectUnifiedPepper(btn.dataset.pepper);
+                    } else if (btn.dataset.sauce) {
+                        handler = () => selectUnifiedSauce(btn.dataset.sauce);
+                    }
+                } else {
+                    // 規格選擇彈窗按鈕
+                    if (btn.dataset.spicy) {
+                        handler = () => selectSpicy(btn.dataset.spicy);
+                    } else if (btn.dataset.pepper) {
+                        handler = () => selectPepper(btn.dataset.pepper);
+                    } else if (btn.dataset.sauce) {
+                        handler = () => selectSauce(btn.dataset.sauce);
+                    } else if (btn.dataset.temp) {
+                        handler = () => selectDrinkTemp(btn.dataset.temp);
+                    } else if (btn.dataset.ice) {
+                        handler = () => selectIceLevel(btn.dataset.ice);
+                    } else if (btn.dataset.sugar) {
+                        handler = () => selectSugarLevel(btn.dataset.sugar);
+                    }
+                }
+
+                if (!handler) return; // 沒有處理器，跳過
+
+                // 移除原來的 inline onclick
+                btn.onclick = null;
+
+                btn.addEventListener('touchstart', function(e) {
+                    touchStartTime = Date.now();
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                    hasMoved = false;
+
+                    // 添加視覺回饋
+                    this.classList.add('pressed');
+
+                    // 觸覺回饋
+                    if (navigator.vibrate) {
+                        navigator.vibrate(10);
+                    }
+                }, { passive: true });
+
+                btn.addEventListener('touchmove', function(e) {
+                    const touch = e.touches[0];
+                    const moveX = Math.abs(touch.clientX - touchStartX);
+                    const moveY = Math.abs(touch.clientY - touchStartY);
+
+                    // 如果移動超過 10px，視為滾動
+                    if (moveX > 10 || moveY > 10) {
+                        hasMoved = true;
+                        this.classList.remove('pressed');
+                    }
+                }, { passive: true });
+
+                btn.addEventListener('touchend', function(e) {
+                    const touchDuration = Date.now() - touchStartTime;
+
+                    // 移除視覺回饋
+                    this.classList.remove('pressed');
+
+                    // 只有在沒有移動且觸控時間短於 800ms 時才觸發點擊
+                    if (!hasMoved && touchDuration < 800) {
+                        e.preventDefault();
+                        if (handler) handler.call(this);
+                    }
+                }, { passive: false });
+
+                // 觸控取消時也要移除視覺回饋
+                btn.addEventListener('touchcancel', function(e) {
+                    this.classList.remove('pressed');
+                }, { passive: true });
+
+                // 保留 click 作為備用（非觸控設備）
+                btn.onclick = (e) => {
+                    if (!e.defaultPrevented && handler) {
+                        handler.call(this);
+                    }
+                };
+            });
+        }
+
+        // 新增到購物車（先選擇規格）
         function addToCart(item) {
+            // 設置當前品項
+            currentItem = item;
+
             // 根據品項類別使用不同的預設規格
-            const defaultCustom = item.category === 'drink' ? '正常冰' : '';
-            const defaultSpicy = item.category === 'drink' ? '' : '不辣';
-            const defaultOnion = item.category === 'drink' ? '' : '';
-            const defaultGarlic = item.category === 'drink' ? '' : '';
-            const defaultSauce = item.category === 'drink' ? '' : '';
-
-            const cartItem = {
-                ...item,
-                quantity: 1,
-                spicy: defaultSpicy,
-                onion: defaultOnion,
-                garlic: defaultGarlic,
-                sauce: defaultSauce,
-                custom: defaultCustom
-            };
-
-            // 檢查購物車是否已有相同規格的品項
-            const existingIndex = cart.findIndex(i =>
-                i.id === cartItem.id &&
-                i.spicy === cartItem.spicy &&
-                i.onion === cartItem.onion &&
-                i.garlic === cartItem.garlic &&
-                i.sauce === cartItem.sauce &&
-                i.custom === cartItem.custom
-            );
-
-            if (existingIndex >= 0) {
-                cart[existingIndex].quantity += cartItem.quantity;
+            if (item.category === 'drink') {
+                // 飲料類別
+                currentSpecQty = 1;
+                currentSpecSpicy = '';
+                currentSpecPepper = '';
+                currentSpecSauce = '';
+                currentSpecCustom = [];
+                currentDrinkTemp = '冰';
+                currentIceLevel = '正常冰';
+                currentSugarLevel = '全糖';
             } else {
-                cart.push(cartItem);
+                // 燒烤類別
+                currentSpecQty = 1;
+                currentSpecSpicy = '不辣';
+                currentSpecPepper = '';
+                currentSpecSauce = '';
+                currentSpecCustom = [];
+                currentDrinkTemp = '';
+                currentIceLevel = '';
+                currentSugarLevel = '';
             }
 
-            updateCart();
+            // 設定 UI
+            document.getElementById('specItemName').textContent = item.name;
+            document.getElementById('specItemPrice').textContent = `$${item.price}`;
+            document.getElementById('specQtyDisplay').textContent = currentSpecQty;
+
+            // 設定辣度按鈕
+            document.querySelectorAll('#specModal .spec-btn[data-spicy]').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.spicy === currentSpecSpicy) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // 設定調味按鈕（蔥、蒜、醬）
+            document.querySelectorAll('#specModal .pepper-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const pepperBtn = document.querySelector(`#specModal .pepper-btn[data-pepper="${currentSpecPepper}"]`);
+            if (pepperBtn) pepperBtn.classList.add('active');
+
+            document.querySelectorAll('#specModal .sauce-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const sauceBtn = document.querySelector(`#specModal .sauce-btn[data-sauce="${currentSpecSauce}"]`);
+            if (sauceBtn) sauceBtn.classList.add('active');
+
+            // 設定溫度按鈕（飲料類別）
+            if (item.category === 'drink') {
+                document.querySelectorAll('.temp-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.temp === currentDrinkTemp) {
+                        btn.classList.add('active');
+                    }
+                });
+
+                // 設定冰塊按鈕
+                const iceSection = document.getElementById('iceOptions');
+                const sugarSection = document.getElementById('sugarOptions');
+                if (currentDrinkTemp === '冰') {
+                    iceSection.style.display = 'block';
+                    sugarSection.style.display = 'block';
+
+                    document.querySelectorAll('.ice-level-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.dataset.ice === currentIceLevel) {
+                            btn.classList.add('active');
+                        }
+                    });
+
+                    document.querySelectorAll('.sugar-level-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.dataset.sugar === currentSugarLevel) {
+                            btn.classList.add('active');
+                        }
+                    });
+                } else {
+                    iceSection.style.display = 'none';
+                    sugarSection.style.display = 'none';
+                }
+            } else {
+                // 非飲料類別，隱藏冰塊和甜度選項
+                document.getElementById('iceOptions').style.display = 'none';
+                document.getElementById('sugarOptions').style.display = 'none';
+            }
+
+            // 設定自訂備註
+            currentSpecCustom = [];
+            document.getElementById('specCustomInput').value = '';
+
+            // 確保不是編輯模式（從菜單點擊新增）
+            currentEditIndex = -1;
+
+            // 根據品項類別顯示/隱藏對應的選項區塊
+            const modalBody = document.querySelector('#specModal .modal-body');
+            const spicySection = modalBody.querySelector('.spicy-section');
+            const seasoningOptions = modalBody.querySelector('.seasoning-options');
+            const drinkOptions = modalBody.querySelector('.drink-options');
+            const quantitySection = modalBody.querySelector('.spec-quantity')?.closest('.spec-section');
+            const customInput = document.getElementById('specCustomInput');
+
+            if (item.category === 'drink') {
+                // 飲料類：隱藏辣度和調味選項，顯示飲料選項
+                // 不要隱藏整個 spicySection，因為 drinkOptions 在裡面
+                if (spicySection) {
+                    // 隱藏辣度 label 和按鈕
+                    const spicyLabel = spicySection.querySelector('.spicy-label');
+                    if (spicyLabel) spicyLabel.style.display = 'none';
+                    const spicyButtons = spicySection.querySelector('.spec-buttons');
+                    if (spicyButtons) spicyButtons.style.display = 'none';
+                }
+                if (seasoningOptions) seasoningOptions.style.display = 'none';
+                if (customInput) customInput.style.display = 'block';  // 顯示自訂輸入
+                if (drinkOptions) drinkOptions.style.display = 'block';
+                if (quantitySection) quantitySection.style.display = 'block';  // 顯示數量選擇
+            } else {
+                // 燒烤類：顯示辣度和調味選項，隱藏飲料選項
+                if (spicySection) {
+                    // 顯示辣度 label 和按鈕
+                    const spicyLabel = spicySection.querySelector('.spicy-label');
+                    if (spicyLabel) spicyLabel.style.display = 'block';
+                    const spicyButtons = spicySection.querySelector('.spec-buttons');
+                    if (spicyButtons) spicyButtons.style.display = 'grid';
+                }
+                if (seasoningOptions) seasoningOptions.style.display = 'block';
+                if (customInput) customInput.style.display = 'block';
+                if (drinkOptions) drinkOptions.style.display = 'none';
+                if (quantitySection) quantitySection.style.display = 'block';
+            }
+
+            // 初始化品項折扣
+            currentItemDiscount = 0;
+            document.getElementById('itemDiscountInput').value = '';
+            updateItemDiscountDisplay();
+
+            // 顯示規格選擇彈窗
+            document.getElementById('specModal').classList.add('active');
         }
 
         // 計算折扣總額
@@ -2755,57 +3049,64 @@
             let totalQuantity = 0;
 
             cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
+                const itemDiscount = item.discount || 0;
+                const itemTotal = (item.price * item.quantity) - itemDiscount;
+                subtotal += itemTotal + itemDiscount;  // 原價小計
                 totalQuantity += item.quantity;
 
                 const cartItem = document.createElement('div');
                 cartItem.className = 'cart-item';
 
-                // 建立規格資訊 HTML
+                // 建立規格資訊 HTML（只使用 custom 欄位）
                 let specsHtml = '';
-                if (item.spicy && item.spicy !== '不辣') {
-                    specsHtml += `<span class="spec-tag">🌶️ ${item.spicy}</span>`;
-                }
-                if (item.onion) {
-                    specsHtml += `<span class="spec-tag">🧅 ${item.onion}</span>`;
-                }
-                if (item.garlic) {
-                    specsHtml += `<span class="spec-tag">🧄 ${item.garlic}</span>`;
-                }
-                if (item.sauce) {
-                    specsHtml += `<span class="spec-tag">🥫 ${item.sauce}</span>`;
-                }
                 if (item.custom && item.custom.trim()) {
                     specsHtml += `<span class="spec-tag">📝 ${item.custom}</span>`;
+                }
+
+                // 如果有折扣，顯示折扣標籤
+                if (itemDiscount > 0) {
+                    specsHtml += `<span class="spec-tag discount-tag">💰 -$${itemDiscount}</span>`;
                 }
 
                 cartItem.innerHTML = `
                     <div class="cart-item-info">
                         <div class="cart-item-name">${item.name}</div>
                         ${specsHtml ? `<div class="cart-item-specs">${specsHtml}</div>` : ''}
-                        <div class="cart-item-price">$${item.price} × ${item.quantity} = $${itemTotal}</div>
                     </div>
-                    <div class="cart-item-actions">
-                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
-                        <div class="quantity-display">${item.quantity}</div>
-                        <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
-                        <button class="delete-btn" onclick="removeFromCart(${item.id})">刪除</button>
+                    <div class="cart-item-bottom">
+                        <div class="cart-item-actions">
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                            <div class="quantity-display">${item.quantity}</div>
+                            <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                            <button class="delete-btn" onclick="removeFromCart(${item.id})">刪除</button>
+                        </div>
+                        <div class="cart-item-total-price">
+                            ${itemDiscount > 0 ? `<div style="text-decoration: line-through; color: #999; font-size: 12px;">$${item.price} × ${item.quantity} = $${item.price * item.quantity}</div>` : `<div style="color: #636E72; font-size: 12px;">$${item.price} × ${item.quantity}</div>`}
+                            <div style="${itemDiscount > 0 ? 'color: #D63031;' : ''} font-size: 16px; font-weight: 600;">
+                                ${`$${itemTotal}`}
+                            </div>
+                        </div>
                     </div>
                 `;
                 cartItemsContainer.appendChild(cartItem);
             });
 
             // 計算折扣
-            const { totalDiscount, appliedDiscounts } = calculateDiscounts();
+            const { totalDiscount: autoDiscount, appliedDiscounts } = calculateDiscounts();
 
-            // 顯示折扣資訊
-            if (totalDiscount > 0) {
+            // 計算品項折扣總計
+            const itemDiscounts = cart.reduce((sum, item) => sum + (item.discount || 0), 0);
+
+            // 總折扣 = 品項折扣 + 自動折扣
+            const totalDiscount = itemDiscounts + autoDiscount;
+
+            // 顯示自動折扣資訊
+            if (autoDiscount > 0) {
                 const discountDiv = document.createElement('div');
                 discountDiv.className = 'cart-discount';
                 discountDiv.innerHTML = `
-                    <div class="discount-label">🏷️ 折扣優惠</div>
-                    <div class="discount-value">-$${totalDiscount}</div>
+                    <div class="discount-label">🏷️ 自動折扣</div>
+                    <div class="discount-value">-$${autoDiscount}</div>
                 `;
                 cartItemsContainer.appendChild(discountDiv);
 
@@ -2817,6 +3118,18 @@
                     cartItemsContainer.appendChild(discountInfo);
                 });
             }
+
+            // 顯示品項折扣資訊
+            // if (itemDiscounts > 0) {
+            //     const itemDiscountDiv = document.createElement('div');
+            //     itemDiscountDiv.className = 'cart-discount';
+            //     itemDiscountDiv.style.cssText = 'background: #FFE0E0; padding: 12px; border-radius: 8px; margin-top: 8px; display: flex; justify-content: space-between; align-items: center;';
+            //     itemDiscountDiv.innerHTML = `
+            //         <div class="discount-label">💰 品項折扣</div>
+            //         <div class="discount-value">-$${itemDiscounts}</div>
+            //     `;
+            //     cartItemsContainer.appendChild(itemDiscountDiv);
+            // }
 
             const total = subtotal - totalDiscount;
             totalItemsEl.textContent = totalQuantity;
@@ -2995,9 +3308,17 @@
                 if (order.discount > 0) {
                     const details = [];
 
+                    // 處理品項折扣
+                    const itemDiscounts = order.items.filter(item => item.discount && item.discount > 0);
+                    if (itemDiscounts.length > 0) {
+                        const totalItemDiscount = itemDiscounts.reduce((sum, item) => sum + item.discount, 0);
+                        const itemNames = itemDiscounts.map(item => item.name).join('、');
+                        details.push(`💰 品項折扣: ${itemNames} (-$${totalItemDiscount})`);
+                    }
+
                     // 處理手動折扣
                     if (order.manualDiscount > 0) {
-                        details.push(`手動折扣: ${order.manualDiscountReason || '手動折扣'} (-$${order.manualDiscount})`);
+                        details.push(`✋ 手動折扣: ${order.manualDiscountReason || '手動折扣'} (-$${order.manualDiscount})`);
                     }
 
                     // 處理自動折扣
@@ -3028,9 +3349,10 @@
                         details.push(`折扣: -$${order.discount}`);
                     }
 
-                    discountDetails = '<div style="margin-bottom: 8px; font-size: 12px; color: #636E72;">' +
-                        details.join(' | ') +
-                        '</div>';
+                    discountDetails = '<div style="background: #FFF0F0; padding: 12px; border-radius: 10px; margin-bottom: 12px; border: 1px solid #FFD0D0;">' +
+                        '<div style="font-size: 13px; color: #636E72; line-height: 1.8;">' +
+                        details.join('<br/>') +
+                        '</div></div>';
                 }
 
                 // 計算口味備註區塊（僅顯示非飲料類的備註）
@@ -3049,30 +3371,24 @@
                     // 檢查辣度是否統一且不是「不辣」
                     const spicyValues = nonDrinkItems.map(item => item.spicy).filter(s => s && s !== '不辣');
                     if (spicyValues.length > 0 && spicyValues.every(v => v === spicyValues[0])) {
-                        unifiedSpecTags.push(`<span style="display: inline-block; padding: 3px 10px; background: #FFEAA7; color: #D63031; border-radius: 4px; font-size: 12px; margin-right: 4px; margin-bottom: 5px;">${spicyValues[0]}</span>`);
+                        unifiedSpecTags.push(`<span style="display: inline-block; padding: 5px 12px; background: #FFEAA7; color: #D63031; border-radius: 6px; font-size: 13px; margin-right: 6px; margin-bottom: 6px; font-weight: 500;">${spicyValues[0]}</span>`);
                     }
 
-                    // 檢查蔥是否統一
-                    const onionValues = nonDrinkItems.map(item => item.onion).filter(o => o);
-                    if (onionValues.length > 0 && onionValues.every(v => v === onionValues[0])) {
-                        unifiedSpecTags.push(`<span style="display: inline-block; padding: 3px 10px; background: #C8F7DC; color: #00B894; border-radius: 4px; font-size: 12px; margin-right: 4px; margin-bottom: 5px;">${onionValues[0]}</span>`);
-                    }
-
-                    // 檢查蒜是否統一
-                    const garlicValues = nonDrinkItems.map(item => item.garlic).filter(g => g);
-                    if (garlicValues.length > 0 && garlicValues.every(v => v === garlicValues[0])) {
-                        unifiedSpecTags.push(`<span style="display: inline-block; padding: 3px 10px; background: #E0D6F7; color: #6C5CE7; border-radius: 4px; font-size: 12px; margin-right: 4px; margin-bottom: 5px;">${garlicValues[0]}</span>`);
+                    // 檢查胡椒是否統一
+                    const pepperValues = nonDrinkItems.map(item => item.pepper).filter(p => p);
+                    if (pepperValues.length > 0 && pepperValues.every(v => v === pepperValues[0])) {
+                        unifiedSpecTags.push(`<span style="display: inline-block; padding: 5px 12px; background: #FFE0D6; color: #E17055; border-radius: 6px; font-size: 13px; margin-right: 6px; margin-bottom: 6px; font-weight: 500;">${pepperValues[0]}</span>`);
                     }
 
                     // 檢查醬是否統一
                     const sauceValues = nonDrinkItems.map(item => item.sauce).filter(s => s);
                     if (sauceValues.length > 0 && sauceValues.every(v => v === sauceValues[0])) {
-                        unifiedSpecTags.push(`<span style="display: inline-block; padding: 3px 10px; background: #F5E6D3; color: #A0522D; border-radius: 4px; font-size: 12px; margin-right: 4px; margin-bottom: 5px;">${sauceValues[0]}</span>`);
+                        unifiedSpecTags.push(`<span style="display: inline-block; padding: 5px 12px; background: #F5E6D3; color: #A0522D; border-radius: 6px; font-size: 13px; margin-right: 6px; margin-bottom: 6px; font-weight: 500;">${sauceValues[0]}</span>`);
                     }
 
                     // 合併統一口味標籤
                     if (unifiedSpecTags.length > 0) {
-                        allSpecs.push(`<div style="font-size: 13px; line-height: 1.8; margin-bottom: 8px;">${unifiedSpecTags.join('')}</div>`);
+                        allSpecs.push(`<div style="font-size: 13px; line-height: 1.9; margin-bottom: 6px;">${unifiedSpecTags.join('')}</div>`);
                     }
 
                     // 自訂備註（非飲料類只顯示一次）
@@ -3083,8 +3399,11 @@
                 }
 
                 const tasteNotesHTML = allSpecs.length > 0 ? `
-                    <div style="background: #F8F9FA; padding: 14px; border-radius: 8px; margin-top: 12px; margin-bottom: 12px;">
-                        <div style="font-size: 14px; font-weight: 600; color: #2D3436; margin-bottom: 10px;">📝 口味備註</div>
+                    <div style="background: #FFF9F0; padding: 14px; border-radius: 10px; margin-top: 12px; border: 1px solid #FFEAA7;">
+                        <div style="font-size: 15px; font-weight: 600; color: #2D3436; margin-bottom: 10px; display: flex; align-items: center;">
+                            <span style="margin-right: 6px;">📝</span>
+                            <span>口味備註</span>
+                        </div>
                         ${allSpecs.join('')}
                     </div>
                 ` : '';
@@ -3106,7 +3425,7 @@
                             </div>
                             <div style="text-align: right;">
                                 <div style="font-weight: 600; font-size: 18px; color: #2D3436;">$${order.total.toLocaleString()}</div>
-                                ${order.discount > 0 ? `<div style="color: #D63031; font-size: 12px;">折扣 -$${order.discount}</div>` : ''}
+                                ${order.totalDiscount > 0 ? `<div style="color: #D63031; font-size: 12px;">折扣 -$${order.totalDiscount}</div>` : ''}
                             </div>
                         </div>
 
@@ -3116,8 +3435,11 @@
                             ${discountDetails}
 
                             <!-- 品項明細 -->
-                            <div style="border-top: 1px solid #DFE6E9; padding-top: 12px;">
-                                <div style="margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #2D3436;">品項明細</div>
+                            <div style="margin-top: 0;">
+                                <div style="margin-bottom: 12px; font-size: 15px; font-weight: 600; color: #2D3436; display: flex; align-items: center;">
+                                    <span style="width: 4px; height: 16px; background: #FF6B35; border-radius: 2px; margin-right: 8px;"></span>
+                                    品項明細
+                                </div>
                                 ${order.items.map(item => {
                                 // 收集該品項的規格備註（僅飲料類顯示在品項明細下方）
                                 const specTags = [];
@@ -3128,34 +3450,53 @@
                                 if (isDrink) {
                                     // 飲料：只顯示自訂備註在品項下方
                                     if (item.custom && item.custom.trim()) {
-                                        specTags.push(`<span style="display: inline-block; padding: 3px 10px; background: #FFE0D6; color: #E17055; border-radius: 4px; font-size: 12px; margin-right: 4px; margin-bottom: 3px;">${item.custom}</span>`);
+                                        specTags.push(`<span style="display: inline-block; padding: 5px 12px; background: #FFF4E6; color: #E17055; border-radius: 6px; font-size: 13px; margin-right: 6px; margin-bottom: 6px; font-weight: 500;">${item.custom}</span>`);
                                     }
                                 }
                                 // 非飲料品項不在品項明細下方顯示備註（改在「口味備註」區塊統一顯示）
 
 
                                 return `
-                                    <div style="padding: 10px 0; border-bottom: 1px solid #ECF0F1;">
-                                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                                            <div style="flex: 1;">
-                                                <div style="font-weight: 500; color: #2D3436; font-size: 15px;">
+                                    <div style="padding: 14px 16px; background: #F8F9FA; border-radius: 10px; margin-bottom: 10px; border: 1px solid #ECF0F1;">
+                                        <div style="display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; margin-bottom: 12px;">
+                                            <div style="min-width: 0;">
+                                                <div style="font-weight: 600; color: #2D3436; font-size: 16px; line-height: 1.4;">
                                                     ${item.name}
+                                                    ${(item.discount || 0) > 0 ? '<span style="margin-left: 6px; color: #D63031; font-size: 13px;">💰</span>' : ''}
                                                 </div>
                                                 ${specTags.length > 0 ? `
-                                                    <div style="margin-top: 8px; line-height: 1.8;">
+                                                    <div style="margin-top: 8px; line-height: 1.9;">
                                                         ${specTags.join('')}
                                                     </div>
                                                 ` : ''}
                                             </div>
                                             <div style="text-align: right;">
-                                                <div style="font-size: 17px; font-weight: 600; color: #2D3436;">
-                                                    $${(item.price * item.quantity).toLocaleString()}
-                                                </div>
-                                                <div style="font-size: 14px; color: #636E72; margin-top: 2px;">
-                                                    $${item.price} x ${item.quantity}
-                                                </div>
+                                                <div style="font-size: 19px; font-weight: 600; color: #636E72; white-space: nowrap; margin-bottom: ${(item.discount || 0) > 0 ? '8px' : '0'};">$${item.price} × ${item.quantity}</div>
                                             </div>
                                         </div>
+                                        ${(item.discount || 0) > 0 ? `
+                                            <div style="border-top: 1px dashed #DFE6E9; padding-top: 10px; margin-top: 8px;">
+                                                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px;">
+                                                    <span style="color: #B2BEC3; text-decoration: line-through;">原價</span>
+                                                    <span style="color: #B2BEC3; text-decoration: line-through;">$${(item.price * item.quantity).toLocaleString()}</span>
+                                                </div>
+                                                <div style="display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px;">
+                                                    <span style="color: #D63031;">💰 品項折扣</span>
+                                                    <span style="color: #D63031; font-weight: 600;">-$${item.discount.toLocaleString()}</span>
+                                                </div>
+                                                <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 700;">
+                                                    <span style="color: #D63031;">小計</span>
+                                                    <span style="color: #D63031;">$${((item.price * item.quantity) - item.discount).toLocaleString()}</span>
+                                                </div>
+                                            </div>
+                                        ` : `
+                                            <div style="border-top: 1px dashed #DFE6E9; padding-top: 10px; margin-top: 8px;">
+                                                <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 700;">
+                                                    <span style="color: #2D3436;">小計</span>
+                                                    <span style="color: #2D3436;">$${(item.price * item.quantity).toLocaleString()}</span>
+                                                </div>
+                                            </div>
+                                        `}
                                     </div>
                                 `;
                             }).join('')}
@@ -3165,19 +3506,19 @@
                         ${tasteNotesHTML}
 
                         <!-- 價格明細 -->
-                        <div style="border-top: 1px solid #DFE6E9; padding-top: 12px; margin-top: 8px;">
-                            <div style="display: flex; justify-content: space-between; font-size: 14px;">
-                                <span style="color: #636E72;">小計：</span>
-                                <span style="color: #2D3436;">$${order.subtotal.toLocaleString()}</span>
+                        <div style="background: #F8F9FA; border-radius: 10px; padding: 14px; margin-top: 12px; border: 1px solid #ECF0F1;">
+                            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px;">
+                                <span style="color: #636E72; font-weight: 500;">小計</span>
+                                <span style="color: #2D3436; font-weight: 600;">$${order.subtotal.toLocaleString()}</span>
                             </div>
                             ${order.discount > 0 ? `
-                                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 4px;">
-                                    <span style="color: #636E72;">折扣：</span>
-                                    <span style="color: #D63031;">-$${order.discount.toLocaleString()}</span>
+                                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 6px;">
+                                    <span style="color: #636E72; font-weight: 500;">折扣</span>
+                                    <span style="color: #D63031; font-weight: 600;">-$${order.discount.toLocaleString()}</span>
                                 </div>
                             ` : ''}
-                            <div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: 600; margin-top: 8px;">
-                                <span style="color: #2D3436;">總計：</span>
+                            <div style="display: flex; justify-content: space-between; font-size: 17px; font-weight: 700; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #DFE6E9;">
+                                <span style="color: #2D3436;">總計</span>
                                 <span style="color: #00B894;">$${order.total.toLocaleString()}</span>
                             </div>
                         </div>
@@ -3352,10 +3693,15 @@
             const receivedInput = document.getElementById('receivedAmount');
             const changeDisplay = document.getElementById('changeDisplay');
 
-            // 計算小計和所有折扣（包含手動折扣）
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            // 計算品項折扣後的小計
+            const subtotal = cart.reduce((sum, item) => {
+                const itemTotal = item.price * item.quantity;
+                const itemDiscount = item.discount || 0;
+                return sum + (itemTotal - itemDiscount);
+            }, 0);
+
             const { totalDiscount: autoDiscount } = calculateDiscounts();
-            const total = Math.max(0, subtotal - autoDiscount - currentManualDiscount);
+            const total = Math.max(0, subtotal - autoDiscount - currentManualDiscount);  // 總計 = 折扣後小計 - 自動折扣 - 手動折扣
 
             const received = parseInt(receivedInput.value) || 0;
 
@@ -3371,11 +3717,24 @@
 
         // 完成付款
         function completePayment() {
-            // 計算小計和折扣
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            // 計算原價小計（用於統計）
+            const originalSubtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            // 計算品項折扣後的小計（用於訂單明細顯示）
+            const subtotal = cart.reduce((sum, item) => {
+                const itemTotal = item.price * item.quantity;
+                const itemDiscount = item.discount || 0;
+                return sum + (itemTotal - itemDiscount);
+            }, 0);
+
             const { totalDiscount: autoDiscount, appliedDiscounts } = calculateDiscounts();
-            const totalDiscount = autoDiscount + currentManualDiscount;
-            const total = subtotal - totalDiscount;
+
+            // 計算品項折扣總和
+            const itemDiscounts = cart.reduce((sum, item) => sum + (item.discount || 0), 0);
+
+            // 總折扣 = 品項折扣 + 自動折扣 + 手動折扣
+            const totalDiscount = itemDiscounts + autoDiscount + currentManualDiscount;
+            const total = subtotal - autoDiscount - currentManualDiscount;  // 總計 = 折扣後小計 - 自動折扣 - 手動折扣
 
             const received = parseInt(document.getElementById('receivedAmount').value) || 0;
 
@@ -3391,27 +3750,19 @@
             // 使用營業日，不判斷新的一天（營業日只在關帳時更新）
 
             // 更新統計（totalRevenue 記錄原價，totalDiscount 記錄折扣）
-            dailyStats.totalRevenue += subtotal;
-            dailyStats.totalDiscount += totalDiscount; // 包含自動折扣和手動折扣
+            dailyStats.totalRevenue += originalSubtotal;
+            dailyStats.totalDiscount += totalDiscount; // 包含品項折扣、自動折扣和手動折扣
             dailyStats.orderCount++;
 
             // 更新時段資料（使用原價）
             if (dailyStats.hourlyData.hasOwnProperty(hour)) {
-                dailyStats.hourlyData[hour] += subtotal;
+                dailyStats.hourlyData[hour] += originalSubtotal;
             }
 
             // 更新商品銷售統計和分類統計
             cart.forEach(item => {
                 const itemTotal = item.price * item.quantity;
-
-                // 計算該品項的折扣金額
-                let itemDiscount = 0;
-                discountRules.forEach(rule => {
-                    if (rule.type === 'item' && rule.itemId === item.id) {
-                        const times = Math.floor(item.quantity / rule.quantity);
-                        itemDiscount += times * rule.discountAmount;
-                    }
-                });
+                const itemDiscount = item.discount || 0;  // 直接使用品項折扣
 
                 // 商品統計
                 if (!dailyStats.itemSales[item.id]) {
@@ -3441,16 +3792,17 @@
                     name: i.name,
                     quantity: i.quantity,
                     price: i.price,
+                    discount: i.discount || 0,  // 品項折扣
                     category: i.category || null,
                     spicy: i.spicy || null,
-                    onion: i.onion || null,
-                    garlic: i.garlic || null,
+                    pepper: i.pepper || null,
                     sauce: i.sauce || null,
                     custom: i.custom || null
                 })),
-                subtotal: subtotal,
-                discount: totalDiscount,
-                total: total,
+                subtotal: subtotal,  // 品項折扣後的小計
+                discount: autoDiscount + currentManualDiscount,  // 自動折扣 + 手動折扣（不含品項折扣）
+                totalDiscount: totalDiscount,  // 完整折扣（品項折扣 + 自動折扣 + 手動折扣）
+                total: total,  // 最終總計
                 manualDiscount: currentManualDiscount,
                 manualDiscountReason: currentManualDiscount > 0 ? (currentDiscountReason.trim() || '手動折扣') : null,
                 appliedDiscounts: appliedDiscounts
@@ -3572,7 +3924,7 @@
             csv += `訂單數,${totalOrderCount}\n`;
             csv += `\n`;
             csv += '訂單明細\n';
-            csv += '訂單號,營業日,時間,品項,數量,單價,小計,折扣,實收\n';
+            csv += '訂單號,營業日,時間,品項,數量,單價,小計,品項折扣,訂單折扣,總折扣,實收\n';
 
             // 依日期和訂單號排序
             allOrders.sort((a, b) => {
@@ -3586,11 +3938,15 @@
                 const orderDate = order.businessDate || businessDate;
                 order.items.forEach(item => {
                     const itemSubtotal = item.quantity * item.price;
-                    // 平均分配折扣到每個品項
-                    const itemDiscount = Math.round((order.discount || 0) / order.items.length);
-                    const itemTotal = itemSubtotal - itemDiscount;
+                    // 品項本身的折扣
+                    const itemOwnDiscount = item.discount || 0;
+                    // 訂單層級的折扣（自動折扣 + 手動折扣）平均分配到每個品項
+                    const orderDiscountPerItem = Math.round((order.discount || 0) / order.items.length);
+                    // 該品項的總折扣 = 品項折扣 + 平均分配的訂單折扣
+                    const totalItemDiscount = itemOwnDiscount + orderDiscountPerItem;
+                    const itemTotal = itemSubtotal - totalItemDiscount;
 
-                    csv += `${order.orderNumber},${orderDate},${order.time},${item.name},${item.quantity},${item.price},${itemSubtotal},${itemDiscount},${itemTotal}\n`;
+                    csv += `${order.orderNumber},${orderDate},${order.time},${item.name},${item.quantity},${item.price},${itemSubtotal},${itemOwnDiscount},${orderDiscountPerItem},${totalItemDiscount},${itemTotal}\n`;
                 });
             });
 
@@ -3649,7 +4005,7 @@
             const actualRevenue = totalRevenue - totalDiscount;
 
             const message = `🔒 每日關帳（換日）\n\n` +
-                `⚠️ 此操作將執行以��動作：\n` +
+                `⚠️ 此操作將執行以下動作：\n` +
                 `1. 保存今日營業資料到歷史記錄\n` +
                 `2. 清空今日統計資料\n` +
                 `3. 重置訂單編號（明日從 #新日期-001 開始）\n\n` +
@@ -3787,20 +4143,17 @@
                         custom: custom.length > 0 ? custom.join('、') : ''
                     };
                 } else {
-                    // 非飲料類：隨機生成辣度、蔥、蒜、醬
+                    // 非飲料類：隨機生成辣度、胡椒、醬
                     const spicyLevels = ['不辣', '不辣', '不辣', '微辣', '微辣', '中辣', '大辣'];
-                    const onionOptions = ['', '', '蔥多', '蔥少', '去蔥'];
-                    const garlicOptions = ['', '', '蒜多', '蒜少', '去蒜'];
+                    const pepperOptions = ['', '', '胡椒多', '胡椒少', '去胡椒'];
                     const sauceOptions = ['', '', '醬多', '醬少', '去醬'];
 
                     const spicy = spicyLevels[Math.floor(Math.random() * spicyLevels.length)];
-                    const onion = onionOptions[Math.floor(Math.random() * onionOptions.length)];
-                    const garlic = garlicOptions[Math.floor(Math.random() * garlicOptions.length)];
+                    const pepper = pepperOptions[Math.floor(Math.random() * pepperOptions.length)];
                     const sauce = sauceOptions[Math.floor(Math.random() * sauceOptions.length)];
 
                     const custom = [];
-                    if (onion) custom.push(onion);
-                    if (garlic) custom.push(garlic);
+                    if (pepper) custom.push(pepper);
                     if (sauce) custom.push(sauce);
 
                     return {
@@ -3862,18 +4215,15 @@
 
                     // 為這筆訂單生成統一的燒烤口味
                     const unifiedSpicyLevels = ['不辣', '不辣', '不辣', '微辣', '微辣', '中辣', '大辣'];
-                    const unifiedOnionOptions = ['', '', '蔥多', '蔥少', '去蔥'];
-                    const unifiedGarlicOptions = ['', '', '蒜多', '蒜少', '去蒜'];
+                    const unifiedPepperOptions = ['', '', '胡椒多', '胡椒少', '去胡椒'];
                     const unifiedSauceOptions = ['', '', '醬多', '醬少', '去醬'];
 
                     const orderUnifiedSpicy = unifiedSpicyLevels[Math.floor(Math.random() * unifiedSpicyLevels.length)];
-                    const orderUnifiedOnion = unifiedOnionOptions[Math.floor(Math.random() * unifiedOnionOptions.length)];
-                    const orderUnifiedGarlic = unifiedGarlicOptions[Math.floor(Math.random() * unifiedGarlicOptions.length)];
+                    const orderUnifiedPepper = unifiedPepperOptions[Math.floor(Math.random() * unifiedPepperOptions.length)];
                     const orderUnifiedSauce = unifiedSauceOptions[Math.floor(Math.random() * unifiedSauceOptions.length)];
 
                     const orderUnifiedCustom = [];
-                    if (orderUnifiedOnion) orderUnifiedCustom.push(orderUnifiedOnion);
-                    if (orderUnifiedGarlic) orderUnifiedCustom.push(orderUnifiedGarlic);
+                    if (orderUnifiedPepper) orderUnifiedCustom.push(orderUnifiedPepper);
                     if (orderUnifiedSauce) orderUnifiedCustom.push(orderUnifiedSauce);
                     const orderUnifiedCustomStr = orderUnifiedCustom.length > 0 ? orderUnifiedCustom.join('、') : '';
 
@@ -3951,18 +4301,16 @@
                                     quantity: 2,
                                     price: 50,
                                     spicy: '中辣',
-                                    onion: '蔥多',
-                                    garlic: '蒜多',
+                                    pepper: '胡椒多',
                                     sauce: '',
-                                    custom: '蔥多、蒜多'
+                                    custom: '胡椒多'
                                 },
                                 {
                                     name: '烤香菇',
                                     quantity: 3,
                                     price: 35,
                                     spicy: '不辣',
-                                    onion: '',
-                                    garlic: '',
+                                    pepper: '',
                                     sauce: '',
                                     custom: ''
                                 },
@@ -4021,8 +4369,7 @@
                             ...item,
                             category: category,
                             spicy: orderUnifiedSpicy,
-                            onion: orderUnifiedOnion,
-                            garlic: orderUnifiedGarlic,
+                            pepper: orderUnifiedPepper,
                             sauce: orderUnifiedSauce,
                             custom: orderUnifiedCustomStr
                         };
@@ -4434,12 +4781,27 @@
                 return;
             }
 
-            // 統計自動折扣和手動折扣
+            // 統計品項折扣、自動折扣和手動折扣
             const discountStats = {};
 
             if (dailyStats.orders && dailyStats.orders.length > 0) {
                 dailyStats.orders.forEach(order => {
-                    if (order.discount > 0) {
+                    // 檢查品項折扣（💰）
+                    if (order.items && order.items.length > 0) {
+                        order.items.forEach(item => {
+                            if (item.discount && item.discount > 0) {
+                                const name = `💰 ${item.name}品項折扣`;
+                                if (!discountStats[name]) {
+                                    discountStats[name] = { count: 0, amount: 0, isManual: false, isItem: true };
+                                }
+                                discountStats[name].count++;
+                                discountStats[name].amount += item.discount;
+                            }
+                        });
+                    }
+
+                    // 檢查自動折扣和手動折扣（使用 totalDiscount 確保包含所有折扣）
+                    if (order.totalDiscount > 0) {
                         // 檢查手動折扣（優先處理）
                         if (order.manualDiscount > 0) {
                             const name = `✋ ${order.manualDiscountReason || '手動折扣'}`;
@@ -4498,7 +4860,7 @@
                 discountDetailsEl.innerHTML = discountList.map(d => `
                     <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #DFE6E9;">
                         <span style="flex: 1;">${d.name}</span>
-                        <span style="color: ${d.isManual ? '#D63031' : '#0984E3'}; margin-left: 12px;">使用 ${d.count} 次，折 $${d.amount.toLocaleString()}</span>
+                        <span style="color: ${d.isItem ? '#E17055' : d.isManual ? '#D63031' : '#0984E3'}; margin-left: 12px;">使用 ${d.count} 次，折 $${d.amount.toLocaleString()}</span>
                     </div>
                 `).join('');
             }
@@ -4811,12 +5173,27 @@
             // 折扣明細 - 從訂單中計算
             const discountDetailsEl = document.getElementById('discountDetails');
 
-            // 統計自動折扣和手動折扣
+            // 統計品項折扣、自動折扣和手動折扣
             const discountStats = {};
 
             if (data.orders && data.orders.length > 0) {
                 data.orders.forEach(order => {
-                    if (order.discount > 0) {
+                    // 檢查品項折扣（💰）
+                    if (order.items && order.items.length > 0) {
+                        order.items.forEach(item => {
+                            if (item.discount && item.discount > 0) {
+                                const name = `💰 ${item.name}品項折扣`;
+                                if (!discountStats[name]) {
+                                    discountStats[name] = { count: 0, amount: 0, isManual: false, isItem: true };
+                                }
+                                discountStats[name].count++;
+                                discountStats[name].amount += item.discount;
+                            }
+                        });
+                    }
+
+                    // 檢查自動折扣和手動折扣（使用 totalDiscount 確保包含所有折扣）
+                    if (order.totalDiscount > 0) {
                         // 檢查手動折扣（優先處理）
                         if (order.manualDiscount > 0) {
                             const name = `✋ ${order.manualDiscountReason || '手動折扣'}`;
@@ -4875,7 +5252,7 @@
                 discountDetailsEl.innerHTML = discountList.map(d => `
                     <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #DFE6E9;">
                         <span style="flex: 1;">${d.name}</span>
-                        <span style="color: ${d.isManual ? '#D63031' : '#0984E3'}; margin-left: 12px;">使用 ${d.count} 次，折 $${d.amount.toLocaleString()}</span>
+                        <span style="color: ${d.isItem ? '#E17055' : d.isManual ? '#D63031' : '#0984E3'}; margin-left: 12px;">使用 ${d.count} 次，折 $${d.amount.toLocaleString()}</span>
                     </div>
                 `).join('');
             }
@@ -5620,8 +5997,7 @@
             // 設定當前規格
             currentSpecQty = item.quantity;
             currentSpecSpicy = item.spicy || '不辣';
-            currentSpecOnion = item.onion || '';
-            currentSpecGarlic = item.garlic || '';
+            currentSpecPepper = item.pepper || '';
             currentSpecSauce = item.sauce || '';
             currentSpecCustom = item.custom ? item.custom.split(', ') : [];
 
@@ -5637,18 +6013,10 @@
                 }
             });
 
-            // 設定蔥按鈕
-            document.querySelectorAll('.onion-btn').forEach(btn => {
+            // 設定胡椒按鈕
+            document.querySelectorAll('.pepper-btn').forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.dataset.onion === currentSpecOnion) {
-                    btn.classList.add('active');
-                }
-            });
-
-            // 設定蒜按鈕
-            document.querySelectorAll('.garlic-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.garlic === currentSpecGarlic) {
+                if (btn.dataset.pepper === currentSpecPepper) {
                     btn.classList.add('active');
                 }
             });
@@ -5701,10 +6069,14 @@
         // 選擇辣度
         function selectSpicy(spicy) {
             currentSpecSpicy = spicy;
-            document.querySelectorAll('.spec-btn:not(.temp-btn):not(.ice-level-btn):not(.unified-spec-btn)').forEach(btn => {
+
+            // 立即更新按鈕狀態（無延遲）
+            document.querySelectorAll('#specModal .spec-btn[data-spicy]').forEach(btn => {
                 btn.classList.remove('active');
             });
-            const spicyBtn = document.querySelector(`.spec-btn[data-spicy="${spicy}"]`);
+
+            // 設定當前選擇的辣度按鈕為 active
+            const spicyBtn = document.querySelector(`#specModal .spec-btn[data-spicy="${spicy}"]`);
             if (spicyBtn) spicyBtn.classList.add('active');
         }
 
@@ -5712,7 +6084,7 @@
         function selectDrinkTemp(temp) {
             currentDrinkTemp = temp;
 
-            // 更新按鈕狀態
+            // 立即更新按鈕狀態（無延遲）
             document.querySelectorAll('.temp-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -5727,59 +6099,51 @@
                 currentIceLevel = '正常冰'; // 重設冰塊選項
             }
 
-            // 更新客製化備註
+            // 更新客製化備註（輕量操作，無需延遲）
             updateDrinkCustomNotes();
         }
 
         function selectIceLevel(level) {
             currentIceLevel = level;
 
-            // 更新按鈕狀態
+            // 立即更新按鈕狀態（無延遲）
             document.querySelectorAll('.ice-level-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`.ice-level-btn[data-ice="${level}"]`).classList.add('active');
 
-            // 更新客製化備註
+            // 更新客製化備註（輕量操作，無需延遲）
             updateDrinkCustomNotes();
         }
 
         function selectSugarLevel(sugar) {
             currentSugarLevel = sugar;
 
-            // 更新按鈕狀態
+            // 立即更新按鈕狀態（無延遲）
             document.querySelectorAll('.sugar-level-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`.sugar-level-btn[data-sugar="${sugar}"]`).classList.add('active');
 
-            // 更新客製化備註
+            // 更新客製化備註（輕量操作，無需延遲）
             updateDrinkCustomNotes();
         }
 
-        // 選擇蔥
-        function selectOnion(onion) {
-            currentSpecOnion = onion;
-            document.querySelectorAll('.onion-btn').forEach(btn => {
+        // 選擇胡椒
+        function selectPepper(pepper) {
+            currentSpecPepper = pepper;
+            // 立即更新按鈕狀態（無延遲）
+            document.querySelectorAll('.pepper-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            const onionBtn = document.querySelector(`.onion-btn[data-onion="${onion}"]`);
-            if (onionBtn) onionBtn.classList.add('active');
-        }
-
-        // 選擇蒜
-        function selectGarlic(garlic) {
-            currentSpecGarlic = garlic;
-            document.querySelectorAll('.garlic-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            const garlicBtn = document.querySelector(`.garlic-btn[data-garlic="${garlic}"]`);
-            if (garlicBtn) garlicBtn.classList.add('active');
+            const pepperBtn = document.querySelector(`.pepper-btn[data-pepper="${pepper}"]`);
+            if (pepperBtn) pepperBtn.classList.add('active');
         }
 
         // 選擇醬
         function selectSauce(sauce) {
             currentSpecSauce = sauce;
+            // 立即更新按鈕狀態（無延遲）
             document.querySelectorAll('.sauce-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -5787,33 +6151,29 @@
             if (sauceBtn) sauceBtn.classList.add('active');
         }
 
-        // 選擇統一蔥
-        function selectUnifiedOnion(onion) {
-            unifiedSpec.onion = onion;
-            document.querySelectorAll('.unified-onion-btn').forEach(btn => {
+        // 選擇統一胡椒
+        function selectUnifiedPepper(pepper) {
+            unifiedSpec.pepper = pepper;
+            // 立即更新按鈕狀態（無延遲）
+            document.querySelectorAll('.unified-pepper-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.querySelector(`.unified-onion-btn[data-onion="${onion}"]`).classList.add('active');
-            applyUnifiedSpec();
-        }
-
-        // 選擇統一蒜
-        function selectUnifiedGarlic(garlic) {
-            unifiedSpec.garlic = garlic;
-            document.querySelectorAll('.unified-garlic-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector(`.unified-garlic-btn[data-garlic="${garlic}"]`).classList.add('active');
+            const pepperBtn = document.querySelector(`.unified-pepper-btn[data-pepper="${pepper}"]`);
+            if (pepperBtn) pepperBtn.classList.add('active');
+            // 延遲套用到購物車（使用 requestAnimationFrame）
             applyUnifiedSpec();
         }
 
         // 選擇統一醬
         function selectUnifiedSauce(sauce) {
             unifiedSpec.sauce = sauce;
+            // 立即更新按鈕狀態（無延遲）
             document.querySelectorAll('.unified-sauce-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.querySelector(`.unified-sauce-btn[data-sauce="${sauce}"]`).classList.add('active');
+            const sauceBtn = document.querySelector(`.unified-sauce-btn[data-sauce="${sauce}"]`);
+            if (sauceBtn) sauceBtn.classList.add('active');
+            // 延遲套用到購物車（使用 requestAnimationFrame）
             applyUnifiedSpec();
         }
 
@@ -5835,18 +6195,26 @@
             if (currentSugarLevel !== '全糖') {
                 currentSpecCustom.push(currentSugarLevel);
             }
+
+            // 添加自訂輸入
+            const customInput = document.getElementById('specCustomInput').value.trim();
+            if (customInput) {
+                currentSpecCustom.push(customInput);
+            }
         }
 
         // 更新客製化備註（非飲料類）
         function updateCustomNotes() {
             currentSpecCustom = [];
 
-            // 收集蔥/蒜/醬選項
-            if (currentSpecOnion) {
-                currentSpecCustom.push(currentSpecOnion);
+            // 收集辣度選項
+            if (currentSpecSpicy && currentSpecSpicy !== '不辣') {
+                currentSpecCustom.push(currentSpecSpicy);
             }
-            if (currentSpecGarlic) {
-                currentSpecCustom.push(currentSpecGarlic);
+
+            // 收集胡椒/醬選項
+            if (currentSpecPepper) {
+                currentSpecCustom.push(currentSpecPepper);
             }
             if (currentSpecSauce) {
                 currentSpecCustom.push(currentSpecSauce);
@@ -5863,6 +6231,47 @@
         function adjustSpecQty(delta) {
             currentSpecQty = Math.max(1, currentSpecQty + delta);
             document.getElementById('specQtyDisplay').textContent = currentSpecQty;
+        }
+
+        // ========== 品項折扣功能 ==========
+
+        // 套用品項快速折扣
+        function applyItemDiscount(amount) {
+            const maxDiscount = currentItem.price * currentSpecQty;  // 最大可折扣金額為品項總價
+            currentItemDiscount = Math.min(amount, maxDiscount);
+            updateItemDiscountDisplay();
+        }
+
+        // 套用品項自訂折扣
+        function applyCustomItemDiscount() {
+            const input = document.getElementById('itemDiscountInput');
+            const amount = parseFloat(input.value);
+            if (!isNaN(amount) && amount > 0) {
+                const maxDiscount = currentItem.price * currentSpecQty;
+                currentItemDiscount = Math.min(amount, maxDiscount);
+                input.value = '';
+                updateItemDiscountDisplay();
+            }
+        }
+
+        // 清除品項折扣
+        function clearItemDiscount() {
+            currentItemDiscount = 0;
+            document.getElementById('itemDiscountInput').value = '';
+            updateItemDiscountDisplay();
+        }
+
+        // 更新品項折扣顯示
+        function updateItemDiscountDisplay() {
+            const display = document.getElementById('itemDiscountDisplay');
+            const amountSpan = document.getElementById('itemDiscountAmount');
+
+            if (currentItemDiscount > 0) {
+                display.style.display = 'block';
+                amountSpan.textContent = currentItemDiscount;
+            } else {
+                display.style.display = 'none';
+            }
         }
 
         // 確認規格並加入購物車
@@ -5882,39 +6291,57 @@
                 allCustomNotes = [...currentSpecCustom];
             }
 
-            // 如果是編輯模式（���結帳視窗編輯飲料類品項）
+            // 如果是編輯模式（從結帳視窗編輯飲料類品項）
             if (currentEditIndex >= 0) {
                 // 更新現有品項的規格（不修改數量）
                 cart[currentEditIndex].spicy = currentSpecSpicy;
-                cart[currentEditIndex].onion = currentSpecOnion;
-                cart[currentEditIndex].garlic = currentSpecGarlic;
+                cart[currentEditIndex].pepper = currentSpecPepper;
                 cart[currentEditIndex].sauce = currentSpecSauce;
                 cart[currentEditIndex].custom = allCustomNotes.join(', ');
+
+                // 如果是飲料，也要更新飲料專屬欄位
+                if (currentItem.category === 'drink') {
+                    cart[currentEditIndex].temp = currentDrinkTemp;
+                    cart[currentEditIndex].iceLevel = currentIceLevel;
+                    cart[currentEditIndex].sugarLevel = currentSugarLevel;
+                }
 
                 currentEditIndex = -1;
 
                 // 立即刷新結帳視窗顯示
                 renderCheckoutItems();
             } else {
-                // 新增模式：建立購物車項目（包含規格）
+                // 新增模式：建立購物車項目（包含規格和折扣）
                 const cartItem = {
                     ...currentItem,
                     quantity: currentSpecQty,
                     spicy: currentSpecSpicy,
-                    onion: currentSpecOnion,
-                    garlic: currentSpecGarlic,
+                    pepper: currentSpecPepper,
                     sauce: currentSpecSauce,
-                    custom: allCustomNotes.join(', ')
+                    custom: allCustomNotes.join(', '),
+                    discount: currentItemDiscount  // 加入品項折扣
                 };
 
-                // 檢查購物車是否已有相同規格的品項
+                // 如果是飲料，加入飲料專屬欄位
+                if (currentItem.category === 'drink') {
+                    cartItem.temp = currentDrinkTemp;
+                    cartItem.iceLevel = currentIceLevel;
+                    cartItem.sugarLevel = currentSugarLevel;
+                }
+
+                // 檢查購物車是否已有相同規格的品項（包含折扣）
                 const existingIndex = cart.findIndex(i =>
                     i.id === cartItem.id &&
                     i.spicy === cartItem.spicy &&
-                    i.onion === cartItem.onion &&
-                    i.garlic === cartItem.garlic &&
+                    i.pepper === cartItem.pepper &&
                     i.sauce === cartItem.sauce &&
-                    i.custom === cartItem.custom
+                    i.custom === cartItem.custom &&
+                    (i.discount || 0) === (cartItem.discount || 0) &&  // 比較折扣
+                    (currentItem.category !== 'drink' || (
+                        i.temp === cartItem.temp &&
+                        i.iceLevel === cartItem.iceLevel &&
+                        i.sugarLevel === cartItem.sugarLevel
+                    ))
                 );
 
                 if (existingIndex >= 0) {
@@ -5933,8 +6360,7 @@
         // 統一規格設定
         let unifiedSpec = {
             spicy: '不辣',
-            onion: '',
-            garlic: '',
+            pepper: '',
             sauce: '',
             custom: []
         };
@@ -5943,8 +6369,7 @@
         function initUnifiedSpec() {
             unifiedSpec = {
                 spicy: '不辣',
-                onion: '',
-                garlic: '',
+                pepper: '',
                 sauce: '',
                 custom: []
             };
@@ -5956,16 +6381,10 @@
             document.querySelector('.unified-spec-btn[data-spicy="不辣"]').classList.add('active');
 
             // 重設蔥按鈕
-            document.querySelectorAll('.unified-onion-btn').forEach(btn => {
+            document.querySelectorAll('.unified-pepper-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.querySelector('.unified-onion-btn[data-onion=""]').classList.add('active');
-
-            // 重設蒜按鈕
-            document.querySelectorAll('.unified-garlic-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelector('.unified-garlic-btn[data-garlic=""]').classList.add('active');
+            document.querySelector('.unified-pepper-btn[data-pepper=""]').classList.add('active');
 
             // 重設醬按鈕
             document.querySelectorAll('.unified-sauce-btn').forEach(btn => {
@@ -5973,7 +6392,7 @@
             });
             document.querySelector('.unified-sauce-btn[data-sauce=""]').classList.add('active');
 
-            // 重設自訂��入
+            // 重設自訂輸入
             document.getElementById('unifiedCustomInput').value = '';
         }
 
@@ -5981,13 +6400,13 @@
         function selectUnifiedSpicy(spicy) {
             unifiedSpec.spicy = spicy;
 
-            // 更新按鈕狀態
+            // 立即更新按鈕狀態（無延遲）
             document.querySelectorAll('.unified-spec-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`.unified-spec-btn[data-spicy="${spicy}"]`).classList.add('active');
 
-            // 立即套用統一規格到購物車
+            // 延遲套用到購物車（使用 requestAnimationFrame）
             applyUnifiedSpec();
         }
 
@@ -6005,30 +6424,45 @@
             applyUnifiedSpec();
         }
 
+        // 防抖計時器
+        let applyUnifiedSpecTimer = null;
+
         // 套用統一規格到所有非飲料類品項
         function applyUnifiedSpec() {
-            cart.forEach(item => {
-                // 只套用到非飲料類品項
-                if (item.category !== 'drink') {
-                    item.spicy = unifiedSpec.spicy;
-                    item.onion = unifiedSpec.onion;
-                    item.garlic = unifiedSpec.garlic;
-                    item.sauce = unifiedSpec.sauce;
+            // 清除之前的定時器
+            if (applyUnifiedSpecTimer) {
+                cancelAnimationFrame(applyUnifiedSpecTimer);
+            }
 
-                    // 收集所有客製化備註
-                    const allCustoms = [];
-                    if (unifiedSpec.onion) allCustoms.push(unifiedSpec.onion);
-                    if (unifiedSpec.garlic) allCustoms.push(unifiedSpec.garlic);
-                    if (unifiedSpec.sauce) allCustoms.push(unifiedSpec.sauce);
-                    if (unifiedSpec.custom.length > 0) {
-                        allCustoms.push(...unifiedSpec.custom);
-                    }
-                    item.custom = allCustoms.join(', ');
+            // 使用 requestAnimationFrame 延遲執行，避免頻繁更新
+            applyUnifiedSpecTimer = requestAnimationFrame(() => {
+                // 檢查購物車是否有非飲料品項
+                const hasNonDrinkItems = cart.some(item => item.category !== 'drink');
+                if (!hasNonDrinkItems) {
+                    return; // 沒有非飲料品項，直接返回
                 }
-            });
 
-            // 重新渲染結帳視窗的品項列表
-            renderCheckoutItems();
+                cart.forEach(item => {
+                    // 只套用到非飲料類品項
+                    if (item.category !== 'drink') {
+                        item.spicy = unifiedSpec.spicy;
+                        item.pepper = unifiedSpec.pepper;
+                        item.sauce = unifiedSpec.sauce;
+
+                        // 收集所有客製化備註
+                        const allCustoms = [];
+                        if (unifiedSpec.pepper) allCustoms.push(unifiedSpec.pepper);
+                        if (unifiedSpec.sauce) allCustoms.push(unifiedSpec.sauce);
+                        if (unifiedSpec.custom.length > 0) {
+                            allCustoms.push(...unifiedSpec.custom);
+                        }
+                        item.custom = allCustoms.join(', ');
+                    }
+                });
+
+                // 重新渲染結帳視窗的品項列表
+                renderCheckoutItems();
+            });
         }
 
         // 編輯飲料類品項的規格
@@ -6044,18 +6478,34 @@
             currentSpecCustom = item.custom ? item.custom.split(', ') : [];
 
             // 解析溫度和冰塊選項
-            currentDrinkTemp = '冰';
-            currentIceLevel = '正常冰';
+            currentDrinkTemp = item.temp || '冰';
+            currentIceLevel = item.iceLevel || '正常冰';
+            currentSugarLevel = item.sugarLevel || '全糖';
 
-            // 從 custom 中解析溫度和冰塊
-            if (currentSpecCustom.includes('熱')) {
-                currentDrinkTemp = '熱';
-            } else if (currentSpecCustom.includes('少冰')) {
-                currentIceLevel = '少冰';
-            } else if (currentSpecCustom.includes('去冰')) {
-                currentIceLevel = '去冰';
-            } else if (currentSpecCustom.includes('正常冰')) {
-                currentIceLevel = '正常冰';
+            // 從 custom 中解析溫度和冰塊（如果沒有直接欄位）
+            if (!item.temp) {
+                if (currentSpecCustom.includes('熱')) {
+                    currentDrinkTemp = '熱';
+                } else if (currentSpecCustom.includes('少冰')) {
+                    currentIceLevel = '少冰';
+                } else if (currentSpecCustom.includes('去冰')) {
+                    currentIceLevel = '去冰';
+                } else if (currentSpecCustom.includes('正常冰')) {
+                    currentIceLevel = '正常冰';
+                }
+            }
+
+            // 從 custom 中解析甜度（如果沒有直接欄位）
+            if (!item.sugarLevel) {
+                if (currentSpecCustom.includes('微糖')) {
+                    currentSugarLevel = '微糖';
+                } else if (currentSpecCustom.includes('半糖')) {
+                    currentSugarLevel = '半糖';
+                } else if (currentSpecCustom.includes('少糖')) {
+                    currentSugarLevel = '少糖';
+                } else if (currentSpecCustom.includes('無糖')) {
+                    currentSugarLevel = '無糖';
+                }
             }
 
             document.getElementById('specItemName').textContent = item.name;
@@ -6073,12 +6523,21 @@
             });
             document.querySelector(`.ice-level-btn[data-ice="${currentIceLevel}"]`).classList.add('active');
 
-            // 顯示/隱藏冰塊選項
+            // 設定甜度按鈕
+            document.querySelectorAll('.sugar-level-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.sugar-level-btn[data-sugar="${currentSugarLevel}"]`).classList.add('active');
+
+            // 顯示/隱藏冰塊和甜度選項
             const iceOptions = document.getElementById('iceOptions');
+            const sugarOptions = document.getElementById('sugarOptions');
             if (currentDrinkTemp === '冰') {
                 iceOptions.style.display = 'block';
+                sugarOptions.style.display = 'block';
             } else {
                 iceOptions.style.display = 'none';
+                sugarOptions.style.display = 'none';
             }
 
             // 飲料類：只顯示溫度/冰塊選項，不能修改數量
@@ -6112,38 +6571,72 @@
             const checkoutItems = document.getElementById('checkoutItems');
             checkoutItems.innerHTML = '';
             let subtotal = 0;
+            let totalItemDiscounts = 0;
 
             cart.forEach((item, index) => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
+                const itemOriginalTotal = item.price * item.quantity;
+                const itemDiscount = item.discount || 0;
+                const itemFinalTotal = itemOriginalTotal - itemDiscount;
+                subtotal += itemFinalTotal;  // 小計使用折扣後的金額
+                totalItemDiscounts += itemDiscount;
 
                 const checkoutItem = document.createElement('div');
                 checkoutItem.className = 'checkout-item';
+
+                // 建立價格顯示 HTML
+                let priceHtml = '';
+                if (itemDiscount > 0) {
+                    // 有折扣：顯示原價 - 折扣 = 折後價
+                    priceHtml = `
+                        <span style="color: #999; font-size: 14px;">$${itemOriginalTotal}</span>
+                        <span style="color: #D63031; font-weight: bold; font-size: 14px;">-$${itemDiscount}</span>
+                        <span style="color: #2D3436; font-weight: bold;">= $${itemFinalTotal}</span>
+                    `;
+                } else {
+                    // 無折扣：只顯示原價
+                    priceHtml = `<span style="color: #2D3436; font-weight: bold;">$${itemOriginalTotal}</span>`;
+                }
+
                 checkoutItem.innerHTML = `
                     <div style="flex: 1;">
                         <strong>${item.name}</strong>
                         <span style="margin-left: 8px; color: #636E72;">× ${item.quantity}</span>
+                        ${itemDiscount > 0 ? `<span style="margin-left: 8px; color: #D63031; font-size: 12px;">💰</span>` : ''}
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        ${item.category === 'drink' ? `<button class="btn-edit-spec" onclick="editDrinkSpec(${index})" style="padding: 6px 16px; font-size: 16px; background: #FF6B35; color: white; border: none; border-radius: 4px; cursor: pointer;">編輯</button>` : ''}
-                        <div>$${itemTotal}</div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        ${priceHtml}
                     </div>
                 `;
                 checkoutItems.appendChild(checkoutItem);
             });
 
-            // 計算並顯示折扣
-            const { totalDiscount, appliedDiscounts } = calculateDiscounts();
+            // 計算並顯示自動折扣
+            const { totalDiscount: autoDiscount, appliedDiscounts } = calculateDiscounts();
 
-            if (totalDiscount > 0) {
+            // 顯示品項折扣
+            // if (totalItemDiscounts > 0) {
+            //     const itemDiscountDiv = document.createElement('div');
+            //     itemDiscountDiv.className = 'checkout-item';
+            //     itemDiscountDiv.style.cssText = 'background: #FFE0E0; color: #D63031;';
+            //     itemDiscountDiv.innerHTML = `
+            //         <div>
+            //             <strong>💰 品項折扣</strong>
+            //         </div>
+            //         <div style="color: #D63031;">-$${totalItemDiscounts}</div>
+            //     `;
+            //     checkoutItems.appendChild(itemDiscountDiv);
+            // }
+
+            // 顯示自動折扣
+            if (autoDiscount > 0) {
                 const discountDiv = document.createElement('div');
                 discountDiv.className = 'checkout-item';
                 discountDiv.style.cssText = 'background: #FFF3CD; color: #856404;';
                 discountDiv.innerHTML = `
                     <div>
-                        <strong>🏷️ 折扣優惠</strong>
+                        <strong>🏷️ 自動折扣</strong>
                     </div>
-                    <div style="color: #856404;">-$${totalDiscount}</div>
+                    <div style="color: #856404;">-$${autoDiscount}</div>
                 `;
                 checkoutItems.appendChild(discountDiv);
 
@@ -6157,15 +6650,16 @@
             }
 
             // 更新小計、折扣和總計
-            const total = subtotal - totalDiscount;
+            // 小計已經是折扣後的金額（包含品項折扣），所以總計只扣除自動折扣
+            const total = subtotal - autoDiscount;
             document.getElementById('checkoutSubtotal').textContent = `$${subtotal}`;
             document.getElementById('checkoutTotal').textContent = `$${total}`;
 
-            // 顯示/隱藏折扣行
+            // 顯示/隱藏折扣行（只顯示自動折扣）
             const discountRow = document.getElementById('checkoutDiscountRow');
-            if (totalDiscount > 0) {
+            if (autoDiscount > 0) {
                 discountRow.style.display = 'flex';
-                document.getElementById('checkoutDiscount').textContent = `-$${totalDiscount}`;
+                document.getElementById('checkoutDiscount').textContent = `-$${autoDiscount}`;
             } else {
                 discountRow.style.display = 'none';
             }
@@ -6175,8 +6669,12 @@
 
         // 套用快速折扣（只能套用一次，直接設定而非累加）
         function applyManualDiscount(amount) {
-            // 計算原價小計和自動折扣
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            // 計算折扣後小計和自動折扣
+            const subtotal = cart.reduce((sum, item) => {
+                const itemTotal = item.price * item.quantity;
+                const itemDiscount = item.discount || 0;
+                return sum + (itemTotal - itemDiscount);
+            }, 0);
             const autoDiscount = calculateDiscounts().totalDiscount;
             const maxDiscount = subtotal - autoDiscount; // 最大可折扣金額（扣掉自動折扣後）
 
@@ -6191,8 +6689,12 @@
             const input = document.getElementById('manualDiscountInput');
             const amount = parseFloat(input.value);
             if (!isNaN(amount) && amount > 0) {
-                // 計算原價小計和自動折扣
-                const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                // 計算折扣後小計和自動折扣
+                const subtotal = cart.reduce((sum, item) => {
+                    const itemTotal = item.price * item.quantity;
+                    const itemDiscount = item.discount || 0;
+                    return sum + (itemTotal - itemDiscount);
+                }, 0);
                 const autoDiscount = calculateDiscounts().totalDiscount;
                 const maxDiscount = subtotal - autoDiscount; // 最大可折扣金額
 
@@ -6206,8 +6708,12 @@
 
         // 套用百分比折扣（只能套用一次，直接設定而非累加）
         function applyPercentageDiscount(percentage) {
-            // 計算原價小計
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            // 計算折扣後小計
+            const subtotal = cart.reduce((sum, item) => {
+                const itemTotal = item.price * item.quantity;
+                const itemDiscount = item.discount || 0;
+                return sum + (itemTotal - itemDiscount);
+            }, 0);
             const autoDiscount = calculateDiscounts().totalDiscount;
             const maxDiscount = subtotal - autoDiscount; // 扣掉自動折扣後的可折金額
 
@@ -6250,15 +6756,25 @@
         // 更新結帳總額
         function updateCheckoutTotal() {
             const checkoutTotal = document.getElementById('checkoutTotal');
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            // 計算折扣後小計（品項折扣已套用）
+            const subtotal = cart.reduce((sum, item) => {
+                const itemTotal = item.price * item.quantity;
+                const itemDiscount = item.discount || 0;
+                return sum + (itemTotal - itemDiscount);
+            }, 0);
+
+            // 計算自動折扣
             const autoDiscount = calculateDiscounts().totalDiscount;
-            const totalDiscount = autoDiscount + currentManualDiscount;
-            const total = Math.max(0, subtotal - totalDiscount); // 確保總金額不會是負數
+
+            // 總計 = 折扣後小計 - 自動折扣 - 手動折扣
+            const total = Math.max(0, subtotal - autoDiscount - currentManualDiscount); // 確保總金額不會是負數
 
             // 更新小計
             document.getElementById('checkoutSubtotal').textContent = `$${subtotal}`;
 
-            // 更新折扣顯示
+            // 更新折扣顯示（只顯示自動折扣 + 手動折扣）
+            const totalDiscount = autoDiscount + currentManualDiscount;
             const discountRow = document.getElementById('checkoutDiscountRow');
             if (totalDiscount > 0) {
                 discountRow.style.display = 'flex';
@@ -6310,6 +6826,7 @@
 
             initMenu();
             initCategoryTabs();
+            initSpecButtons(); // 優化規格按鈕觸控響應
 
             // 更新主畫面營業日顯示
             updateHeaderBusinessDate();
